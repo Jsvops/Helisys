@@ -1,0 +1,11 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@transaccionEvento.edit.headline">Edit Transaccion Evento</h1>
+    <div>
+        <a routerLink="/transaccionEventos" class="btn btn-secondary" i18n="@@transaccionEvento.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="editForm" field="tvoId" rowType="number" i18n-label="@@transaccionEvento.tvoId.label" label="Tvo Id" />
+    <app-input-row [group]="editForm" field="tvoEvento" i18n-label="@@transaccionEvento.tvoEvento.label" label="Tvo Evento" />
+    <input type="submit" i18n-value="@@transaccionEvento.edit.headline" value="Edit Transaccion Evento" class="btn btn-primary mt-4" />
+</form>

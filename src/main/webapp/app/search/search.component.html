@@ -1,0 +1,50 @@
+<div>
+    <h1>Search Products</h1>
+    <form (ngSubmit)="searchProducts()">
+        <label for="partNumber">Part Number:</label>
+        <input type="text" id="partNumber" [(ngModel)]="partNumber" name="partNumber"/>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" [(ngModel)]="name" name="name"/>
+
+        <label for="alterPartNumber">Alternate Part Number:</label>
+        <input type="text" id="alterPartNumber" [(ngModel)]="alterPartNumber" name="alterPartNumber"/>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <table *ngIf="products?.length">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Part Number</th>
+            <th>Name</th>
+            <th>Alternate Part Number</th>
+            <th>Serial Number</th>
+            <th>Units</th>
+            <th>Expiration Date</th>
+            <th>Document Type</th>
+            <th>Product Type</th>
+            <th>Combined Container</th>
+            <th>Aircraft Model</th>
+            <th>Supplier</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let product of products">
+            <td>{{ product.proId }}</td>
+            <td>{{ product.proNumeroParte }}</td>
+            <td>{{ product.proNombre }}</td>
+            <td>{{ product.proNumeroParteAlterno }}</td>
+            <td>{{ product.proNumeroSerie }}</td>
+            <td>{{ product.proUnidades }}</td>
+            <td>{{ product.proFechaVencimiento }}</td>
+            <td>{{ product.proTipoDocumento }}</td>
+            <td>{{ product.tipoProducto }}</td>
+            <td>{{ product.contenedorCombinado }}</td>
+            <td>{{ product.modeloAeronave }}</td>
+            <td>{{ product.proveedor }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

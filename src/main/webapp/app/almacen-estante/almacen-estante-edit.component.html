@@ -1,0 +1,11 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@almacenEstante.edit.headline">Edit Almacen Estante</h1>
+    <div>
+        <a routerLink="/almacenEstantes" class="btn btn-secondary" i18n="@@almacenEstante.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="editForm" field="amtId" rowType="number" i18n-label="@@almacenEstante.amtId.label" label="Amt Id" />
+    <app-input-row [group]="editForm" field="amtDescripcion" i18n-label="@@almacenEstante.amtDescripcion.label" label="Amt Descripcion" />
+    <input type="submit" i18n-value="@@almacenEstante.edit.headline" value="Edit Almacen Estante" class="btn btn-primary mt-4" />
+</form>

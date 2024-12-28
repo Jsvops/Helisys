@@ -1,0 +1,41 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@aeronave.list.headline">Aeronaves</h1>
+    <div>
+        <a routerLink="/aeronaves/add" class="btn btn-primary ms-2" i18n="@@aeronave.list.createNew">Create new Aeronave</a>
+    </div>
+</div>
+@if (!aeronaves || aeronaves.length === 0) {
+<div i18n="@@aeronave.list.empty">No Aeronaves could be found.</div>
+} @else {
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th scope="col" i18n="@@aeronave.anvId.label">Anv Id</th>
+                <th scope="col" i18n="@@aeronave.anvMatricula.label">Anv Matricula</th>
+                <th scope="col" i18n="@@aeronave.anvNumeroSerie.label">Anv Numero Serie</th>
+                <th scope="col" i18n="@@aeronave.anvFabricacion.label">Anv Fabricacion</th>
+                <th scope="col" i18n="@@aeronave.anvMre.label">Anv Mre</th>
+                <th><!-- --></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (aeronave of aeronaves; track aeronave.anvId) {
+            <tr>
+                <td>{{ aeronave.anvId }}</td>
+                <td>{{ aeronave.anvMatricula }}</td>
+                <td>{{ aeronave.anvNumeroSerie }}</td>
+                <td>{{ aeronave.anvFabricacion }}</td>
+                <td>{{ aeronave.anvMre }}</td>
+                <td>
+                    <div class="float-end text-nowrap">
+                        <a [routerLink]="['/aeronaves/edit', aeronave.anvId]" class="btn btn-sm btn-secondary" i18n="@@aeronave.list.edit">Edit</a>
+                        <button type="button" (click)="confirmDelete(aeronave.anvId!)" class="btn btn-sm btn-secondary" i18n="@@aeronave.list.delete">Delete</button>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

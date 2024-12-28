@@ -1,0 +1,35 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@almacenEstante.list.headline">Almacen Estantes</h1>
+    <div>
+        <a routerLink="/almacenEstantes/add" class="btn btn-primary ms-2" i18n="@@almacenEstante.list.createNew">Create new Almacen Estante</a>
+    </div>
+</div>
+@if (!almacenEstantes || almacenEstantes.length === 0) {
+<div i18n="@@almacenEstante.list.empty">No Almacen Estantes could be found.</div>
+} @else {
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th scope="col" i18n="@@almacenEstante.amtId.label">Amt Id</th>
+                <th scope="col" i18n="@@almacenEstante.amtDescripcion.label">Amt Descripcion</th>
+                <th><!-- --></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (almacenEstante of almacenEstantes; track almacenEstante.amtId) {
+            <tr>
+                <td>{{ almacenEstante.amtId }}</td>
+                <td>{{ almacenEstante.amtDescripcion }}</td>
+                <td>
+                    <div class="float-end text-nowrap">
+                        <a [routerLink]="['/almacenEstantes/edit', almacenEstante.amtId]" class="btn btn-sm btn-secondary" i18n="@@almacenEstante.list.edit">Edit</a>
+                        <button type="button" (click)="confirmDelete(almacenEstante.amtId!)" class="btn btn-sm btn-secondary" i18n="@@almacenEstante.list.delete">Delete</button>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

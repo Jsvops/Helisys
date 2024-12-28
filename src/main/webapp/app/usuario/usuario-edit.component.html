@@ -1,0 +1,23 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@usuario.edit.headline">Edit Usuario</h1>
+    <div>
+        <a routerLink="/usuarios" class="btn btn-secondary" i18n="@@usuario.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <input type="submit" i18n-value="@@usuario.edit.headline" value="Edit Usuario" class="btn btn-primary mt-4 mb-4" />
+    <app-input-row [group]="editForm" field="usrId" rowType="number" i18n-label="@@usuario.usrId.label" label="Usr Id" />
+    <app-input-row [group]="editForm" field="usrCtIdentidad" rowType="number" i18n-label="@@usuario.usrCtIdentidad.label" label="Usr Ct Identidad" />
+    <app-input-row [group]="editForm" field="usrCtMilitar" rowType="number" i18n-label="@@usuario.usrCtMilitar.label" label="Usr Ct Militar" />
+    <app-input-row [group]="editForm" field="usrNombre" i18n-label="@@usuario.usrNombre.label" label="Usr Nombre" />
+    <app-input-row [group]="editForm" field="usrApellido" i18n-label="@@usuario.usrApellido.label" label="Usr Apellido" />
+    <app-input-row [group]="editForm" field="usrDireccion" i18n-label="@@usuario.usrDireccion.label" label="Usr Direccion" />
+    <app-input-row [group]="editForm" field="usrTelefono" i18n-label="@@usuario.usrTelefono.label" label="Usr Telefono" />
+    <app-input-row [group]="editForm" field="usrCargo" i18n-label="@@usuario.usrCargo.label" label="Usr Cargo" />
+    <app-input-row [group]="editForm" field="usrFoto" i18n-label="@@usuario.usrFoto.label" label="Usr Foto" />
+    <app-input-row [group]="editForm" field="usrLogin" i18n-label="@@usuario.usrLogin.label" label="Usr Login" />
+    <app-input-row [group]="editForm" field="usrPassword" i18n-label="@@usuario.usrPassword.label" label="Usr Password" />
+    <app-input-row [group]="editForm" field="usrEdn" rowType="select" [options]="usrEdnValues" i18n-label="@@usuario.usrEdn.label" label="Usr Edn" />
+    <app-input-row [group]="editForm" field="usrGdo" rowType="select" [options]="usrGdoValues" i18n-label="@@usuario.usrGdo.label" label="Usr Gdo" />
+    <input type="submit" i18n-value="@@usuario.edit.headline" value="Edit Usuario" class="btn btn-primary mt-4" />
+</form>

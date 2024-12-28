@@ -1,0 +1,10 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@almacenEstante.add.headline">Add Almacen Estante</h1>
+    <div>
+        <a routerLink="/almacenEstantes" class="btn btn-secondary" i18n="@@almacenEstante.add.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="addForm" field="amtDescripcion" i18n-label="@@almacenEstante.amtDescripcion.label" label="Amt Descripcion" />
+    <input type="submit" i18n-value="@@almacenEstante.add.headline" value="Add Almacen Estante" class="btn btn-primary mt-4" />
+</form>

@@ -1,0 +1,15 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@pedidosCompra.add.headline">Add Pedidos Compra</h1>
+    <div>
+        <a routerLink="/pedidosCompras" class="btn btn-secondary" i18n="@@pedidosCompra.add.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="addForm" field="pcaDescripcion" i18n-label="@@pedidosCompra.pcaDescripcion.label" label="Pca Descripcion" />
+    <app-input-row [group]="addForm" field="pcaFechaPedido" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaPedido.label" label="Pca Fecha Pedido" />
+    <app-input-row [group]="addForm" field="pcaFechaEnvio" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaEnvio.label" label="Pca Fecha Envio" />
+    <app-input-row [group]="addForm" field="pcaFechaEntrega" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaEntrega.label" label="Pca Fecha Entrega" />
+    <app-input-row [group]="addForm" field="pcaFechaPrometida" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaPrometida.label" label="Pca Fecha Prometida" />
+    <app-input-row [group]="addForm" field="pcaDireccionEnvio" i18n-label="@@pedidosCompra.pcaDireccionEnvio.label" label="Pca Direccion Envio" />
+    <input type="submit" i18n-value="@@pedidosCompra.add.headline" value="Add Pedidos Compra" class="btn btn-primary mt-4" />
+</form>

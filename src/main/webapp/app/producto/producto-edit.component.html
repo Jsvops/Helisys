@@ -1,0 +1,22 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@producto.edit.headline">Edit Producto</h1>
+    <div>
+        <a routerLink="/productos" class="btn btn-secondary" i18n="@@producto.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <input type="submit" i18n-value="@@producto.edit.headline" value="Edit Producto" class="btn btn-primary mt-4 mb-4" />
+    <app-input-row [group]="editForm" field="proId" rowType="number" i18n-label="@@producto.proId.label" label="Pro Id" />
+    <app-input-row [group]="editForm" field="proNumeroParte" i18n-label="@@producto.proNumeroParte.label" label="Pro Numero Parte" />
+    <app-input-row [group]="editForm" field="proNombre" i18n-label="@@producto.proNombre.label" label="Pro Nombre" />
+    <app-input-row [group]="editForm" field="proNumeroParteAlterno" i18n-label="@@producto.proNumeroParteAlterno.label" label="Pro Numero Parte Alterno" />
+    <app-input-row [group]="editForm" field="proNumeroSerie" i18n-label="@@producto.proNumeroSerie.label" label="Pro Numero Serie" />
+    <app-input-row [group]="editForm" field="proUnidades" rowType="number" i18n-label="@@producto.proUnidades.label" label="Pro Unidades" />
+    <app-input-row [group]="editForm" field="proFechaVencimiento" datepicker="datepicker" i18n-label="@@producto.proFechaVencimiento.label" label="Pro Fecha Vencimiento" />
+    <app-input-row [group]="editForm" field="proTipoDocumento" i18n-label="@@producto.proTipoDocumento.label" label="Pro Tipo Documento" />
+    <app-input-row [group]="editForm" field="proTpo" rowType="select" [options]="proTpoValues" i18n-label="@@producto.proTpo.label" label="Pro Tpo" />
+    <app-input-row [group]="editForm" field="proAmc" rowType="select" [options]="proAmcValues" i18n-label="@@producto.proAmc.label" label="Pro Amc" />
+    <app-input-row [group]="editForm" field="proMre" rowType="select" [options]="proMreValues" i18n-label="@@producto.proMre.label" label="Pro Mre" />
+    <app-input-row [group]="editForm" field="proPve" rowType="select" [options]="proPveValues" i18n-label="@@producto.proPve.label" label="Pro Pve" />
+    <input type="submit" i18n-value="@@producto.edit.headline" value="Edit Producto" class="btn btn-primary mt-4" />
+</form>

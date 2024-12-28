@@ -1,0 +1,13 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@aeronave.add.headline">Add Aeronave</h1>
+    <div>
+        <a routerLink="/aeronaves" class="btn btn-secondary" i18n="@@aeronave.add.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="addForm" field="anvMatricula" i18n-label="@@aeronave.anvMatricula.label" label="Anv Matricula" />
+    <app-input-row [group]="addForm" field="anvNumeroSerie" i18n-label="@@aeronave.anvNumeroSerie.label" label="Anv Numero Serie" />
+    <app-input-row [group]="addForm" field="anvFabricacion" i18n-label="@@aeronave.anvFabricacion.label" label="Anv Fabricacion" />
+    <app-input-row [group]="addForm" field="anvMre" rowType="select" [options]="anvMreValues" i18n-label="@@aeronave.anvMre.label" label="Anv Mre" />
+    <input type="submit" i18n-value="@@aeronave.add.headline" value="Add Aeronave" class="btn btn-primary mt-4" />
+</form>

@@ -1,0 +1,41 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@pedidosProducto.list.headline">Pedidos Productos</h1>
+    <div>
+        <a routerLink="/pedidosProductos/add" class="btn btn-primary ms-2" i18n="@@pedidosProducto.list.createNew">Create new Pedidos Producto</a>
+    </div>
+</div>
+@if (!pedidosProductos || pedidosProductos.length === 0) {
+<div i18n="@@pedidosProducto.list.empty">No Pedidos Productos could be found.</div>
+} @else {
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th scope="col" i18n="@@pedidosProducto.pptId.label">Ppt Id</th>
+                <th scope="col" i18n="@@pedidosProducto.pptCantidad.label">Ppt Cantidad</th>
+                <th scope="col" i18n="@@pedidosProducto.pptPrecioUnitario.label">Ppt Precio Unitario</th>
+                <th scope="col" i18n="@@pedidosProducto.pptPro.label">Ppt Pro</th>
+                <th scope="col" i18n="@@pedidosProducto.pptPca.label">Ppt Pca</th>
+                <th><!-- --></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (pedidosProducto of pedidosProductos; track pedidosProducto.pptId) {
+            <tr>
+                <td>{{ pedidosProducto.pptId }}</td>
+                <td>{{ pedidosProducto.pptCantidad }}</td>
+                <td>{{ pedidosProducto.pptPrecioUnitario }}</td>
+                <td>{{ pedidosProducto.pptPro }}</td>
+                <td>{{ pedidosProducto.pptPca }}</td>
+                <td>
+                    <div class="float-end text-nowrap">
+                        <a [routerLink]="['/pedidosProductos/edit', pedidosProducto.pptId]" class="btn btn-sm btn-secondary" i18n="@@pedidosProducto.list.edit">Edit</a>
+                        <button type="button" (click)="confirmDelete(pedidosProducto.pptId!)" class="btn btn-sm btn-secondary" i18n="@@pedidosProducto.list.delete">Delete</button>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

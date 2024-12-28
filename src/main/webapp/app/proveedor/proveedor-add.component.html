@@ -1,0 +1,16 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@proveedor.add.headline">Add Proveedor</h1>
+    <div>
+        <a routerLink="/proveedores" class="btn btn-secondary" i18n="@@proveedor.add.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="addForm" field="pveNombre" i18n-label="@@proveedor.pveNombre.label" label="Pve Nombre" />
+    <app-input-row [group]="addForm" field="pveTelefono" i18n-label="@@proveedor.pveTelefono.label" label="Pve Telefono" />
+    <app-input-row [group]="addForm" field="pveFax" i18n-label="@@proveedor.pveFax.label" label="Pve Fax" />
+    <app-input-row [group]="addForm" field="pveEmail" i18n-label="@@proveedor.pveEmail.label" label="Pve Email" />
+    <app-input-row [group]="addForm" field="pveDireccion" i18n-label="@@proveedor.pveDireccion.label" label="Pve Direccion" />
+    <app-input-row [group]="addForm" field="pveCiudad" i18n-label="@@proveedor.pveCiudad.label" label="Pve Ciudad" />
+    <app-input-row [group]="addForm" field="pvePais" i18n-label="@@proveedor.pvePais.label" label="Pve Pais" />
+    <input type="submit" i18n-value="@@proveedor.add.headline" value="Add Proveedor" class="btn btn-primary mt-4" />
+</form>

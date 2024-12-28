@@ -1,0 +1,11 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@modeloAeronave.edit.headline">Edit Modelo Aeronave</h1>
+    <div>
+        <a routerLink="/modeloAeronaves" class="btn btn-secondary" i18n="@@modeloAeronave.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="editForm" field="mreId" rowType="number" i18n-label="@@modeloAeronave.mreId.label" label="Mre Id" />
+    <app-input-row [group]="editForm" field="mreNombre" i18n-label="@@modeloAeronave.mreNombre.label" label="Mre Nombre" />
+    <input type="submit" i18n-value="@@modeloAeronave.edit.headline" value="Edit Modelo Aeronave" class="btn btn-primary mt-4" />
+</form>

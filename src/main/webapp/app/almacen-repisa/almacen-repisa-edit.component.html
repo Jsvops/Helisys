@@ -1,0 +1,12 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@almacenRepisa.edit.headline">Edit Almacen Repisa</h1>
+    <div>
+        <a routerLink="/almacenRepisas" class="btn btn-secondary" i18n="@@almacenRepisa.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="editForm" field="amrId" rowType="number" i18n-label="@@almacenRepisa.amrId.label" label="Amr Id" />
+    <app-input-row [group]="editForm" field="amrNombre" i18n-label="@@almacenRepisa.amrNombre.label" label="Amr Nombre" />
+    <app-input-row [group]="editForm" field="amrAmt" rowType="select" [options]="amrAmtValues" i18n-label="@@almacenRepisa.amrAmt.label" label="Amr Amt" />
+    <input type="submit" i18n-value="@@almacenRepisa.edit.headline" value="Edit Almacen Repisa" class="btn btn-primary mt-4" />
+</form>

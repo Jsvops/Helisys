@@ -1,0 +1,10 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@tipoProducto.add.headline">Add Tipo Producto</h1>
+    <div>
+        <a routerLink="/tipoProductos" class="btn btn-secondary" i18n="@@tipoProducto.add.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="addForm" field="tpoNombreTipo" i18n-label="@@tipoProducto.tpoNombreTipo.label" label="Tpo Nombre Tipo" />
+    <input type="submit" i18n-value="@@tipoProducto.add.headline" value="Add Tipo Producto" class="btn btn-primary mt-4" />
+</form>

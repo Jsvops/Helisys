@@ -1,0 +1,13 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@transaccionesProducto.edit.headline">Edit Transacciones Producto</h1>
+    <div>
+        <a routerLink="/transaccionesProductos" class="btn btn-secondary" i18n="@@transaccionesProducto.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="editForm" field="tcoId" rowType="number" i18n-label="@@transaccionesProducto.tcoId.label" label="Tco Id" />
+    <app-input-row [group]="editForm" field="tcoUnidades" rowType="number" i18n-label="@@transaccionesProducto.tcoUnidades.label" label="Tco Unidades" />
+    <app-input-row [group]="editForm" field="tcoPro" rowType="select" [options]="tcoProValues" i18n-label="@@transaccionesProducto.tcoPro.label" label="Tco Pro" />
+    <app-input-row [group]="editForm" field="tcoTce" rowType="select" [options]="tcoTceValues" i18n-label="@@transaccionesProducto.tcoTce.label" label="Tco Tce" />
+    <input type="submit" i18n-value="@@transaccionesProducto.edit.headline" value="Edit Transacciones Producto" class="btn btn-primary mt-4" />
+</form>

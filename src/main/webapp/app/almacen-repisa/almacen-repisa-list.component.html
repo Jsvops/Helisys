@@ -1,0 +1,37 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@almacenRepisa.list.headline">Almacen Repisas</h1>
+    <div>
+        <a routerLink="/almacenRepisas/add" class="btn btn-primary ms-2" i18n="@@almacenRepisa.list.createNew">Create new Almacen Repisa</a>
+    </div>
+</div>
+@if (!almacenRepisas || almacenRepisas.length === 0) {
+<div i18n="@@almacenRepisa.list.empty">No Almacen Repisas could be found.</div>
+} @else {
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th scope="col" i18n="@@almacenRepisa.amrId.label">Amr Id</th>
+                <th scope="col" i18n="@@almacenRepisa.amrNombre.label">Amr Nombre</th>
+                <th scope="col" i18n="@@almacenRepisa.amrAmt.label">Amr Amt</th>
+                <th><!-- --></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (almacenRepisa of almacenRepisas; track almacenRepisa.amrId) {
+            <tr>
+                <td>{{ almacenRepisa.amrId }}</td>
+                <td>{{ almacenRepisa.amrNombre }}</td>
+                <td>{{ almacenRepisa.amrAmt }}</td>
+                <td>
+                    <div class="float-end text-nowrap">
+                        <a [routerLink]="['/almacenRepisas/edit', almacenRepisa.amrId]" class="btn btn-sm btn-secondary" i18n="@@almacenRepisa.list.edit">Edit</a>
+                        <button type="button" (click)="confirmDelete(almacenRepisa.amrId!)" class="btn btn-sm btn-secondary" i18n="@@almacenRepisa.list.delete">Delete</button>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

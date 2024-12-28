@@ -1,0 +1,14 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@transaccion.edit.headline">Edit Transaccion</h1>
+    <div>
+        <a routerLink="/transacciones" class="btn btn-secondary" i18n="@@transaccion.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="editForm" field="tceId" rowType="number" i18n-label="@@transaccion.tceId.label" label="Tce Id" />
+    <app-input-row [group]="editForm" field="tceFechaTransaccion" datepicker="datepicker" i18n-label="@@transaccion.tceFechaTransaccion.label" label="Tce Fecha Transaccion" />
+    <app-input-row [group]="editForm" field="tceObservaciones" i18n-label="@@transaccion.tceObservaciones.label" label="Tce Observaciones" />
+    <app-input-row [group]="editForm" field="tceTvo" rowType="select" [options]="tceTvoValues" i18n-label="@@transaccion.tceTvo.label" label="Tce Tvo" />
+    <app-input-row [group]="editForm" field="tceUsr" rowType="select" [options]="tceUsrValues" i18n-label="@@transaccion.tceUsr.label" label="Tce Usr" />
+    <input type="submit" i18n-value="@@transaccion.edit.headline" value="Edit Transaccion" class="btn btn-primary mt-4" />
+</form>

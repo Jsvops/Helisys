@@ -1,0 +1,13 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@pedidosProducto.add.headline">Add Pedidos Producto</h1>
+    <div>
+        <a routerLink="/pedidosProductos" class="btn btn-secondary" i18n="@@pedidosProducto.add.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="addForm" field="pptCantidad" rowType="number" i18n-label="@@pedidosProducto.pptCantidad.label" label="Ppt Cantidad" />
+    <app-input-row [group]="addForm" field="pptPrecioUnitario" rowType="number" i18n-label="@@pedidosProducto.pptPrecioUnitario.label" label="Ppt Precio Unitario" />
+    <app-input-row [group]="addForm" field="pptPro" rowType="select" [options]="pptProValues" i18n-label="@@pedidosProducto.pptPro.label" label="Ppt Pro" />
+    <app-input-row [group]="addForm" field="pptPca" rowType="select" [options]="pptPcaValues" i18n-label="@@pedidosProducto.pptPca.label" label="Ppt Pca" />
+    <input type="submit" i18n-value="@@pedidosProducto.add.headline" value="Add Pedidos Producto" class="btn btn-primary mt-4" />
+</form>

@@ -1,0 +1,39 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@transaccionesProducto.list.headline">Transacciones Productos</h1>
+    <div>
+        <a routerLink="/transaccionesProductos/add" class="btn btn-primary ms-2" i18n="@@transaccionesProducto.list.createNew">Create new Transacciones Producto</a>
+    </div>
+</div>
+@if (!transaccionesProductos || transaccionesProductos.length === 0) {
+<div i18n="@@transaccionesProducto.list.empty">No Transacciones Productos could be found.</div>
+} @else {
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th scope="col" i18n="@@transaccionesProducto.tcoId.label">Tco Id</th>
+                <th scope="col" i18n="@@transaccionesProducto.tcoUnidades.label">Tco Unidades</th>
+                <th scope="col" i18n="@@transaccionesProducto.tcoPro.label">Tco Pro</th>
+                <th scope="col" i18n="@@transaccionesProducto.tcoTce.label">Tco Tce</th>
+                <th><!-- --></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (transaccionesProducto of transaccionesProductos; track transaccionesProducto.tcoId) {
+            <tr>
+                <td>{{ transaccionesProducto.tcoId }}</td>
+                <td>{{ transaccionesProducto.tcoUnidades }}</td>
+                <td>{{ transaccionesProducto.tcoPro }}</td>
+                <td>{{ transaccionesProducto.tcoTce }}</td>
+                <td>
+                    <div class="float-end text-nowrap">
+                        <a [routerLink]="['/transaccionesProductos/edit', transaccionesProducto.tcoId]" class="btn btn-sm btn-secondary" i18n="@@transaccionesProducto.list.edit">Edit</a>
+                        <button type="button" (click)="confirmDelete(transaccionesProducto.tcoId!)" class="btn btn-sm btn-secondary" i18n="@@transaccionesProducto.list.delete">Delete</button>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

@@ -1,0 +1,35 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@tipoProducto.list.headline">Tipo Productos</h1>
+    <div>
+        <a routerLink="/tipoProductos/add" class="btn btn-primary ms-2" i18n="@@tipoProducto.list.createNew">Create new Tipo Producto</a>
+    </div>
+</div>
+@if (!tipoProductos || tipoProductos.length === 0) {
+<div i18n="@@tipoProducto.list.empty">No Tipo Productos could be found.</div>
+} @else {
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th scope="col" i18n="@@tipoProducto.tpoId.label">Tpo Id</th>
+                <th scope="col" i18n="@@tipoProducto.tpoNombreTipo.label">Tpo Nombre Tipo</th>
+                <th><!-- --></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (tipoProducto of tipoProductos; track tipoProducto.tpoId) {
+            <tr>
+                <td>{{ tipoProducto.tpoId }}</td>
+                <td>{{ tipoProducto.tpoNombreTipo }}</td>
+                <td>
+                    <div class="float-end text-nowrap">
+                        <a [routerLink]="['/tipoProductos/edit', tipoProducto.tpoId]" class="btn btn-sm btn-secondary" i18n="@@tipoProducto.list.edit">Edit</a>
+                        <button type="button" (click)="confirmDelete(tipoProducto.tpoId!)" class="btn btn-sm btn-secondary" i18n="@@tipoProducto.list.delete">Delete</button>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

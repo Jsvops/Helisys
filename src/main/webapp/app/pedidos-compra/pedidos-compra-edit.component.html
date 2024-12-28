@@ -1,0 +1,16 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@pedidosCompra.edit.headline">Edit Pedidos Compra</h1>
+    <div>
+        <a routerLink="/pedidosCompras" class="btn btn-secondary" i18n="@@pedidosCompra.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="editForm" field="pcaId" rowType="number" i18n-label="@@pedidosCompra.pcaId.label" label="Pca Id" />
+    <app-input-row [group]="editForm" field="pcaDescripcion" i18n-label="@@pedidosCompra.pcaDescripcion.label" label="Pca Descripcion" />
+    <app-input-row [group]="editForm" field="pcaFechaPedido" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaPedido.label" label="Pca Fecha Pedido" />
+    <app-input-row [group]="editForm" field="pcaFechaEnvio" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaEnvio.label" label="Pca Fecha Envio" />
+    <app-input-row [group]="editForm" field="pcaFechaEntrega" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaEntrega.label" label="Pca Fecha Entrega" />
+    <app-input-row [group]="editForm" field="pcaFechaPrometida" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaPrometida.label" label="Pca Fecha Prometida" />
+    <app-input-row [group]="editForm" field="pcaDireccionEnvio" i18n-label="@@pedidosCompra.pcaDireccionEnvio.label" label="Pca Direccion Envio" />
+    <input type="submit" i18n-value="@@pedidosCompra.edit.headline" value="Edit Pedidos Compra" class="btn btn-primary mt-4" />
+</form>

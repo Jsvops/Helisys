@@ -1,0 +1,14 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@pedidosProducto.edit.headline">Edit Pedidos Producto</h1>
+    <div>
+        <a routerLink="/pedidosProductos" class="btn btn-secondary" i18n="@@pedidosProducto.edit.back">Back to list</a>
+    </div>
+</div>
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <app-input-row [group]="editForm" field="pptId" rowType="number" i18n-label="@@pedidosProducto.pptId.label" label="Ppt Id" />
+    <app-input-row [group]="editForm" field="pptCantidad" rowType="number" i18n-label="@@pedidosProducto.pptCantidad.label" label="Ppt Cantidad" />
+    <app-input-row [group]="editForm" field="pptPrecioUnitario" rowType="number" i18n-label="@@pedidosProducto.pptPrecioUnitario.label" label="Ppt Precio Unitario" />
+    <app-input-row [group]="editForm" field="pptPro" rowType="select" [options]="pptProValues" i18n-label="@@pedidosProducto.pptPro.label" label="Ppt Pro" />
+    <app-input-row [group]="editForm" field="pptPca" rowType="select" [options]="pptPcaValues" i18n-label="@@pedidosProducto.pptPca.label" label="Ppt Pca" />
+    <input type="submit" i18n-value="@@pedidosProducto.edit.headline" value="Edit Pedidos Producto" class="btn btn-primary mt-4" />
+</form>
