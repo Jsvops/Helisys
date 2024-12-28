@@ -13,6 +13,6 @@ public interface TransaccionRepository extends JpaRepository<Transaccion, Intege
 
     Transaccion findFirstByTceUsr(Usuario usuario);
 
-    Optional<Transaccion> findTopByOrderByTceIdDesc();  // Asegúrate de que este método retorne Optional
+    Optional<Transaccion> findTopByOrderByTceIdDesc();  // Metodo para retornar Optional
 }
 

@@ -137,7 +137,7 @@ public class ProductoService {
         }
         return null;
     }
-    // Nuevo método para buscar productos con filtros
+    // Metodo para buscar con filtros
 
     public List<ProductViewDTO> findFilteredProducts(String partNumber, String name, String alterPartNumber) {
         return productoRepository.findProducts(partNumber, name, alterPartNumber);
