@@ -14,8 +14,23 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema helisys
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `helisys` DEFAULT CHARACTER SET utf16 COLLATE utf16_spanish_ci ;
-USE `helisys` ;
+-- Crear el esquema si no existe
+CREATE SCHEMA IF NOT EXISTS `helisys`
+    DEFAULT CHARACTER SET utf16
+    COLLATE utf16_spanish_ci;
+
+-- Seleccionar el esquema
+USE `helisys`;
+
+-- Crear el usuario (en este ejemplo, se asume conexión desde localhost)
+CREATE USER IF NOT EXISTS 'helisys'@'localhost' IDENTIFIED BY 'MyC0mpl3xP@ss2025';
+
+-- Otorgar todos los privilegios sobre el esquema al usuario creado
+GRANT ALL PRIVILEGES ON `helisys`.* TO 'helisys'@'localhost';
+
+-- Aplicar los cambios de privilegios
+FLUSH PRIVILEGES;
+
 
 -- -----------------------------------------------------
 -- Table `helisys`.`modelo_aeronave`
@@ -413,6 +428,9 @@ ENGINE = InnoDB
 AUTO_INCREMENT = 9452
 DEFAULT CHARACTER SET = utf16
 COLLATE = utf16_spanish_ci;
+
+DROP TRIGGER IF EXISTS `helisys`.`actualizar_unidades_producto`;
+
 
 USE `helisys`;
 
