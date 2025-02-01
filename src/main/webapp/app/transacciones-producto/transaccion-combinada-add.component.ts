@@ -6,6 +6,8 @@ import { InputRowComponent } from 'app/common/input-row/input-row.component';
 import { TransaccionesProductoService } from 'app/transacciones-producto/transacciones-producto.service';
 import { TransaccionService } from 'app/transaccion/transaccion.service';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
+import { MatDialog } from '@angular/material/dialog';
+import { SearchComponent } from 'app/search/search.component';
 
 @Component({
   selector: 'app-transaccion-combinada-add',
@@ -18,6 +20,7 @@ export class TransaccionCombinadaAddComponent implements OnInit {
   transaccionService = inject(TransaccionService);
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
+  dialog = inject(MatDialog); // Inyectar MatDialog
 
   tceTvoValues?: Map<number, string>;
   tceUsrValues?: Map<number, string>;
@@ -105,4 +108,16 @@ export class TransaccionCombinadaAddComponent implements OnInit {
       error: (error: any) => this.errorHandler.handleServerError(error)
     });
   }
+
+  openSearchModal() {
+    const dialogRef = this.dialog.open(SearchComponent, {
+      width: '600px', // Ancho de la ventana emergente
+      data: {} // Puedes pasar datos si es necesario
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      // Lógica después de cerrar la ventana emergente
+    });
+  }
+
 }

@@ -44,6 +44,7 @@ import { TransaccionesProductoAddComponent } from './transacciones-producto/tran
 import { TransaccionesProductoEditComponent } from './transacciones-producto/transacciones-producto-edit.component';
 import { SearchComponent } from './search/search.component';
 import { TransaccionCombinadaAddComponent} from './transacciones-producto/transaccion-combinada-add.component';
+import { TransaccionCombinadaListComponent } from './transacciones-producto/transaccion-combinada-list.component';
 import { ErrorComponent } from './error/error.component';
 
 
@@ -272,6 +273,10 @@ export const routes: Routes = [
   {
   path: 'transaccion-combinada-add',
   component: TransaccionCombinadaAddComponent
+  },
+  {
+    path: 'transaccion-combinada-list',
+    component: TransaccionCombinadaListComponent
   },
   {
     path: 'error',

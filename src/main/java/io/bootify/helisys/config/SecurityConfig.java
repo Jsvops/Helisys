@@ -4,13 +4,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @Configuration
@@ -18,60 +18,67 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 public class SecurityConfig {
 
     @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails user = User.withUsername("user")
-            .password(passwordEncoder().encode("password"))
-            .roles("USER")
-            .build();
-
-        UserDetails admin = User.withUsername("admin")
-            .password(passwordEncoder().encode("admin"))
-            .roles("ADMIN")
-            .build();
-
-        return new InMemoryUserDetailsManager(user, admin);
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/login", "/resources/**", "/static/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/transaccion-combinada-add").hasRole("USER")
+                .anyRequest().authenticated() // Requiere autenticación para cualquier otra solicitud
             )
             .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/perform_login")
-                .defaultSuccessUrl("/home", true)
-                .failureUrl("/login?error=true")
-                .failureHandler(authenticationFailureHandler())
+                .successHandler(successHandler()) // Gestiona el redireccionamiento después de iniciar sesión
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutUrl("/perform_logout")
-                .logoutSuccessUrl("/login?logout=true")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
                 .logoutSuccessHandler(logoutSuccessHandler())
-                .permitAll()
             )
-            .csrf(csrf -> csrf.disable()); // Deshabilitar temporalmente CSRF para depuración
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .invalidSessionUrl("/login")
+                .maximumSessions(1)
+                .expiredUrl("/login")
+            );
+            /*.sessionFixation(sessionFixation -> sessionFixation
+                .migrateSession()
+            );*/
 
-        return http.build();
+        return httpSecurity.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public UserDetailsService userDetailsService() {
+        UserDetails admin = User.withDefaultPasswordEncoder()
+            .username("admin")
+            .password("adminPass")
+            .roles("ADMIN")
+            .build();
+
+        UserDetails user = User.withDefaultPasswordEncoder()
+            .username("user")
+            .password("userPass")
+            .roles("USER")
+            .build();
+
+        return new InMemoryUserDetailsManager(admin, user);
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new CustomAuthenticationFailureHandler();
+    public AuthenticationSuccessHandler successHandler() {
+        return (request, response, authentication) -> {
+            String role = authentication.getAuthorities().stream()
+                .findFirst().orElseThrow(() -> new IllegalStateException("No roles found")).getAuthority();
+            if ("ROLE_ADMIN".equals(role)) {
+                response.sendRedirect("/"); // Redirige al home predeterminado para admin
+            } else if ("ROLE_USER".equals(role)) {
+                response.sendRedirect("/transaccion-combinada-add"); // Redirige a la URL específica de user
+            } else {
+                response.sendRedirect("/"); // URL por defecto
+            }
+        };
     }
 
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
-        return new CustomLogoutSuccessHandler();
+        return (request, response, authentication) -> response.sendRedirect("/login?logout");
     }
 }
