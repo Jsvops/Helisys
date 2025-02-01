@@ -1,3 +1,5 @@
+-- MySQL Workbench Forward Engineering
+
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -35,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `helisys`.`aeronave` (
   `anv_mre_id` INT(11) NOT NULL,
   `anv_matricula` VARCHAR(45) NOT NULL,
   `anv_numero_serie` VARCHAR(45) NOT NULL,
-  `anv_año_fabricacion` VARCHAR(45) NOT NULL,
+  `anv_fabricacion` VARCHAR(25) NOT NULL,
   PRIMARY KEY (`anv_id`, `anv_mre_id`),
   UNIQUE INDEX `anv_matricula_UNIQUE` (`anv_matricula` ASC) VISIBLE,
   INDEX `fk_aeronave_modelo_aeronave1_idx` (`anv_mre_id` ASC) VISIBLE,
@@ -58,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `helisys`.`almacen_estante` (
   `amt_descripcion` VARCHAR(25) NOT NULL,
   PRIMARY KEY (`amt_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 14
+AUTO_INCREMENT = 10
 DEFAULT CHARACTER SET = utf16
 COLLATE = utf16_spanish_ci;
 
@@ -76,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `helisys`.`almacen_repisa` (
     FOREIGN KEY (`amr_amt_id`)
     REFERENCES `helisys`.`almacen_estante` (`amt_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 64
+AUTO_INCREMENT = 41
 DEFAULT CHARACTER SET = utf16
 COLLATE = utf16_spanish_ci;
 
@@ -96,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `helisys`.`almacen_contenedor` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 2048
+AUTO_INCREMENT = 1212
 DEFAULT CHARACTER SET = utf16
 COLLATE = utf16_spanish_ci;
 
@@ -128,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `helisys`.`proveedor` (
   `pve_pais` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`pve_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 8
+AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = utf16
 COLLATE = utf16_spanish_ci;
 
@@ -150,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `helisys`.`contacto_proveedor` (
     FOREIGN KEY (`cpe_pve_id`)
     REFERENCES `helisys`.`proveedor` (`pve_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 8
+AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = utf16
 COLLATE = utf16_spanish_ci;
 
@@ -207,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `helisys`.`grado` (
   PRIMARY KEY (`gdo_id`),
   UNIQUE INDEX `gdo_nombre_UNIQUE` (`gdo_nombre` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 32
+AUTO_INCREMENT = 31
 DEFAULT CHARACTER SET = utf16
 COLLATE = utf16_spanish_ci;
 
@@ -251,21 +253,26 @@ CREATE TABLE IF NOT EXISTS `helisys`.`producto` (
   `pro_tpo_id` INT(11) NOT NULL,
   `pro_mre_id` INT(11) NOT NULL,
   `pro_pve_id` INT(11) NOT NULL,
-  `pro_amc_id` VARCHAR(25) NOT NULL,
+  `pro_amc_id` INT(11) NOT NULL,
   `pro_nombre` VARCHAR(45) NOT NULL,
-  `pro_numero_parte_alterno` VARCHAR(45) NOT NULL,
+  `pro_numero_parte_alterno` VARCHAR(45) NULL DEFAULT NULL,
   `pro_numero_serie` VARCHAR(45) NOT NULL,
   `pro_unidades` INT(11) NOT NULL,
-  `pro_fecha_vencimiento` DATE NOT NULL,
+  `pro_fecha_vencimiento` DATE NULL DEFAULT NULL,
   `pro_tipo_documento` VARCHAR(25) NOT NULL,
   PRIMARY KEY (`pro_id`, `pro_numero_parte`, `pro_tpo_id`, `pro_mre_id`, `pro_pve_id`, `pro_amc_id`),
   INDEX `FK_pro_tpo_id` (`pro_tpo_id` ASC) VISIBLE,
   INDEX `fk_producto_modelo_aeronave1_idx` (`pro_mre_id` ASC) VISIBLE,
   INDEX `fk_producto_proveedor1_idx` (`pro_pve_id` ASC) VISIBLE,
-  INDEX `FK_producto_contenedor` (`pro_amc_id` ASC) VISIBLE,
+  INDEX `fk_producto_almacen_contenedor1_idx` (`pro_amc_id` ASC) VISIBLE,
   CONSTRAINT `FK_pro_tpo_id`
     FOREIGN KEY (`pro_tpo_id`)
     REFERENCES `helisys`.`tipo_producto` (`tpo_id`),
+  CONSTRAINT `fk_producto_almacen_contenedor1`
+    FOREIGN KEY (`pro_amc_id`)
+    REFERENCES `helisys`.`almacen_contenedor` (`amc_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_producto_modelo_aeronave1`
     FOREIGN KEY (`pro_mre_id`)
     REFERENCES `helisys`.`modelo_aeronave` (`mre_id`)
@@ -277,7 +284,7 @@ CREATE TABLE IF NOT EXISTS `helisys`.`producto` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 2048
+AUTO_INCREMENT = 1335
 DEFAULT CHARACTER SET = utf16
 COLLATE = utf16_spanish_ci;
 
@@ -313,7 +320,7 @@ CREATE TABLE IF NOT EXISTS `helisys`.`transaccion_evento` (
   `tvo_evento` VARCHAR(25) NOT NULL,
   PRIMARY KEY (`tvo_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 10
 DEFAULT CHARACTER SET = utf16
 COLLATE = utf16_spanish_ci;
 
@@ -349,7 +356,7 @@ CREATE TABLE IF NOT EXISTS `helisys`.`usuario` (
     FOREIGN KEY (`usr_gdo_id`)
     REFERENCES `helisys`.`grado` (`gdo_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 16
+AUTO_INCREMENT = 11
 DEFAULT CHARACTER SET = utf16
 COLLATE = utf16_spanish_ci;
 
@@ -363,17 +370,24 @@ CREATE TABLE IF NOT EXISTS `helisys`.`transaccion` (
   `tce_tvo_id` INT(11) NOT NULL,
   `tce_fecha_transaccion` DATE NOT NULL,
   `tce_observaciones` VARCHAR(500) NOT NULL,
+  `tce_anv_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`tce_id`, `tce_usr_id`, `tce_tvo_id`),
   INDEX `FKaqj9wk94c5iylabaijj3dpxti` (`tce_usr_id` ASC) VISIBLE,
   INDEX `FK9sfdxr4f1ewyrufa2x1eukson` (`tce_tvo_id` ASC) VISIBLE,
+  INDEX `FK_transaccion_aeronave` (`tce_anv_id` ASC) VISIBLE,
   CONSTRAINT `FK9sfdxr4f1ewyrufa2x1eukson`
     FOREIGN KEY (`tce_tvo_id`)
     REFERENCES `helisys`.`transaccion_evento` (`tvo_id`),
+  CONSTRAINT `FK_transaccion_aeronave`
+    FOREIGN KEY (`tce_anv_id`)
+    REFERENCES `helisys`.`aeronave` (`anv_id`)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
   CONSTRAINT `FKaqj9wk94c5iylabaijj3dpxti`
     FOREIGN KEY (`tce_usr_id`)
     REFERENCES `helisys`.`usuario` (`usr_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 16384
+AUTO_INCREMENT = 9452
 DEFAULT CHARACTER SET = utf16
 COLLATE = utf16_spanish_ci;
 
@@ -396,10 +410,45 @@ CREATE TABLE IF NOT EXISTS `helisys`.`transacciones_producto` (
     FOREIGN KEY (`tco_tce_id`)
     REFERENCES `helisys`.`transaccion` (`tce_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 16384
+AUTO_INCREMENT = 9452
 DEFAULT CHARACTER SET = utf16
 COLLATE = utf16_spanish_ci;
 
+USE `helisys`;
+
+DELIMITER $$
+USE `helisys`$$
+CREATE
+DEFINER=``@``
+TRIGGER `helisys`.`actualizar_unidades_producto`
+AFTER INSERT ON `helisys`.`transacciones_producto`
+FOR EACH ROW
+BEGIN
+    DECLARE tipo_evento INT;
+
+    -- Obtener el tipo de evento (alta o baja) desde la tabla transaccion
+    SELECT tce_tvo_id
+    INTO tipo_evento
+    FROM transaccion
+    WHERE tce_id = NEW.tco_tce_id;
+
+    -- Verificar si es un evento de alta (1, 2, 3)
+    IF tipo_evento IN (1, 2, 3) THEN
+        UPDATE producto
+        SET pro_unidades = pro_unidades + NEW.tco_unidades
+        WHERE pro_id = NEW.tco_pro_id;
+
+    -- Verificar si es un evento de baja (4, 5, 6, 7, 8)
+    ELSEIF tipo_evento IN (4, 5, 6, 7, 8) THEN
+        UPDATE producto
+        SET pro_unidades = pro_unidades - NEW.tco_unidades
+        WHERE pro_id = NEW.tco_pro_id;
+
+    END IF;
+END$$
+
+
+DELIMITER ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
