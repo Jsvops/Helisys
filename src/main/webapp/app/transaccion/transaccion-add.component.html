@@ -5,10 +5,24 @@
     </div>
 </div>
 <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
-    <app-input-row [group]="addForm" field="tceFechaTransaccion" datepicker="datepicker" i18n-label="@@transaccion.tceFechaTransaccion.label" label="Tce Fecha Transaccion" />
+    <!-- Campo para la fecha de transacción -->
+    <app-input-row [group]="addForm" field="tceFechaTransaccion" datepicker="datepicker" i18n-label="@@transaccion.tceFechaTransaccion.label" label="Tce Fecha Transaccion" disabled="true" />
+
+    <!-- Campo para las observaciones -->
     <app-input-row [group]="addForm" field="tceObservaciones" i18n-label="@@transaccion.tceObservaciones.label" label="Tce Observaciones" />
+
+    <!-- Campo para el evento de transacción (tceTvo) -->
     <app-input-row [group]="addForm" field="tceTvo" rowType="select" [options]="tceTvoValues" i18n-label="@@transaccion.tceTvo.label" label="Tce Tvo" />
-    <app-input-row [group]="addForm" field="tceUsr" rowType="select" [options]="tceUsrValues" i18n-label="@@transaccion.tceUsr.label" label="Tce Usr" />
+
+    <!-- Campo oculto para el ID del usuario (tceUsr) -->
+    <input id="tceUsr" formControlName="tceUsr" type="hidden" class="form-control" />
+
+    <!-- Mostrar el nombre del usuario -->
+    <div class="form-group">
+        <label for="tceUsrDisplay" i18n="@@transaccion.tceUsr.label">Tce Usr</label>
+        <input id="tceUsrDisplay" type="text" class="form-control" [value]="currentUserName" readonly />
+    </div>
+
+    <!-- Botón para enviar el formulario -->
     <input type="submit" i18n-value="@@transaccion.add.headline" value="Add Transaccion" class="btn btn-primary mt-4" />
 </form>
-

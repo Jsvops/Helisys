@@ -3,6 +3,8 @@ package io.bootify.helisys.repos;
 import io.bootify.helisys.domain.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
@@ -14,4 +16,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     boolean existsByUsrPasswordIgnoreCase(String usrPassword);
 
+    // AGREGA EL METODO PARA BUSCAR POR "usrNombre"
+    Optional<Usuario> findByUsrNombre(String usrNombre);
+
 }
+//

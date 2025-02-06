@@ -13,8 +13,8 @@ import io.bootify.helisys.util.NotFoundException;
 import io.bootify.helisys.util.ReferencedWarning;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate; // Importa LocalDate para manejar fechas
 import java.util.List;
-
 
 @Service
 public class TransaccionService {
@@ -44,18 +44,22 @@ public class TransaccionService {
     public TransaccionDTO get(final Integer tceId) {
         return transaccionRepository.findById(tceId)
             .map(transaccion -> mapToDTO(transaccion, new TransaccionDTO()))
-            .orElseThrow(NotFoundException::new);
+            .orElseThrow(() -> new NotFoundException("Transacción no encontrada con ID: " + tceId));
     }
 
     public Integer create(final TransaccionDTO transaccionDTO) {
         final Transaccion transaccion = new Transaccion();
+        // Establece la fecha actual si no se proporciona
+        if (transaccionDTO.getTceFechaTransaccion() == null) {
+            transaccionDTO.setTceFechaTransaccion(LocalDate.now());
+        }
         mapToEntity(transaccionDTO, transaccion);
         return transaccionRepository.save(transaccion).getTceId();
     }
 
     public void update(final Integer tceId, final TransaccionDTO transaccionDTO) {
         final Transaccion transaccion = transaccionRepository.findById(tceId)
-            .orElseThrow(NotFoundException::new);
+            .orElseThrow(() -> new NotFoundException("Transacción no encontrada con ID: " + tceId));
         mapToEntity(transaccionDTO, transaccion);
         transaccionRepository.save(transaccion);
     }
@@ -66,10 +70,9 @@ public class TransaccionService {
 
     public TransaccionDTO getLastTransaccion() {
         Transaccion transaccion = transaccionRepository.findTopByOrderByTceIdDesc()
-            .orElseThrow(NotFoundException::new);
+            .orElseThrow(() -> new NotFoundException("No se encontraron transacciones"));
         return mapToDTO(transaccion, new TransaccionDTO());
     }
-
 
     private TransaccionDTO mapToDTO(final Transaccion transaccion, final TransaccionDTO transaccionDTO) {
         transaccionDTO.setTceId(transaccion.getTceId());
@@ -83,19 +86,32 @@ public class TransaccionService {
     private Transaccion mapToEntity(final TransaccionDTO transaccionDTO, final Transaccion transaccion) {
         transaccion.setTceFechaTransaccion(transaccionDTO.getTceFechaTransaccion());
         transaccion.setTceObservaciones(transaccionDTO.getTceObservaciones());
-        final TransaccionEvento tceTvo = transaccionDTO.getTceTvo() == null ? null : transaccionEventoRepository.findById(transaccionDTO.getTceTvo())
-            .orElseThrow(() -> new NotFoundException("tceTvo not found"));
-        transaccion.setTceTvo(tceTvo);
-        final Usuario tceUsr = transaccionDTO.getTceUsr() == null ? null : usuarioRepository.findById(transaccionDTO.getTceUsr())
-            .orElseThrow(() -> new NotFoundException("tceUsr not found"));
-        transaccion.setTceUsr(tceUsr);
+
+        // Asignar el evento de transacción (tceTvo)
+        if (transaccionDTO.getTceTvo() != null) {
+            final TransaccionEvento tceTvo = transaccionEventoRepository.findById(transaccionDTO.getTceTvo())
+                .orElseThrow(() -> new NotFoundException("Evento de transacción no encontrado con ID: " + transaccionDTO.getTceTvo()));
+            transaccion.setTceTvo(tceTvo);
+        } else {
+            transaccion.setTceTvo(null);
+        }
+
+        // Asignar el usuario (tceUsr)
+        if (transaccionDTO.getTceUsr() != null) {
+            final Usuario tceUsr = usuarioRepository.findById(transaccionDTO.getTceUsr())
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado con ID: " + transaccionDTO.getTceUsr()));
+            transaccion.setTceUsr(tceUsr);
+        } else {
+            throw new IllegalArgumentException("El campo tceUsr no puede ser nulo");
+        }
+
         return transaccion;
     }
 
     public ReferencedWarning getReferencedWarning(final Integer tceId) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Transaccion transaccion = transaccionRepository.findById(tceId)
-            .orElseThrow(NotFoundException::new);
+            .orElseThrow(() -> new NotFoundException("Transacción no encontrada con ID: " + tceId));
         final TransaccionesProducto tcoTceTransaccionesProducto = transaccionesProductoRepository.findFirstByTcoTce(transaccion);
         if (tcoTceTransaccionesProducto != null) {
             referencedWarning.setKey("transaccion.transaccionesProducto.tcoTce.referenced");

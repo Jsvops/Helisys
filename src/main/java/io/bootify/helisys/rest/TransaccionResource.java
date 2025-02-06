@@ -11,12 +11,15 @@ import io.bootify.helisys.util.ReferencedException;
 import io.bootify.helisys.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +28,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @RestController
 @RequestMapping(value = "/api/transacciones", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -58,6 +60,24 @@ public class TransaccionResource {
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createTransaccion(
         @RequestBody @Valid final TransaccionDTO transaccionDTO) {
+
+        // Obtiene el nombre de usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        // Busca el ID del usuario en la base de datos
+        Usuario usuario = usuarioRepository.findByUsrNombre(username)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Asigna el ID del usuario al campo tceUsr de la transacción
+        transaccionDTO.setTceUsr(usuario.getUsrId());
+
+        // Asigna la fecha actual si no se proporciona
+        if (transaccionDTO.getTceFechaTransaccion() == null) {
+            transaccionDTO.setTceFechaTransaccion(LocalDate.now());
+        }
+
+        // Crea la transacción
         final Integer createdTceId = transaccionService.create(transaccionDTO);
         return new ResponseEntity<>(createdTceId, HttpStatus.CREATED);
     }

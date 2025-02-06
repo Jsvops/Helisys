@@ -32,6 +32,12 @@ public class UsuarioService {
         this.gradoRepository = gradoRepository;
         this.transaccionRepository = transaccionRepository;
     }
+    //nueva logica de negocio
+    public Integer findIdByUsername(String username) {
+        return usuarioRepository.findByUsrNombre(username)
+            .map(Usuario::getUsrId)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
 
     public List<UsuarioDTO> findAll() {
         final List<Usuario> usuarios = usuarioRepository.findAll(Sort.by("usrId"));
@@ -130,3 +136,4 @@ public class UsuarioService {
     }
 
 }
+//

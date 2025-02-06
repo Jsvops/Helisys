@@ -20,6 +20,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/transaccion-combinada-add").hasRole("USER")
@@ -48,13 +49,13 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails admin = User.withDefaultPasswordEncoder()
-            .username("admin")
+            .username("CIDAR")
             .password("adminPass")
             .roles("ADMIN")
             .build();
 
         UserDetails user = User.withDefaultPasswordEncoder()
-            .username("user")
+            .username("JUAN PABLO")
             .password("userPass")
             .roles("USER")
             .build();

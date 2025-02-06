@@ -16,7 +16,7 @@
                     </li>
                     <li class="navbar-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarEntitiesLink" role="button"
-                                aria-expanded="false" i18n="@@navigation.entities">Entities</a>
+                           aria-expanded="false" i18n="@@navigation.entities">Entities</a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarEntitiesLink">
                             <li><a routerLink="/modeloAeronaves" class="dropdown-item" i18n="@@modeloAeronave.list.headline">Modelo Aeronaves</a></li>
                             <li><a routerLink="/aeronaves" class="dropdown-item" i18n="@@aeronave.list.headline">Aeronaves</a></li>
@@ -33,6 +33,10 @@
                             <li><a routerLink="/transacciones" class="dropdown-item" i18n="@@transaccion.list.headline">Transacciones</a></li>
                             <li><a routerLink="/transaccionesProductos" class="dropdown-item" i18n="@@transaccionesProducto.list.headline">Transacciones Productos</a></li>
                         </ul>
+                    </li>
+                    <!-- Mostrar el nombre del usuario en la parte derecha del menú -->
+                    <li class="navbar-item">
+                        <span class="navbar-text">Usuario: {{ userName }}</span>
                     </li>
                 </ul>
             </div>
