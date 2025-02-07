@@ -28,7 +28,8 @@ public class Transaccion {
     @Column(nullable = false)
     private LocalDate tceFechaTransaccion;
 
-    @Column(nullable = false, length = 500)
+    //cambio de false a true porque el campo tceObservaciones es opcional
+    @Column(nullable = true, length = 500)
     private String tceObservaciones;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -27,7 +27,7 @@ export class TransaccionAddComponent implements OnInit {
 
   addForm = new FormGroup({
     tceFechaTransaccion: new FormControl({ value: this.getCurrentDate(), disabled: true }, [Validators.required]), // Asigna la fecha actual y deshabilita el campo
-    tceObservaciones: new FormControl(null, [Validators.required, Validators.maxLength(500)]),
+    tceObservaciones: new FormControl(null, [Validators.maxLength(500)]), // Eliminando Validators.required  para que sea opcional
     tceTvo: new FormControl(null, [Validators.required]),
     tceUsr: new FormControl<number | null>({ value: null, disabled: true }, [Validators.required]),
   }, { updateOn: 'submit' });

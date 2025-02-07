@@ -6,11 +6,13 @@ import { InputRowComponent } from 'app/common/input-row/input-row.component';
 import { TransaccionesProductoService } from 'app/transacciones-producto/transacciones-producto.service';
 import { TransaccionService } from 'app/transaccion/transaccion.service';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
+import { AuthService } from 'app/auth.service'; // Importa el servicio de autenticación
 import { MatDialog } from '@angular/material/dialog';
 import { SearchComponent } from 'app/search/search.component';
 
 @Component({
   selector: 'app-transaccion-combinada-add',
+  standalone: true,
   imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
   templateUrl: './transaccion-combinada-add.component.html'
 })
@@ -18,6 +20,7 @@ export class TransaccionCombinadaAddComponent implements OnInit {
 
   transaccionesProductoService = inject(TransaccionesProductoService);
   transaccionService = inject(TransaccionService);
+  authService = inject(AuthService); // Inyecta el servicio de autenticación
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
   dialog = inject(MatDialog); // Inyectar MatDialog
@@ -25,14 +28,15 @@ export class TransaccionCombinadaAddComponent implements OnInit {
   tceTvoValues?: Map<number, string>;
   tceUsrValues?: Map<number, string>;
   tcoProValues?: Map<number, string>;
-  tcoTceValues?: Map<number, string>;
+  currentUserId?: number;
+  currentUserName?: string;
   currentTransactionId?: number;
 
   addForm = new FormGroup({
-    tceFechaTransaccion: new FormControl(null, [Validators.required]),
-    tceObservaciones: new FormControl(null, [Validators.required]),
+    tceFechaTransaccion: new FormControl({ value: this.getCurrentDate(), disabled: true }, [Validators.required]), // Asigna la fecha actual y deshabilita el campo
+    tceObservaciones: new FormControl(null, [Validators.maxLength(500)]), // Eliminando Validators.required para que sea opcional
     tceTvo: new FormControl(null, [Validators.required]),
-    tceUsr: new FormControl(null, [Validators.required]),
+    tceUsr: new FormControl<number | null>({ value: null, disabled: true }, [Validators.required]),
     tcoUnidades: new FormControl(null, [Validators.required]),
     tcoPro: new FormControl(null, [Validators.required]),
     tcoTce: new FormControl({ value: null as number | null, disabled: true }, [Validators.required])
@@ -46,11 +50,23 @@ export class TransaccionCombinadaAddComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Obtener la información del usuario autenticado y asignar el ID al campo tceUsr
+    this.authService.getCurrentUserInfo().subscribe({
+      next: (userInfo) => {
+        this.currentUserId = userInfo.usrId;
+        this.currentUserName = userInfo.usrNombre;
+        this.addForm.patchValue({ tceUsr: this.currentUserId }); // Asigna el ID del usuario
+      },
+      error: (error) => this.errorHandler.handleServerError(error.error)
+    });
+
     this.transaccionService.getTceTvoValues()
       .subscribe({
         next: (data: Map<number, string>) => this.tceTvoValues = data,
         error: (error: any) => this.errorHandler.handleServerError(error)
       });
+
+    // Obtener los valores para tceUsr
     this.transaccionService.getTceUsrValues()
       .subscribe({
         next: (data: Map<number, string>) => this.tceUsrValues = data,
@@ -62,11 +78,11 @@ export class TransaccionCombinadaAddComponent implements OnInit {
         next: (data: Map<number, string>) => this.tcoProValues = data,
         error: (error: any) => this.errorHandler.handleServerError(error)
       });
-    this.transaccionesProductoService.getTcoTceValues()
-      .subscribe({
-        next: (data: Map<number, string>) => this.tcoTceValues = data,
-        error: (error: any) => this.errorHandler.handleServerError(error)
-      });
+  }
+
+  getCurrentDate(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // Formato 'YYYY-MM-DD'
   }
 
   handleSubmit() {
@@ -95,7 +111,7 @@ export class TransaccionCombinadaAddComponent implements OnInit {
         };
 
         this.transaccionesProductoService.createTransaccionesProducto(transaccionesProductoData).subscribe({
-          next: (res: any) => {
+          next: () => {
             this.router.navigate(['/transaccionesProductos'], {
               state: {
                 msgSuccess: this.getMessage('created')
@@ -119,5 +135,4 @@ export class TransaccionCombinadaAddComponent implements OnInit {
       // Lógica después de cerrar la ventana emergente
     });
   }
-
 }
