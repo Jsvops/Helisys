@@ -7,7 +7,7 @@
 </div>
 
 <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
-    <app-input-row [group]="addForm" field="tcoPro" rowType="select" [options]="tcoProValues" i18n-label="@@transaccionesProducto.tcoPro.label" label="Pieza:" />
+    <app-input-row [group]="addForm" field="tcoPro" rowType="text" [options]="tcoProValues" i18n-label="@@transaccionesProducto.tcoPro.label" label="Pieza:" />
     <app-input-row [group]="addForm" field="tceTvo" rowType="select" [options]="tceTvoValues" i18n-label="@@transaccion.tceTvo.label" label="Movimiento:" />
     <app-input-row [group]="addForm" field="tcoUnidades" rowType="number" i18n-label="@@transaccionesProducto.tcoUnidades.label" label="Unidades:" />
     <app-input-row [group]="addForm" field="tceObservaciones" i18n-label="@@transaccion.tceObservaciones.label" label="Observaciones:" />

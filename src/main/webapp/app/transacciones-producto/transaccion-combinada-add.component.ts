@@ -82,6 +82,7 @@ export class TransaccionCombinadaAddComponent implements OnInit {
 
   getCurrentDate(): string {
     const today = new Date();
+    today.setMinutes(today.getMinutes() - today.getTimezoneOffset()); // Ajusta a la zona horaria local
     return today.toISOString().split('T')[0]; // Formato 'YYYY-MM-DD'
   }
 
