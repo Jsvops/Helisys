@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { TransaccionDTO } from 'app/transaccion/transaccion.model';
-import { map, Observable } from 'rxjs';
+import { map, Observable, catchError, tap } from 'rxjs';
 import { transformRecordToMap } from 'app/common/utils'; // Asegúrate de que la ruta sea correcta
 
 @Injectable({
@@ -46,5 +46,26 @@ export class TransaccionService {
   // Método para obtener la última transacción
   getLastTransaccion(): Observable<TransaccionDTO> {
     return this.http.get<TransaccionDTO>(`${this.resourcePath}/last`);
+  }
+
+  // Nuevo método para obtener las aeronaves
+  getAeronaves(): Observable<{ anv_id: number, anv_matricula: string }[]> {
+    return this.http.get<{ anv_id: number, anv_matricula: string }[]>(`${environment.apiPath}/api/aeronaves`);
+  }
+
+  // Método para obtener aeronaves compatibles con un producto
+  getAeronavesCompatibles(productoId: number): Observable<{ anvId: number, anvMatricula: string }[]> {
+    console.log('Solicitando aeronaves compatibles para productoId:', productoId);
+    return this.http.get<{ anvId: number, anvMatricula: string }[]>(
+      `${environment.apiPath}/api/aeronaves/compatibles?productoId=${productoId}`
+    ).pipe(
+      tap((response) => {
+        console.log('Respuesta del backend:', response);
+      }),
+      catchError((error) => {
+        console.error('Error al obtener aeronaves compatibles:', error);
+        throw error; // Propagar el error
+      })
+    );
   }
 }

@@ -14,7 +14,6 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Entity
 @Getter
 @Setter
@@ -28,7 +27,7 @@ public class Transaccion {
     @Column(nullable = false)
     private LocalDate tceFechaTransaccion;
 
-    //cambio de false a true porque el campo tceObservaciones es opcional
+    // Cambio de false a true porque el campo tceObservaciones es opcional
     @Column(nullable = true, length = 500)
     private String tceObservaciones;
 
@@ -39,6 +38,11 @@ public class Transaccion {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tce_usr_id", nullable = false)
     private Usuario tceUsr;
+
+    // Relación discontinua con Aeronave (opcional)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tce_anv_id", nullable = true) // Permitir valores nulos
+    private Aeronave tceAnv;
 
     @OneToMany(mappedBy = "tcoTce")
     private Set<TransaccionesProducto> tcoTceTransaccionesProductos;

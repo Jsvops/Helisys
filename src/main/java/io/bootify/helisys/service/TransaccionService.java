@@ -1,10 +1,12 @@
 package io.bootify.helisys.service;
 
+import io.bootify.helisys.domain.Aeronave;
 import io.bootify.helisys.domain.Transaccion;
 import io.bootify.helisys.domain.TransaccionEvento;
 import io.bootify.helisys.domain.TransaccionesProducto;
 import io.bootify.helisys.domain.Usuario;
 import io.bootify.helisys.model.TransaccionDTO;
+import io.bootify.helisys.repos.AeronaveRepository;
 import io.bootify.helisys.repos.TransaccionEventoRepository;
 import io.bootify.helisys.repos.TransaccionRepository;
 import io.bootify.helisys.repos.TransaccionesProductoRepository;
@@ -13,7 +15,7 @@ import io.bootify.helisys.util.NotFoundException;
 import io.bootify.helisys.util.ReferencedWarning;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate; // Importa LocalDate para manejar fechas
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -22,15 +24,18 @@ public class TransaccionService {
     private final TransaccionRepository transaccionRepository;
     private final TransaccionEventoRepository transaccionEventoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final AeronaveRepository aeronaveRepository;
     private final TransaccionesProductoRepository transaccionesProductoRepository;
 
     public TransaccionService(final TransaccionRepository transaccionRepository,
                               final TransaccionEventoRepository transaccionEventoRepository,
                               final UsuarioRepository usuarioRepository,
+                              final AeronaveRepository aeronaveRepository,
                               final TransaccionesProductoRepository transaccionesProductoRepository) {
         this.transaccionRepository = transaccionRepository;
         this.transaccionEventoRepository = transaccionEventoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.aeronaveRepository = aeronaveRepository;
         this.transaccionesProductoRepository = transaccionesProductoRepository;
     }
 
@@ -49,7 +54,6 @@ public class TransaccionService {
 
     public Integer create(final TransaccionDTO transaccionDTO) {
         final Transaccion transaccion = new Transaccion();
-        // Establece la fecha actual si no se proporciona
         if (transaccionDTO.getTceFechaTransaccion() == null) {
             transaccionDTO.setTceFechaTransaccion(LocalDate.now());
         }
@@ -80,6 +84,7 @@ public class TransaccionService {
         transaccionDTO.setTceObservaciones(transaccion.getTceObservaciones());
         transaccionDTO.setTceTvo(transaccion.getTceTvo() == null ? null : transaccion.getTceTvo().getTvoId());
         transaccionDTO.setTceUsr(transaccion.getTceUsr() == null ? null : transaccion.getTceUsr().getUsrId());
+        transaccionDTO.setTceAnv(transaccion.getTceAnv() == null ? null : transaccion.getTceAnv().getAnvId());
         return transaccionDTO;
     }
 
@@ -87,22 +92,26 @@ public class TransaccionService {
         transaccion.setTceFechaTransaccion(transaccionDTO.getTceFechaTransaccion());
         transaccion.setTceObservaciones(transaccionDTO.getTceObservaciones());
 
-        // Asignar el evento de transacción (tceTvo)
         if (transaccionDTO.getTceTvo() != null) {
             final TransaccionEvento tceTvo = transaccionEventoRepository.findById(transaccionDTO.getTceTvo())
                 .orElseThrow(() -> new NotFoundException("Evento de transacción no encontrado con ID: " + transaccionDTO.getTceTvo()));
             transaccion.setTceTvo(tceTvo);
-        } else {
-            transaccion.setTceTvo(null);
         }
 
-        // Asignar el usuario (tceUsr)
         if (transaccionDTO.getTceUsr() != null) {
             final Usuario tceUsr = usuarioRepository.findById(transaccionDTO.getTceUsr())
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado con ID: " + transaccionDTO.getTceUsr()));
             transaccion.setTceUsr(tceUsr);
         } else {
             throw new IllegalArgumentException("El campo tceUsr no puede ser nulo");
+        }
+
+        if (transaccionDTO.getTceAnv() != null) {
+            final Aeronave tceAnv = aeronaveRepository.findById(transaccionDTO.getTceAnv())
+                .orElseThrow(() -> new NotFoundException("Aeronave no encontrada con ID: " + transaccionDTO.getTceAnv()));
+            transaccion.setTceAnv(tceAnv);
+        } else {
+            transaccion.setTceAnv(null);
         }
 
         return transaccion;

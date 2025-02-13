@@ -26,4 +26,6 @@ public class TransaccionDTO {
     @NotNull
     private Integer tceUsr;
 
+    private Integer tceAnv;
+
 }

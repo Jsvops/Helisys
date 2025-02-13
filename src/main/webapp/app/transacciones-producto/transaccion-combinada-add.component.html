@@ -7,10 +7,35 @@
 </div>
 
 <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+    <!-- Campo Pieza -->
     <app-input-row [group]="addForm" field="tcoPro" rowType="text" [options]="tcoProValues" i18n-label="@@transaccionesProducto.tcoPro.label" label="Pieza:" />
+
+    <!-- Campo Movimiento -->
     <app-input-row [group]="addForm" field="tceTvo" rowType="select" [options]="tceTvoValues" i18n-label="@@transaccion.tceTvo.label" label="Movimiento:" />
+
+    <!-- Campo Unidades -->
     <app-input-row [group]="addForm" field="tcoUnidades" rowType="number" i18n-label="@@transaccionesProducto.tcoUnidades.label" label="Unidades:" />
+
+    <!-- Campo Observaciones -->
     <app-input-row [group]="addForm" field="tceObservaciones" i18n-label="@@transaccion.tceObservaciones.label" label="Observaciones:" />
 
+    <!-- Campo Matrícula de Aeronave (condicional) -->
+    <div class="form-group" *ngIf="showAeronaveField">
+        <label for="tceAnv" i18n="@@transaccion.tceAnv.label">Matrícula de Aeronave</label>
+        <select id="tceAnv" formControlName="tceAnv" class="form-control" [disabled]="aeronaves.length === 0">
+            <option value="" i18n="@@transaccion.tceAnv.placeholder">Seleccione una matrícula</option>
+            <option *ngFor="let anv of aeronaves" [value]="anv.anvId">{{ anv.anvMatricula }}</option>
+        </select>
+        <!-- Mensaje de error si el campo es requerido pero no se ha seleccionado una aeronave -->
+        <div *ngIf="addForm.get('tceAnv')?.invalid && addForm.get('tceAnv')?.touched" class="text-danger">
+            <span i18n="@@transaccion.tceAnv.error">Debe seleccionar una matrícula de aeronave.</span>
+        </div>
+        <!-- Mensaje si no hay aeronaves compatibles -->
+        <div *ngIf="aeronaves.length === 0 && showAeronaveField" class="text-info">
+            <span i18n="@@transaccion.tceAnv.noAeronaves">No hay aeronaves compatibles con el producto seleccionado.</span>
+        </div>
+    </div>
+
+    <!-- Botón de envío -->
     <input type="submit" i18n-value="@@transaccion.add.headline" value="Añadir Transaccion" class="btn btn-primary mt-4" />
 </form>
