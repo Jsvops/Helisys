@@ -1,12 +1,20 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, NavigationEnd } from '@angular/router'; // Asegúrate de importar NavigationEnd
+import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { TransaccionService } from 'app/transaccion/transaccion.service';
 import { TransaccionDTO } from 'app/transaccion/transaccion.model';
 import { TransaccionesProductoService } from 'app/transacciones-producto/transacciones-producto.service';
 import { TransaccionesProductoDTO } from 'app/transacciones-producto/transacciones-producto.model';
+import { ProductoService } from 'app/producto/producto.service';
+import { UsuarioService } from 'app/usuario/usuario.service';
+import { AeronaveService } from 'app/aeronave/aeronave.service';
+import { ProductoDTO } from 'app/producto/producto.model';
+import { UsuarioDTO } from 'app/usuario/usuario.model';
+import { AeronaveDTO } from 'app/aeronave/aeronave.model';
+import { TransaccionEventoService } from 'app/transaccion-evento/transaccion-evento.service';
+import { TransaccionEventoDTO } from 'app/transaccion-evento/transaccion-evento.model';
 
 @Component({
   selector: 'app-transaccion-combinada-list',
@@ -17,9 +25,21 @@ export class TransaccionCombinadaListComponent implements OnInit, OnDestroy {
 
   transaccionService = inject(TransaccionService);
   transaccionesProductoService = inject(TransaccionesProductoService);
+  productoService = inject(ProductoService);
+  usuarioService = inject(UsuarioService);
+  aeronaveService = inject(AeronaveService);
+  transaccionEventoService = inject(TransaccionEventoService);
   errorHandler = inject(ErrorHandler);
   router = inject(Router);
-  transaccionesCombinadas: (TransaccionDTO & TransaccionesProductoDTO)[] = [];
+
+  transaccionesCombinadas: (TransaccionDTO & TransaccionesProductoDTO & {
+    tcoProNombre: string,
+    tceUsrNombre: string,
+    tceAnvMatricula: string,
+    tcoUnidades: number,
+    tceTvoEvento: string
+  })[] = [];
+
   navigationSubscription?: Subscription;
 
   getMessage(key: string, details?: any) {
@@ -34,7 +54,7 @@ export class TransaccionCombinadaListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadData();
     this.navigationSubscription = this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) { // Asegúrate de que NavigationEnd esté disponible aquí
+      if (event instanceof NavigationEnd) {
         this.loadData();
       }
     });
@@ -45,14 +65,53 @@ export class TransaccionCombinadaListComponent implements OnInit, OnDestroy {
   }
 
   loadData() {
+    // Cargar todas las transacciones
     this.transaccionService.getAllTransacciones().subscribe({
       next: (transacciones) => {
-        this.transaccionesProductoService.getAllTransaccionesProductos().subscribe({
+        // Cargar todos los productos
+        this.productoService.getAllProductos().subscribe({
           next: (productos) => {
-            this.transaccionesCombinadas = transacciones.map(transaccion => ({
-              ...transaccion,
-              ...productos.find(producto => producto.tcoTce === transaccion.tceId)
-            }));
+            // Cargar todos los usuarios
+            this.usuarioService.getAllUsuarios().subscribe({
+              next: (usuarios) => {
+                // Cargar todas las aeronaves
+                this.aeronaveService.getAllAeronaves().subscribe({
+                  next: (aeronaves) => {
+                    // Cargar todas las transacciones de productos
+                    this.transaccionesProductoService.getAllTransaccionesProductos().subscribe({
+                      next: (transaccionesProducto) => {
+                        // Cargar todos los eventos de transacción
+                        this.transaccionEventoService.getAllTransaccionEventos().subscribe({
+                          next: (transaccionEventos) => {
+                            // Combinar transacciones con sus valores asociados
+                            this.transaccionesCombinadas = transacciones.map(transaccion => {
+                              const producto = productos.find(p => p.proId === transaccion.tceTvo); // Asumiendo que tceTvo es el ID del producto
+                              const usuario = usuarios.find(u => u.usrId === transaccion.tceUsr);
+                              const aeronave = aeronaves.find(a => a.anvId === transaccion.tceAnv);
+                              const transaccionProducto = transaccionesProducto.find(tp => tp.tcoTce === transaccion.tceId);
+                              const transaccionEvento = transaccionEventos.find(te => te.tvoId === transaccion.tceTvo);
+
+                              return {
+                                ...transaccion,
+                                tcoProNombre: producto?.proNumeroParte || 'N/A', // Usar proNumeroParte en lugar de proNombre
+                                tceUsrNombre: usuario?.usrNombre || 'N/A', // Nombre del usuario (o 'N/A' si no se encuentra)
+                                tceAnvMatricula: aeronave?.anvMatricula || 'N/A', // Matrícula de la aeronave (o 'N/A' si no se encuentra)
+                                tcoUnidades: transaccionProducto?.tcoUnidades || 0, // Unidades (o 0 si no se encuentra)
+                                tceTvoEvento: transaccionEvento?.tvoEvento || 'N/A' // Evento de transacción (o 'N/A' si no se encuentra)
+                              };
+                            });
+                          },
+                          error: (error) => this.errorHandler.handleServerError(error.error)
+                        });
+                      },
+                      error: (error) => this.errorHandler.handleServerError(error.error)
+                    });
+                  },
+                  error: (error) => this.errorHandler.handleServerError(error.error)
+                });
+              },
+              error: (error) => this.errorHandler.handleServerError(error.error)
+            });
           },
           error: (error) => this.errorHandler.handleServerError(error.error)
         });

@@ -1,0 +1,104 @@
+/* Estilos generales */
+.search-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  width: 98%; /* Ocupa casi toda la pantalla */
+  max-width: none; /* Sin límite de ancho máximo */
+  height: auto; /* Altura automática */
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Estilos para el formulario */
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 200px;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.form-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.search-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  align-self: flex-end;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilos para la tabla */
+.results-container {
+  margin-top: 20px;
+  overflow-x: auto; /* Scroll horizontal si la tabla es muy ancha */
+  max-height: 500px; /* Altura máxima de la tabla */
+  overflow-y: auto; /* Scroll vertical si hay muchos resultados */
+}
+
+.results-table {
+  width: 100%; /* Ocupa todo el ancho disponible */
+  border-collapse: collapse;
+}
+
+.results-table th, .results-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-size: 14px; /* Tamaño de fuente más pequeño */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+}
+
+.results-table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  color: #333;
+}
+
+.results-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.results-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Estilos para el mensaje de no resultados */
+.no-results {
+  text-align: center;
+  color: #666;
+  margin-top: 20px;
+  font-style: italic;
+}

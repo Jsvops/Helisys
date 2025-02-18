@@ -9,5 +9,6 @@ export class TransaccionDTO {
   tceObservaciones?: string|null;
   tceTvo?: number|null;
   tceUsr?: number|null;
+  tceAnv?: number|null;
 
 }

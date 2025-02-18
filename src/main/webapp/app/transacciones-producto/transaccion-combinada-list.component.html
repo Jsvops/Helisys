@@ -1,7 +1,7 @@
 <div class="d-flex flex-wrap mb-4">
     <h1 class="flex-grow-1" i18n="@@transaccion.list.headline">Transacciones Combinadas</h1>
     <div>
-        <a routerLink="/transacciones/add" class="btn btn-primary ms-2" i18n="@@transaccion.list.createNew">Create new Transaccion</a>
+        <a routerLink="/transaccion-combinada-add" class="btn btn-primary ms-2" i18n="@@transaccion.list.createNew">Crear una nueva Transaccion</a>
     </div>
 </div>
 
@@ -13,27 +13,26 @@
         <thead>
         <tr>
             <th scope="col" i18n="@@transaccion.tceId.label">Tce Id</th>
+            <th scope="col" i18n="@@transaccionesProducto.tcoPro.label">Pieza</th>
+            <th scope="col" i18n="@@transaccion.tceTvo.label">Movimiento</th>
+            <th scope="col" i18n="@@transaccionesProducto.tcoUnidades.label">Unidades</th>
+            <th scope="col" i18n="@@transaccion.tceUsr.label">Usuario</th>
             <th scope="col" i18n="@@transaccion.tceFechaTransaccion.label">Fecha Transaccion</th>
             <th scope="col" i18n="@@transaccion.tceObservaciones.label">Observaciones</th>
-            <th scope="col" i18n="@@transaccion.tceTvo.label">Estado</th>
-            <th scope="col" i18n="@@transaccion.tceUsr.label">Usuario</th>
-            <th scope="col" i18n="@@transaccionesProducto.tcoId.label">Producto Id</th>
-            <th scope="col" i18n="@@transaccionesProducto.tcoUnidades.label">Unidades</th>
-            <th scope="col" i18n="@@transaccionesProducto.tcoPro.label">Producto</th>
-            <th><!-- --></th>
+            <th scope="col" i18n="@@transaccion.tceAnv.label">Aeronave</th>
         </tr>
         </thead>
         <tbody>
         @for (transaccionCombinada of transaccionesCombinadas; track transaccionCombinada.tceId) {
         <tr>
             <td>{{ transaccionCombinada.tceId }}</td>
+            <td>{{ transaccionCombinada.tcoProNombre }}</td> <!-- Nombre del producto -->
+            <td>{{ transaccionCombinada.tceTvoEvento }}</td>
+            <td>{{ transaccionCombinada.tcoUnidades }}</td>
+            <td>{{ transaccionCombinada.tceUsrNombre }}</td> <!-- Nombre del usuario -->
             <td>{{ transaccionCombinada.tceFechaTransaccion }}</td>
             <td>{{ transaccionCombinada.tceObservaciones }}</td>
-            <td>{{ transaccionCombinada.tceTvo }}</td>
-            <td>{{ transaccionCombinada.tceUsr }}</td>
-            <td>{{ transaccionCombinada.tcoId }}</td>
-            <td>{{ transaccionCombinada.tcoUnidades }}</td>
-            <td>{{ transaccionCombinada.tcoPro }}</td>
+            <td>{{ transaccionCombinada.tceAnvMatricula }}</td> <!-- Matrícula de la aeronave -->
             <td>
                 <div class="float-end text-nowrap">
                     <a [routerLink]="['/transacciones/edit', transaccionCombinada.tceId]" class="btn btn-sm btn-secondary" i18n="@@transaccion.list.edit">Edit</a>

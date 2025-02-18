@@ -1,8 +1,10 @@
 <div class="d-flex flex-wrap mb-4">
     <h1 class="flex-grow-1" i18n="@@transaccion.add.headline">Transaccion</h1>
     <div>
-        <a routerLink="/transacciones" class="btn btn-secondary" i18n="@@transaccion.add.back">Back to list</a>
-        <button type="button" class="btn btn-info" (click)="openSearchModal()">Search</button>
+        <!-- Botón de Search -->
+        <button type="button" class="btn btn-info" (click)="openSearchModal()">Buscar</button>
+        <!-- Botón para ir a la lista de transacciones -->
+        <a routerLink="/transaccion-combinada-list" class="btn btn-secondary ml-2">Lista de transacciones</a>
     </div>
 </div>
 

@@ -142,4 +142,11 @@ public class ProductoService {
     public List<ProductViewDTO> findFilteredProducts(String partNumber, String name, String alterPartNumber) {
         return productoRepository.findProducts(partNumber, name, alterPartNumber);
     }
+
+    // Método para obtener las unidades disponibles de un producto
+    public int getUnidadesDisponibles(final Integer productoId) {
+        Producto producto = productoRepository.findById(productoId)
+            .orElseThrow(() -> new NotFoundException("Producto no encontrado con ID: " + productoId));
+        return producto.getProUnidades(); // Usamos el campo proUnidades
+    }
 }

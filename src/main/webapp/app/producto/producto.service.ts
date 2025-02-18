@@ -14,6 +14,14 @@ export class ProductoService {
   http = inject(HttpClient);
   resourcePath = environment.apiPath + '/api/productos';
 
+  // Método para obtener las unidades disponibles de un producto
+  getUnidadesDisponibles(productoId: number): Observable<number> {
+    const url = `${this.resourcePath}/${productoId}/unidades-disponibles`;
+    return this.http.get<number>(url);
+  }
+
+  // Métodos existentes...
+
   getAllProductos() {
     return this.http.get<ProductoDTO[]>(this.resourcePath);
   }
@@ -35,32 +43,37 @@ export class ProductoService {
   }
 
   getProTpoValues() {
-    return this.http.get<Record<string,string>>(this.resourcePath + '/proTpoValues')
-        .pipe(map(transformRecordToMap));
+    return this.http.get<Record<string, string>>(this.resourcePath + '/proTpoValues')
+      .pipe(map(transformRecordToMap));
   }
 
   getProAmcValues() {
-    return this.http.get<Record<string,string>>(this.resourcePath + '/proAmcValues')
-        .pipe(map(transformRecordToMap));
+    return this.http.get<Record<string, string>>(this.resourcePath + '/proAmcValues')
+      .pipe(map(transformRecordToMap));
   }
 
   getProMreValues() {
-    return this.http.get<Record<string,string>>(this.resourcePath + '/proMreValues')
-        .pipe(map(transformRecordToMap));
+    return this.http.get<Record<string, string>>(this.resourcePath + '/proMreValues')
+      .pipe(map(transformRecordToMap));
   }
 
   getProPveValues() {
-    return this.http.get<Record<string,string>>(this.resourcePath + '/proPveValues')
-        .pipe(map(transformRecordToMap));
+    return this.http.get<Record<string, string>>(this.resourcePath + '/proPveValues')
+      .pipe(map(transformRecordToMap));
   }
-// Método para buscar productos con filtros
 
-findFilteredProducts(partNumber?: string, name?: string, alterPartNumber?: string): Observable<ProductViewDTO[]> {
-  let params = new HttpParams();
-  if (partNumber) { params =
-    params.append('partNumber', partNumber);
-    } if (name){
+  // Método para buscar productos con filtros
+  findFilteredProducts(partNumber?: string, name?: string, alterPartNumber?: string): Observable<ProductViewDTO[]> {
+    let params = new HttpParams();
+    if (partNumber) {
+      params = params.append('partNumber', partNumber);
+    }
+    if (name) {
       params = params.append('name', name);
-       } if (alterPartNumber) { params = params.append('alterPartNumber', alterPartNumber);
-         } return this.http.get<ProductViewDTO[]>(`${this.resourcePath}/search`, { params }); }
+    }
+    if (alterPartNumber) {
+      params = params.append('alterPartNumber', alterPartNumber);
+    }
+    return this.http.get<ProductViewDTO[]>(`${this.resourcePath}/search`, { params });
+  }
 }

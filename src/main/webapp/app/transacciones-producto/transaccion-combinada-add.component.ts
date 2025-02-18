@@ -8,7 +8,9 @@ import { TransaccionService } from 'app/transaccion/transaccion.service';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { AuthService } from 'app/auth.service';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SearchComponent } from 'app/search/search.component';
+import { ProductoService } from 'app/producto/producto.service'; // Importar ProductoService
 
 @Component({
   selector: 'app-transaccion-combinada-add',
@@ -21,9 +23,11 @@ export class TransaccionCombinadaAddComponent implements OnInit {
   transaccionesProductoService = inject(TransaccionesProductoService);
   transaccionService = inject(TransaccionService);
   authService = inject(AuthService);
+  productoService = inject(ProductoService); // Inyectar ProductoService
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
   dialog = inject(MatDialog);
+  snackBar = inject(MatSnackBar);
 
   tceTvoValues?: Map<number, string>;
   tceUsrValues?: Map<number, string>;
@@ -39,11 +43,11 @@ export class TransaccionCombinadaAddComponent implements OnInit {
     tceObservaciones: new FormControl(null, [Validators.maxLength(500)]),
     tceTvo: new FormControl(null, [Validators.required]),
     tceUsr: new FormControl<number | null>({ value: null, disabled: true }, [Validators.required]),
-    tcoUnidades: new FormControl(null, [Validators.required]),
+    tcoUnidades: new FormControl(null, [Validators.required, Validators.min(1)]), // Validar que las unidades sean mayores que 0
     tcoPro: new FormControl(null, [Validators.required]),
     tcoTce: new FormControl({ value: null as number | null, disabled: true }, [Validators.required]),
     tceAnv: new FormControl(null) // Se agregará validador dinámicamente
-  }, { updateOn: 'change' }); // Cambia 'submit' por 'change'
+  }, { updateOn: 'change' });
 
   ngOnInit() {
     this.authService.getCurrentUserInfo().subscribe({
@@ -73,7 +77,6 @@ export class TransaccionCombinadaAddComponent implements OnInit {
     // Escuchar cambios en el campo tcoPro (producto)
     this.addForm.get('tcoPro')?.valueChanges.subscribe((proNumeroParte: string | null) => {
       if (proNumeroParte) {
-        // Obtener el pro_id correspondiente al pro_numero_parte
         const productoId = this.getProIdFromNumeroParte(proNumeroParte);
 
         if (productoId) {
@@ -81,16 +84,16 @@ export class TransaccionCombinadaAddComponent implements OnInit {
           this.transaccionService.getAeronavesCompatibles(productoId).subscribe({
             next: (aeronaves: { anvId: number, anvMatricula: string }[]) => {
               console.log('Aeronaves compatibles:', aeronaves);
-              this.aeronaves = aeronaves; // Actualizar la lista de aeronaves
+              this.aeronaves = aeronaves;
             },
             error: (error: any) => this.errorHandler.handleServerError(error)
           });
         } else {
           console.error('No se encontró el ID del producto para el número de parte:', proNumeroParte);
-          this.aeronaves = []; // Limpiar la lista si no se encuentra el ID
+          this.aeronaves = [];
         }
       } else {
-        this.aeronaves = []; // Limpiar la lista si no hay producto seleccionado
+        this.aeronaves = [];
       }
     });
 
@@ -104,7 +107,7 @@ export class TransaccionCombinadaAddComponent implements OnInit {
         tceAnvControl?.setValidators([Validators.required]);
       } else {
         tceAnvControl?.clearValidators();
-        tceAnvControl?.setValue(null); // Reiniciar valor si ya no es requerido
+        tceAnvControl?.setValue(null);
       }
       tceAnvControl?.updateValueAndValidity();
     });
@@ -116,7 +119,6 @@ export class TransaccionCombinadaAddComponent implements OnInit {
     return today.toISOString().split('T')[0];
   }
 
-  // Método para obtener el pro_id desde el pro_numero_parte
   getProIdFromNumeroParte(proNumeroParte: string): number | null {
     if (!this.tcoProValues) {
       console.error('tcoProValues no está definido');
@@ -134,18 +136,16 @@ export class TransaccionCombinadaAddComponent implements OnInit {
     return null;
   }
 
-  // Método para actualizar la lista de productos
   actualizarListaProductos() {
     this.transaccionesProductoService.getTcoProValues().subscribe({
       next: (data: Map<number, string>) => {
-        this.tcoProValues = data; // Actualizar la lista de productos
+        this.tcoProValues = data;
         console.log('Lista de productos actualizada:', this.tcoProValues);
       },
       error: (error: any) => this.errorHandler.handleServerError(error)
     });
   }
 
-  // Método handleSubmit con logs adicionales
   handleSubmit() {
     window.scrollTo(0, 0);
     this.addForm.markAllAsTouched();
@@ -153,6 +153,51 @@ export class TransaccionCombinadaAddComponent implements OnInit {
       return;
     }
 
+    const proNumeroParte = this.addForm.get('tcoPro')?.value!;
+    const productoId = this.getProIdFromNumeroParte(proNumeroParte);
+    const unidadesSolicitadas = this.addForm.get('tcoUnidades')?.value!;
+    const tipoTransaccion = this.addForm.get('tceTvo')?.value!;
+
+    if (!productoId) {
+      console.error('No se pudo obtener el ID del producto');
+      return;
+    }
+
+    // Verificar si es una transacción de baja
+    const esBaja = this.esTransaccionDeBaja(tipoTransaccion);
+
+    if (esBaja) {
+      // Verificar las unidades disponibles en el almacén solo si es una transacción de baja
+      this.productoService.getUnidadesDisponibles(productoId).subscribe({
+        next: (unidadesDisponibles: number) => {
+          if (unidadesDisponibles < unidadesSolicitadas) {
+            // Mostrar mensaje de error si no hay suficientes unidades
+            this.snackBar.open(`No hay suficientes unidades disponibles. Unidades disponibles: ${unidadesDisponibles}`, 'Cerrar', {
+              duration: 5000,
+            });
+            return;
+          }
+
+          this.procesarTransaccion(productoId, unidadesSolicitadas);
+        },
+        error: (error: any) => {
+          console.error('Error al obtener unidades disponibles:', error);
+          this.errorHandler.handleServerError(error);
+        }
+      });
+    } else {
+      // Si es una transacción de alta, proceder directamente
+      this.procesarTransaccion(productoId, unidadesSolicitadas);
+    }
+  }
+
+  esTransaccionDeBaja(tipoTransaccion: number): boolean {
+    // Valores de tceTvo que corresponden a transacciones de baja
+    const bajas = [4, 5, 6, 7, 8, 9];
+    return bajas.includes(tipoTransaccion);
+  }
+
+  procesarTransaccion(productoId: number, unidadesSolicitadas: number) {
     const transaccionData = {
       tceFechaTransaccion: this.addForm.get('tceFechaTransaccion')?.value!,
       tceObservaciones: this.addForm.get('tceObservaciones')?.value!,
@@ -168,17 +213,9 @@ export class TransaccionCombinadaAddComponent implements OnInit {
         this.currentTransactionId = response;
         this.addForm.patchValue({ tcoTce: this.currentTransactionId });
 
-        const proNumeroParte = this.addForm.get('tcoPro')?.value!;
-        const productoId = this.getProIdFromNumeroParte(proNumeroParte);
-
-        if (!productoId) {
-          console.error('No se pudo obtener el ID del producto');
-          return;
-        }
-
         const transaccionesProductoData = {
-          tcoUnidades: this.addForm.get('tcoUnidades')?.value!,
-          tcoPro: productoId, // Usar el ID del producto obtenido
+          tcoUnidades: unidadesSolicitadas,
+          tcoPro: productoId,
           tcoTce: this.currentTransactionId
         };
 
@@ -186,7 +223,7 @@ export class TransaccionCombinadaAddComponent implements OnInit {
 
         this.transaccionesProductoService.createTransaccionesProducto(transaccionesProductoData).subscribe({
           next: () => {
-            this.router.navigate(['/transaccionesProductos'], {
+            this.router.navigate(['//transaccion-combinada-list'], {
               state: { msgSuccess: 'Transacciones Producto fue creada exitosamente.' }
             });
           },
@@ -204,7 +241,12 @@ export class TransaccionCombinadaAddComponent implements OnInit {
   }
 
   openSearchModal() {
-    const dialogRef = this.dialog.open(SearchComponent, { width: '600px', data: {} });
+    const dialogRef = this.dialog.open(SearchComponent, {
+      width: '80vw', // Ajusta el ancho del diálogo
+      height: '50vh', // Ajusta la altura del diálogo
+      data: {}
+    });
     dialogRef.afterClosed().subscribe();
   }
-}
+
+ }

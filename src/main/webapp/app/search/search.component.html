@@ -1,50 +1,66 @@
-<div>
-    <h1>Search Products</h1>
-    <form (ngSubmit)="searchProducts()">
-        <label for="partNumber">Part Number:</label>
-        <input type="text" id="partNumber" [(ngModel)]="partNumber" name="partNumber"/>
+<div class="search-container">
+    <h1>Buscar pieza</h1>
 
-        <label for="name">Name:</label>
-        <input type="text" id="name" [(ngModel)]="name" name="name"/>
+    <!-- Formulario de búsqueda -->
+    <form class="search-form" (ngSubmit)="searchProducts()">
+        <div class="form-group">
+            <label for="partNumber">Número de parte:</label>
+            <input type="text" id="partNumber" [(ngModel)]="partNumber" name="partNumber" class="form-input" />
+        </div>
 
-        <label for="alterPartNumber">Alternate Part Number:</label>
-        <input type="text" id="alterPartNumber" [(ngModel)]="alterPartNumber" name="alterPartNumber"/>
+        <div class="form-group">
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" [(ngModel)]="name" name="name" class="form-input" />
+        </div>
 
-        <button type="submit">Search</button>
+        <div class="form-group">
+            <label for="alterPartNumber">Número de parte alterna:</label>
+            <input type="text" id="alterPartNumber" [(ngModel)]="alterPartNumber" name="alterPartNumber" class="form-input" />
+        </div>
+
+        <button type="submit" class="search-button">Buscar</button>
     </form>
 
-    <table *ngIf="products?.length">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Part Number</th>
-            <th>Name</th>
-            <th>Alternate Part Number</th>
-            <th>Serial Number</th>
-            <th>Units</th>
-            <th>Expiration Date</th>
-            <th>Document Type</th>
-            <th>Product Type</th>
-            <th>Combined Container</th>
-            <th>Aircraft Model</th>
-            <th>Supplier</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let product of products">
-            <td>{{ product.proId }}</td>
-            <td>{{ product.proNumeroParte }}</td>
-            <td>{{ product.proNombre }}</td>
-            <td>{{ product.proNumeroParteAlterno }}</td>
-            <td>{{ product.proNumeroSerie }}</td>
-            <td>{{ product.proUnidades }}</td>
-            <td>{{ product.proFechaVencimiento }}</td>
-            <td>{{ product.proTipoDocumento }}</td>
-            <td>{{ product.tipoProducto }}</td>
-            <td>{{ product.contenedorCombinado }}</td>
-            <td>{{ product.modeloAeronave }}</td>
-            <td>{{ product.proveedor }}</td>
-        </tr>
-        </tbody>
-    </table>
+    <!-- Tabla de resultados -->
+    <div *ngIf="products?.length" class="results-container">
+        <table class="results-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Part Number</th>
+                <th>Name</th>
+                <th>Alternate Part Number</th>
+                <th>Serial Number</th>
+                <th>Units</th>
+                <th>Expiration Date</th>
+                <th>Document Type</th>
+                <th>Product Type</th>
+                <th>Combined Container</th>
+                <th>Aircraft Model</th>
+                <th>Supplier</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let product of products">
+                <td>{{ product.proId }}</td>
+                <td>{{ product.proNumeroParte }}</td>
+                <td>{{ product.proNombre }}</td>
+                <td>{{ product.proNumeroParteAlterno }}</td>
+                <td>{{ product.proNumeroSerie }}</td>
+                <td>{{ product.proUnidades }}</td>
+                <td>{{ product.proFechaVencimiento }}</td>
+                <td>{{ product.proTipoDocumento }}</td>
+                <td>{{ product.tipoProducto }}</td>
+                <td>{{ product.contenedorCombinado }}</td>
+                <td>{{ product.modeloAeronave }}</td>
+                <td>{{ product.proveedor }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mensaje de no resultados -->
+    <div *ngIf="searchPerformed && (!products || products.length === 0)">
+        <p class="no-results">No se encontraron resultados.</p>
+    </div>
 </div>
