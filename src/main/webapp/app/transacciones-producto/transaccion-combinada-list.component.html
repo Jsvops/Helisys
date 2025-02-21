@@ -5,8 +5,23 @@
     </div>
 </div>
 
+<!-- Filtro de fecha -->
+<div class="mb-4">
+    <label for="filtroAnio" class="me-2">Año:</label>
+    <input type="number" id="filtroAnio" [(ngModel)]="filtroAnio" placeholder="Año" class="me-2" />
+
+    <label for="filtroMes" class="me-2">Mes:</label>
+    <input type="number" id="filtroMes" [(ngModel)]="filtroMes" placeholder="Mes" min="1" max="12" class="me-2" />
+
+    <label for="filtroDia" class="me-2">Día:</label>
+    <input type="number" id="filtroDia" [(ngModel)]="filtroDia" placeholder="Día" min="1" max="31" class="me-2" />
+
+    <button (click)="aplicarFiltro()" class="btn btn-secondary me-2">Aplicar Filtro</button>
+    <button (click)="limpiarFiltro()" class="btn btn-secondary">Limpiar Filtro</button>
+</div>
+
 @if (!transaccionesCombinadas || transaccionesCombinadas.length === 0) {
-<div i18n="@@transaccion.list.empty">No Transacciones could be found.</div>
+<div i18n="@@transaccion.list.empty">No se encontraron transacciones.</div>
 } @else {
 <div class="table-responsive">
     <table class="table table-striped table-hover align-middle">
@@ -20,23 +35,27 @@
             <th scope="col" i18n="@@transaccion.tceFechaTransaccion.label">Fecha Transaccion</th>
             <th scope="col" i18n="@@transaccion.tceObservaciones.label">Observaciones</th>
             <th scope="col" i18n="@@transaccion.tceAnv.label">Aeronave</th>
+            <th scope="col" i18n="@@transaccion.list.actions">Acciones</th>
         </tr>
         </thead>
         <tbody>
-        @for (transaccionCombinada of transaccionesCombinadas; track transaccionCombinada.tceId) {
+        @for (transaccionCombinada of transaccionesFiltradas; track transaccionCombinada.tceId) {
         <tr>
             <td>{{ transaccionCombinada.tceId }}</td>
-            <td>{{ transaccionCombinada.tcoProNombre }}</td> <!-- Nombre del producto -->
+            <td>{{ transaccionCombinada.tcoProNombre }}</td>
             <td>{{ transaccionCombinada.tceTvoEvento }}</td>
             <td>{{ transaccionCombinada.tcoUnidades }}</td>
-            <td>{{ transaccionCombinada.tceUsrNombre }}</td> <!-- Nombre del usuario -->
-            <td>{{ transaccionCombinada.tceFechaTransaccion }}</td>
+            <td>{{ transaccionCombinada.tceUsrNombre }}</td>
+            <td>{{ transaccionCombinada.tceFechaTransaccion | date: 'yyyy-MM-dd' }}</td>
             <td>{{ transaccionCombinada.tceObservaciones }}</td>
-            <td>{{ transaccionCombinada.tceAnvMatricula }}</td> <!-- Matrícula de la aeronave -->
+            <td>{{ transaccionCombinada.tceAnvMatricula }}</td>
             <td>
                 <div class="float-end text-nowrap">
-                    <a [routerLink]="['/transacciones/edit', transaccionCombinada.tceId]" class="btn btn-sm btn-secondary" i18n="@@transaccion.list.edit">Edit</a>
-                    <button type="button" (click)="confirmDelete(transaccionCombinada.tceId!)" class="btn btn-sm btn-secondary" i18n="@@transaccion.list.delete">Delete</button>
+                    <a [routerLink]="['/transaccion-combinada-edit', transaccionCombinada.tceId, transaccionCombinada.tcoId]"
+                       class="btn btn-sm btn-secondary" i18n="@@transaccion.list.edit"
+                       (click)="logIds(transaccionCombinada.tceId, transaccionCombinada.tcoId)">Editar</a>
+                    <button type="button" (click)="confirmDelete(transaccionCombinada.tceId!)"
+                            class="btn btn-sm btn-secondary" i18n="@@transaccion.list.delete">Eliminar</button>
                 </div>
             </td>
         </tr>

@@ -43,11 +43,10 @@ import { TransaccionesProductoListComponent } from './transacciones-producto/tra
 import { TransaccionesProductoAddComponent } from './transacciones-producto/transacciones-producto-add.component';
 import { TransaccionesProductoEditComponent } from './transacciones-producto/transacciones-producto-edit.component';
 import { SearchComponent } from './search/search.component';
-import { TransaccionCombinadaAddComponent} from './transacciones-producto/transaccion-combinada-add.component';
+import { TransaccionCombinadaAddComponent } from './transacciones-producto/transaccion-combinada-add.component';
 import { TransaccionCombinadaListComponent } from './transacciones-producto/transaccion-combinada-list.component';
+import { TransaccionCombinadaEditComponent } from './transacciones-producto/transaccion-combinada-edit.component'; // Asegúrate de importar el componente
 import { ErrorComponent } from './error/error.component';
-
-
 
 export const routes: Routes = [
   {
@@ -266,17 +265,24 @@ export const routes: Routes = [
     title: $localize`:@@transaccionesProducto.edit.headline:Edit Transacciones Producto`
   },
   {
-  path: 'search',
-  component: SearchComponent,
-  title:`SearchProducts`
+    path: 'search',
+    component: SearchComponent,
+    title: `SearchProducts`
   },
   {
-  path: 'transaccion-combinada-add',
-  component: TransaccionCombinadaAddComponent
+    path: 'transaccion-combinada-add',
+    component: TransaccionCombinadaAddComponent,
+    title: $localize`:@@transaccionCombinada.add.headline:Add Transacción Combinada`
   },
   {
     path: 'transaccion-combinada-list',
-    component: TransaccionCombinadaListComponent
+    component: TransaccionCombinadaListComponent,
+    title: $localize`:@@transaccionCombinada.list.headline:Lista de Transacciones Combinadas`
+  },
+  {
+    path: 'transaccion-combinada-edit/:tceId/:tcoId',
+    component: TransaccionCombinadaEditComponent,
+    title: $localize`:@@transaccionCombinada.edit.headline:Edit Transacción Combinada`
   },
   {
     path: 'error',
@@ -288,5 +294,4 @@ export const routes: Routes = [
     component: ErrorComponent,
     title: $localize`:@@notFound.headline:Page not found`
   }
-
 ];

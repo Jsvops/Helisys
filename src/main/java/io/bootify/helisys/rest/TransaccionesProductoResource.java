@@ -9,6 +9,8 @@ import io.bootify.helisys.service.TransaccionesProductoService;
 import io.bootify.helisys.util.CustomCollectors;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Sort;
@@ -86,9 +88,15 @@ public class TransaccionesProductoResource {
 
     @GetMapping("/tcoTceValues")
     public ResponseEntity<Map<Integer, String>> getTcoTceValues() {
-        return ResponseEntity.ok(transaccionRepository.findAll(Sort.by("tceId"))
-                .stream()
-                .collect(CustomCollectors.toSortedMap(Transaccion::getTceId, Transaccion::getTceObservaciones)));
-    }
+        List<Transaccion> transacciones = transaccionRepository.findAll(Sort.by("tceId"));
+        Map<Integer, String> result = new HashMap<>();
 
+        for (Transaccion transaccion : transacciones) {
+            if (transaccion.getTceId() != null && transaccion.getTceObservaciones() != null) {
+                result.put(transaccion.getTceId(), transaccion.getTceObservaciones());
+            }
+        }
+
+        return ResponseEntity.ok(result);
+    }
 }
