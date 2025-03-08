@@ -46,6 +46,7 @@ import { SearchComponent } from './search/search.component';
 import { TransaccionCombinadaAddComponent } from './transacciones-producto/transaccion-combinada-add.component';
 import { TransaccionCombinadaListComponent } from './transacciones-producto/transaccion-combinada-list.component';
 import { TransaccionCombinadaEditComponent } from './transacciones-producto/transaccion-combinada-edit.component'; // Asegúrate de importar el componente
+import { AlmacenCombinadoAddComponent } from './almacen-contenedor/almacen-combinado-add.component'; // Importa el nuevo componente
 import { ErrorComponent } from './error/error.component';
 
 export const routes: Routes = [
@@ -283,6 +284,11 @@ export const routes: Routes = [
     path: 'transaccion-combinada-edit/:tceId/:tcoId',
     component: TransaccionCombinadaEditComponent,
     title: $localize`:@@transaccionCombinada.edit.headline:Edit Transacción Combinada`
+  },
+  {
+    path: 'almacen-combinado-add', // Nueva ruta para AlmacenCombinadoAddComponent
+    component: AlmacenCombinadoAddComponent,
+    title: $localize`:@@almacenCombinado.add.headline:Add Almacen Combinado`
   },
   {
     path: 'error',

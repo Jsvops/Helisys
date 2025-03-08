@@ -1,0 +1,20 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@almacenCombinado.add.headline">Add Almacen Combinado</h1>
+    <div>
+        <a routerLink="/almacenCombinados" class="btn btn-secondary" i18n="@@almacenCombinado.add.back">Back to list</a>
+    </div>
+</div>
+
+<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+    <!-- Campo para AlmacenEstante -->
+    <app-input-row [group]="addForm" field="amtDescripcion" i18n-label="@@almacenEstante.amtDescripcion.label" label="Descripción del Estante" />
+
+    <!-- Campo para AlmacenRepisa -->
+    <app-input-row [group]="addForm" field="amrNombre" i18n-label="@@almacenRepisa.amrNombre.label" label="Nombre de la Repisa" />
+
+    <!-- Campo para AlmacenContenedor -->
+    <app-input-row [group]="addForm" field="amcNumero" i18n-label="@@almacenContenedor.amcNumero.label" label="Número del Contenedor" />
+
+    <!-- Botón de envío -->
+    <input type="submit" i18n-value="@@almacenCombinado.add.headline" value="Add Almacen Combinado" class="btn btn-primary mt-4" />
+</form>

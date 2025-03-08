@@ -7,6 +7,7 @@ import io.bootify.helisys.domain.Producto;
 import io.bootify.helisys.domain.Proveedor;
 import io.bootify.helisys.domain.TipoProducto;
 import io.bootify.helisys.domain.TransaccionesProducto;
+import io.bootify.helisys.model.AlmacenCombinadoDTO;
 import io.bootify.helisys.model.ProductViewDTO;
 import io.bootify.helisys.model.ProductoDTO;
 import io.bootify.helisys.repos.AlmacenContenedorRepository;
@@ -148,5 +149,9 @@ public class ProductoService {
         Producto producto = productoRepository.findById(productoId)
             .orElseThrow(() -> new NotFoundException("Producto no encontrado con ID: " + productoId));
         return producto.getProUnidades(); // Usamos el campo proUnidades
+    }
+
+    public List<AlmacenCombinadoDTO> getAlmacenCombinado() {
+        return almacenContenedorRepository.findAllAlmacenCombinado();
     }
 }

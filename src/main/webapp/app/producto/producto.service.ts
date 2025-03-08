@@ -5,6 +5,7 @@ import { ProductoDTO } from 'app/producto/producto.model';
 import { map, Observable } from 'rxjs';
 import { transformRecordToMap } from 'app/common/utils';
 import { ProductViewDTO } from 'app/producto/product-view.dto'; // Asegúrate de tener este modelo definido
+import { AlmacenCombinadoDTO } from 'app/almacen-combinado/almacen-combinado.model'; // Importa el modelo
 
 @Injectable({
   providedIn: 'root',
@@ -76,4 +77,9 @@ export class ProductoService {
     }
     return this.http.get<ProductViewDTO[]>(`${this.resourcePath}/search`, { params });
   }
+
+  getAlmacenCombinado(): Observable<AlmacenCombinadoDTO[]> {
+  return this.http.get<AlmacenCombinadoDTO[]>('/api/productos/almacen-combinado');
+  }
+
 }

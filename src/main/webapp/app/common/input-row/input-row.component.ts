@@ -4,7 +4,6 @@ import { AbstractControl, FormGroup, ReactiveFormsModule, Validators } from '@an
 import { InputErrorsComponent } from 'app/common/input-row/input-errors.component';
 import flatpickr from 'flatpickr';
 
-
 @Component({
   selector: 'app-input-row',
   templateUrl: './input-row.component.html',
@@ -25,16 +24,16 @@ export class InputRowComponent implements AfterViewInit, OnChanges, OnInit {
   inputClass = '';
 
   @Input()
-  options?: Record<string,string>|Map<number,string>;
+  options?: Record<string, string> | Map<number, string>; // Acepta un Map o un Record
 
   @Input({ required: true })
   label = '';
 
   @Input()
-  datepicker?: 'datepicker'|'timepicker'|'datetimepicker';
+  datepicker?: 'datepicker' | 'timepicker' | 'datetimepicker';
 
   control?: AbstractControl;
-  optionsMap?: Map<string|number,string>;
+  optionsMap?: Map<string | number, string>; // Mapa para almacenar las opciones
 
   elRef = inject(ElementRef);
 
@@ -44,8 +43,10 @@ export class InputRowComponent implements AfterViewInit, OnChanges, OnInit {
 
   ngOnChanges() {
     if (!this.options || this.options instanceof Map) {
+      // Si options es un Map o no está definido, lo asignamos directamente
       this.optionsMap = this.options;
     } else {
+      // Si options es un Record, lo convertimos a un Map
       this.optionsMap = new Map(Object.entries(this.options));
     }
   }
@@ -77,7 +78,7 @@ export class InputRowComponent implements AfterViewInit, OnChanges, OnInit {
     if (!this.datepicker) {
       return;
     }
-    const flatpickrConfig:any = {
+    const flatpickrConfig: any = {
       allowInput: true,
       time_24hr: true,
       enableSeconds: true
@@ -94,7 +95,7 @@ export class InputRowComponent implements AfterViewInit, OnChanges, OnInit {
       flatpickrConfig.altFormat = 'Y-m-d H:i:S';
       flatpickrConfig.dateFormat = 'Y-m-dTH:i:S';
       // workaround label issue
-      flatpickrConfig.onReady = function() {
+      flatpickrConfig.onReady = function () {
         const id = this.input.id;
         this.input.id = null;
         this.altInput.id = id;
@@ -107,6 +108,7 @@ export class InputRowComponent implements AfterViewInit, OnChanges, OnInit {
       flatpicker.setDate(val);
     });
   }
+
   // Método para verificar si el campo es tcoTce
   isTcoTceField(): boolean { return this.field === 'tcoTce'; }
 }

@@ -4,6 +4,7 @@ import io.bootify.helisys.domain.AlmacenContenedor;
 import io.bootify.helisys.domain.ModeloAeronave;
 import io.bootify.helisys.domain.Proveedor;
 import io.bootify.helisys.domain.TipoProducto;
+import io.bootify.helisys.model.AlmacenCombinadoDTO;
 import io.bootify.helisys.model.ProductViewDTO;
 import io.bootify.helisys.model.ProductoDTO;
 import io.bootify.helisys.repos.AlmacenContenedorRepository;
@@ -130,4 +131,10 @@ public class ProductoResource {
             .stream()
             .collect(CustomCollectors.toSortedMap(Proveedor::getPveId, Proveedor::getPveNombre)));
     }
+    @GetMapping("/almacen-combinado")
+    public ResponseEntity<List<AlmacenCombinadoDTO>> getAlmacenCombinado() {
+        List<AlmacenCombinadoDTO> datosCombinados = productoService.getAlmacenCombinado();
+        return ResponseEntity.ok(datosCombinados);
+    }
+
 }

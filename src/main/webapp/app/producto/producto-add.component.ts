@@ -6,7 +6,7 @@ import { InputRowComponent } from 'app/common/input-row/input-row.component';
 import { ProductoService } from 'app/producto/producto.service';
 import { ProductoDTO } from 'app/producto/producto.model';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
-
+import { AlmacenCombinadoDTO } from 'app/almacen-combinado/almacen-combinado.model'; // Importa el modelo
 
 @Component({
   selector: 'app-producto-add',
@@ -19,10 +19,10 @@ export class ProductoAddComponent implements OnInit {
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
 
-  proTpoValues?: Map<number,string>;
-  proAmcValues?: Map<number,string>;
-  proMreValues?: Map<number,string>;
-  proPveValues?: Map<number,string>;
+  proTpoValues?: Map<number, string>;
+  proAmcValues?: Map<number, string>; // Mantenemos el tipo Map
+  proMreValues?: Map<number, string>;
+  proPveValues?: Map<number, string>;
 
   addForm = new FormGroup({
     proNumeroParte: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
@@ -47,25 +47,39 @@ export class ProductoAddComponent implements OnInit {
 
   ngOnInit() {
     this.productoService.getProTpoValues()
-        .subscribe({
-          next: (data) => this.proTpoValues = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
-    this.productoService.getProAmcValues()
-        .subscribe({
-          next: (data) => this.proAmcValues = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+      .subscribe({
+        next: (data) => this.proTpoValues = data,
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
+
     this.productoService.getProMreValues()
-        .subscribe({
-          next: (data) => this.proMreValues = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+      .subscribe({
+        next: (data) => this.proMreValues = data,
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
+
     this.productoService.getProPveValues()
-        .subscribe({
-          next: (data) => this.proPveValues = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+      .subscribe({
+        next: (data) => this.proPveValues = data,
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
+
+    // Cargar los datos combinados para proAmc
+    this.productoService.getAlmacenCombinado()
+      .subscribe({
+        next: (data) => {
+          console.log('Datos combinados recibidos:', data);
+
+          // Convertir los datos a un Map
+          this.proAmcValues = new Map(data.map(item => [item.amcId, item.descripcionCombinada]));
+
+          console.log('Valores de proAmcValues:', this.proAmcValues);
+        },
+        error: (error) => {
+          console.error('Error al cargar datos combinados:', error);
+          this.errorHandler.handleServerError(error.error);
+        }
+      });
   }
 
   handleSubmit() {
@@ -76,14 +90,13 @@ export class ProductoAddComponent implements OnInit {
     }
     const data = new ProductoDTO(this.addForm.value);
     this.productoService.createProducto(data)
-        .subscribe({
-          next: () => this.router.navigate(['/productos'], {
-            state: {
-              msgSuccess: this.getMessage('created')
-            }
-          }),
-          error: (error) => this.errorHandler.handleServerError(error.error, this.addForm, this.getMessage)
-        });
+      .subscribe({
+        next: () => this.router.navigate(['/productos'], {
+          state: {
+            msgSuccess: this.getMessage('created')
+          }
+        }),
+        error: (error) => this.errorHandler.handleServerError(error.error, this.addForm, this.getMessage)
+      });
   }
-
 }

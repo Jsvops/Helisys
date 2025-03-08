@@ -4,17 +4,41 @@
         <a routerLink="/productos" class="btn btn-secondary" i18n="@@producto.add.back">Back to list</a>
     </div>
 </div>
+
 <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+    <!-- Campo: Número de parte -->
     <app-input-row [group]="addForm" field="proNumeroParte" i18n-label="@@producto.proNumeroParte.label" label="Pro Numero Parte" />
+
+    <!-- Campo: Nombre -->
     <app-input-row [group]="addForm" field="proNombre" i18n-label="@@producto.proNombre.label" label="Pro Nombre" />
+
+    <!-- Campo: Número de parte alterno -->
     <app-input-row [group]="addForm" field="proNumeroParteAlterno" i18n-label="@@producto.proNumeroParteAlterno.label" label="Pro Numero Parte Alterno" />
+
+    <!-- Campo: Número de serie -->
     <app-input-row [group]="addForm" field="proNumeroSerie" i18n-label="@@producto.proNumeroSerie.label" label="Pro Numero Serie" />
+
+    <!-- Campo: Unidades -->
     <app-input-row [group]="addForm" field="proUnidades" rowType="number" i18n-label="@@producto.proUnidades.label" label="Pro Unidades" />
+
+    <!-- Campo: Fecha de vencimiento -->
     <app-input-row [group]="addForm" field="proFechaVencimiento" datepicker="datepicker" i18n-label="@@producto.proFechaVencimiento.label" label="Pro Fecha Vencimiento" />
+
+    <!-- Campo: Tipo de documento -->
     <app-input-row [group]="addForm" field="proTipoDocumento" i18n-label="@@producto.proTipoDocumento.label" label="Pro Tipo Documento" />
+
+    <!-- Campo: Tipo de producto (proTpo) -->
     <app-input-row [group]="addForm" field="proTpo" rowType="select" [options]="proTpoValues" i18n-label="@@producto.proTpo.label" label="Pro Tpo" />
+
+    <!-- Campo: Almacén combinado (proAmc) -->
+
     <app-input-row [group]="addForm" field="proAmc" rowType="select" [options]="proAmcValues" i18n-label="@@producto.proAmc.label" label="Pro Amc" />
+    <!-- Campo: Marca (proMre) -->
     <app-input-row [group]="addForm" field="proMre" rowType="select" [options]="proMreValues" i18n-label="@@producto.proMre.label" label="Pro Mre" />
+
+    <!-- Campo: Proveedor (proPve) -->
     <app-input-row [group]="addForm" field="proPve" rowType="select" [options]="proPveValues" i18n-label="@@producto.proPve.label" label="Pro Pve" />
+
+    <!-- Botón de envío -->
     <input type="submit" i18n-value="@@producto.add.headline" value="Add Producto" class="btn btn-primary mt-4" />
 </form>
