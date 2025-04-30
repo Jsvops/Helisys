@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Reporte de Transacciones</title>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 20mm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px; /* Espacio entre tablas */
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .page-break {
+            page-break-before: always; /* Fuerza un salto de página */
+        }
+        th.pieza, td.pieza {
+        width: 20%; /* Puedes ajustar este porcentaje según lo necesites */
+        word-wrap: break-word; /* Rompe palabras largas si es necesario */
+        }
+        /* Añade estas reglas para sobrescribir la alineación cuando se use text-center */
+        .text-center {
+            text-align: center !important;
+        }
+    </style>
+</head>
+<body>
+<h1>Reporte de Transacciones</h1>
+<p>Fecha de inicio: <span th:text="${fechaInicio}"></span></p>
+<p>Fecha de fin: <span th:text="${fechaFin}"></span></p>
+
+<!-- Iterar sobre cada grupo de 7 transacciones -->
+<div th:each="pagina, iterStat : ${transaccionesPaginadas}">
+    <table>
+        <thead>
+        <tr>
+            <th class="pieza text-center">Pieza</th> <!-- Se asigna la clase "pieza" -->
+            <th class="text-center">Movimiento</th>
+            <th class="text-center">Unidades</th>
+            <th class="text-center">Usuario</th>
+            <th class="text-center">Fecha Transacción</th>
+            <th class="text-center">Observaciones</th>
+            <th class="text-center">Aeronave</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="transaccion : ${pagina}">
+            <td class="pieza text-center" th:text="${transaccion['tcoProNombre']}"></td> <!-- Se asigna la clase "pieza" -->
+            <td class="text-center" th:text="${transaccion['tceTvoEvento']}"></td>
+            <td class="text-center" th:text="${transaccion['tcoUnidades']}"></td>
+            <td class="text-center" th:text="${transaccion['tceUsrNombre']}"></td>
+            <td class="text-center" th:text="${transaccion['tceFechaTransaccion'] != null ? #dates.format(transaccion['tceFechaTransaccion'], 'yyyy-MM-dd') : 'N/A'}"></td>
+            <td class="text-center" th:text="${transaccion['tceObservaciones']}"></td>
+            <td class="text-center" th:text="${transaccion['tceAnvMatricula']}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Agregar salto de página después de cada grupo, excepto en la última página -->
+    <div th:if="${!iterStat.last}" class="page-break"></div>
+</div>
+
+</body>
+</html>

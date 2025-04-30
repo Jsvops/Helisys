@@ -1,22 +1,18 @@
 package io.bootify.helisys.service;
 
-import io.bootify.helisys.domain.Aeronave;
-import io.bootify.helisys.domain.Transaccion;
-import io.bootify.helisys.domain.TransaccionEvento;
-import io.bootify.helisys.domain.TransaccionesProducto;
-import io.bootify.helisys.domain.Usuario;
+import io.bootify.helisys.domain.*;
 import io.bootify.helisys.model.TransaccionDTO;
-import io.bootify.helisys.repos.AeronaveRepository;
-import io.bootify.helisys.repos.TransaccionEventoRepository;
-import io.bootify.helisys.repos.TransaccionRepository;
-import io.bootify.helisys.repos.TransaccionesProductoRepository;
-import io.bootify.helisys.repos.UsuarioRepository;
+import io.bootify.helisys.repos.*;
 import io.bootify.helisys.util.NotFoundException;
 import io.bootify.helisys.util.ReferencedWarning;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TransaccionService {
@@ -44,6 +40,21 @@ public class TransaccionService {
         return transacciones.stream()
             .map(transaccion -> mapToDTO(transaccion, new TransaccionDTO()))
             .toList();
+    }
+
+    public List<Map<String, Object>> getTransaccionesByFecha(LocalDate fechaInicio, LocalDate fechaFin) {
+        List<Map<String, Object>> transacciones = transaccionRepository.findTransaccionesCombinadasByFecha(fechaInicio, fechaFin);
+
+        // Convertir LocalDate a Date
+        transacciones.forEach(transaccion -> {
+            LocalDate fechaLocalDate = (LocalDate) transaccion.get("tceFechaTransaccion");
+            if (fechaLocalDate != null) {
+                Date fechaDate = Date.from(fechaLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                transaccion.put("tceFechaTransaccion", fechaDate);
+            }
+        });
+
+        return transacciones;
     }
 
     public TransaccionDTO get(final Integer tceId) {

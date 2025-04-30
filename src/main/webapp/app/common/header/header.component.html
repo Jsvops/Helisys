@@ -2,7 +2,7 @@
     <div class="container">
         <nav class="navbar navbar-light navbar-expand-md">
             <a routerLink="/" class="navbar-brand">
-                <img ngSrc="logo.png" i18n-alt="@@app.title" alt="Helisys" width="30" height="30" class="d-inline-block align-top">
+                <img ngSrc="diablos_rojos.png" i18n-alt="@@app.title" alt="Helisys" width="30" height="30" class="d-inline-block align-top">
                 <span class="ps-1" i18n="@@app.title">Helisys</span>
             </a>
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggle"
@@ -10,28 +10,22 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarToggle">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="navbar-item">
-                        <a routerLink="/" class="nav-link" i18n="@@navigation.home">Home</a>
+                        <a routerLink="/" class="nav-link" i18n="@@navigation.home">Inicio</a>
                     </li>
                     <li class="navbar-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarEntitiesLink" role="button"
-                           aria-expanded="false" i18n="@@navigation.entities">Entities</a>
+                           aria-expanded="false" i18n="@@navigation.entities">Menú</a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarEntitiesLink">
+                            <li><a routerLink="/producto-aeronave-add" class="dropdown-item" i18n="@@productoAeronave.add.headline">Piezas</a></li>
+                            <li><a routerLink="/transaccion-combinada-add" class="dropdown-item" i18n="@@transaccion-combinada-add.headline">Transacciones</a></li>
                             <li><a routerLink="/modeloAeronaves" class="dropdown-item" i18n="@@modeloAeronave.list.headline">Modelo Aeronaves</a></li>
                             <li><a routerLink="/aeronaves" class="dropdown-item" i18n="@@aeronave.list.headline">Aeronaves</a></li>
-                            <li><a routerLink="/almacenEstantes" class="dropdown-item" i18n="@@almacenEstante.list.headline">Almacen Estantes</a></li>
-                            <li><a routerLink="/almacenRepisas" class="dropdown-item" i18n="@@almacenRepisa.list.headline">Almacen Repisas</a></li>
-                            <li><a routerLink="/almacenContenedores" class="dropdown-item" i18n="@@almacenContenedor.list.headline">Almacen Contenedores</a></li>
                             <li><a routerLink="/proveedores" class="dropdown-item" i18n="@@proveedor.list.headline">Proveedores</a></li>
                             <li><a routerLink="/pedidosCompras" class="dropdown-item" i18n="@@pedidosCompra.list.headline">Pedidos Compras</a></li>
-                            <li><a routerLink="/tipoProductos" class="dropdown-item" i18n="@@tipoProducto.list.headline">Tipo Productos</a></li>
-                            <li><a routerLink="/productos" class="dropdown-item" i18n="@@producto.list.headline">Productos</a></li>
                             <li><a routerLink="/pedidosProductos" class="dropdown-item" i18n="@@pedidosProducto.list.headline">Pedidos Productos</a></li>
-                            <li><a routerLink="/transaccionEventos" class="dropdown-item" i18n="@@transaccionEvento.list.headline">Transaccion Eventos</a></li>
                             <li><a routerLink="/usuarios" class="dropdown-item" i18n="@@usuario.list.headline">Usuarios</a></li>
-                            <li><a routerLink="/transacciones" class="dropdown-item" i18n="@@transaccion.list.headline">Transacciones</a></li>
-                            <li><a routerLink="/transaccionesProductos" class="dropdown-item" i18n="@@transaccionesProducto.list.headline">Transacciones Productos</a></li>
                         </ul>
                     </li>
                     <!-- Mostrar el nombre del usuario en la parte derecha del menú -->

@@ -8,8 +8,8 @@ import { MatDialogRef } from '@angular/material/dialog';
   selector: 'app-confirm-dialog',
   standalone: true, // Asegúrate de que sea standalone
   imports: [MatDialogModule, MatButtonModule, MatInputModule], // Importa los módulos aquí
-  templateUrl: './confirm-dialog.component.html',
-  styleUrls: ['./confirm-dialog.component.css']
+  templateUrl: './confirm-dialog.component.html'
+
 })
 export class ConfirmDialogComponent {
 

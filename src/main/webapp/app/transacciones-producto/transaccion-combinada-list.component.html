@@ -1,23 +1,29 @@
 <div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@transaccion.list.headline">Transacciones Combinadas</h1>
+    <h1 class="flex-grow-1" i18n="@@transaccion.list.headline">Lista de Transacciones</h1>
     <div>
-        <a routerLink="/transaccion-combinada-add" class="btn btn-primary ms-2" i18n="@@transaccion.list.createNew">Crear una nueva Transaccion</a>
+        <a routerLink="/transaccion-combinada-add" class="btn btn-primary ms-2" i18n="@@transaccion.list.createNew">
+            Agregar una nueva Transacción
+        </a>
+        <button (click)="generarReportePdf()" class="btn btn-primary ms-2">
+            Generar Reporte PDF
+        </button>
     </div>
 </div>
 
-<!-- Filtro de fecha -->
+<!-- Selector de rango de fechas -->
 <div class="mb-4">
-    <label for="filtroAnio" class="me-2">Año:</label>
-    <input type="number" id="filtroAnio" [(ngModel)]="filtroAnio" placeholder="Año" class="me-2" />
+    <mat-form-field appearance="fill">
+        <mat-label>Seleccione un rango de fechas</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate [(ngModel)]="fechaInicio" placeholder="Fecha de inicio" />
+            <input matEndDate [(ngModel)]="fechaFin" placeholder="Fecha de fin" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker class="custom-datepicker"></mat-date-range-picker>
+    </mat-form-field>
 
-    <label for="filtroMes" class="me-2">Mes:</label>
-    <input type="number" id="filtroMes" [(ngModel)]="filtroMes" placeholder="Mes" min="1" max="12" class="me-2" />
-
-    <label for="filtroDia" class="me-2">Día:</label>
-    <input type="number" id="filtroDia" [(ngModel)]="filtroDia" placeholder="Día" min="1" max="31" class="me-2" />
-
-    <button (click)="aplicarFiltro()" class="btn btn-secondary me-2">Aplicar Filtro</button>
-    <button (click)="limpiarFiltro()" class="btn btn-secondary">Limpiar Filtro</button>
+    <button (click)="aplicarFiltroPorRango()" class="btn btn-secondary ms-2">Aplicar Filtro</button>
+    <button (click)="limpiarFiltro()" class="btn btn-secondary ms-2">Limpiar Filtro</button>
 </div>
 
 @if (!transaccionesCombinadas || transaccionesCombinadas.length === 0) {
@@ -27,40 +33,40 @@
     <table class="table table-striped table-hover align-middle">
         <thead>
         <tr>
-            <th scope="col" i18n="@@transaccion.tceId.label">Tce Id</th>
-            <th scope="col" i18n="@@transaccionesProducto.tcoPro.label">Pieza</th>
-            <th scope="col" i18n="@@transaccion.tceTvo.label">Movimiento</th>
-            <th scope="col" i18n="@@transaccionesProducto.tcoUnidades.label">Unidades</th>
-            <th scope="col" i18n="@@transaccion.tceUsr.label">Usuario</th>
-            <th scope="col" i18n="@@transaccion.tceFechaTransaccion.label">Fecha Transaccion</th>
-            <th scope="col" i18n="@@transaccion.tceObservaciones.label">Observaciones</th>
-            <th scope="col" i18n="@@transaccion.tceAnv.label">Aeronave</th>
-            <th scope="col" i18n="@@transaccion.list.actions">Acciones</th>
+            <th scope="col" class="text-center" i18n="@@transaccionesProducto.tcoPro.label">Pieza</th>
+            <th scope="col" class="text-center" i18n="@@transaccion.tceTvo.label">Movimiento</th>
+            <th scope="col" class="text-center" i18n="@@transaccionesProducto.tcoUnidades.label">Unidades</th>
+            <th scope="col" class="text-center" i18n="@@transaccion.tceUsr.label">Usuario</th>
+            <th scope="col" class="text-center" i18n="@@transaccion.tceFechaTransaccion.label">Fecha Transacción</th>
+            <th scope="col" class="text-center" i18n="@@transaccion.tceObservaciones.label">Observaciones</th>
+            <th scope="col" class="text-center" i18n="@@transaccion.tceAnv.label">Aeronave</th>
         </tr>
         </thead>
         <tbody>
-        @for (transaccionCombinada of transaccionesFiltradas; track transaccionCombinada.tceId) {
+        @for (transaccion of paginatedTransacciones; track transaccion.tceId) {
         <tr>
-            <td>{{ transaccionCombinada.tceId }}</td>
-            <td>{{ transaccionCombinada.tcoProNombre }}</td>
-            <td>{{ transaccionCombinada.tceTvoEvento }}</td>
-            <td>{{ transaccionCombinada.tcoUnidades }}</td>
-            <td>{{ transaccionCombinada.tceUsrNombre }}</td>
-            <td>{{ transaccionCombinada.tceFechaTransaccion | date: 'yyyy-MM-dd' }}</td>
-            <td>{{ transaccionCombinada.tceObservaciones }}</td>
-            <td>{{ transaccionCombinada.tceAnvMatricula }}</td>
-            <td>
-                <div class="float-end text-nowrap">
-                    <a [routerLink]="['/transaccion-combinada-edit', transaccionCombinada.tceId, transaccionCombinada.tcoId]"
-                       class="btn btn-sm btn-secondary" i18n="@@transaccion.list.edit"
-                       (click)="logIds(transaccionCombinada.tceId, transaccionCombinada.tcoId)">Editar</a>
-                    <button type="button" (click)="confirmDelete(transaccionCombinada.tceId!)"
-                            class="btn btn-sm btn-secondary" i18n="@@transaccion.list.delete">Eliminar</button>
-                </div>
-            </td>
+            <td class="text-center">{{ transaccion.tcoProNombre }}</td>
+            <td class="text-center">{{ transaccion.tceTvoEvento }}</td>
+            <td class="text-center">{{ transaccion.tcoUnidades }}</td>
+            <td class="text-center">{{ transaccion.tceUsrNombre }}</td>
+            <td class="text-center">{{ transaccion.tceFechaTransaccion | date: 'yyyy-MM-dd' }}</td>
+            <td class="text-center">{{ transaccion.tceObservaciones }}</td>
+            <td class="text-center">{{ transaccion.tceAnvMatricula }}</td>
         </tr>
         }
         </tbody>
     </table>
 </div>
+
+<!-- Controles de paginación -->
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <button (click)="previousPage()" [disabled]="currentPage === 1" class="btn btn-secondary">
+        Anterior
+    </button>
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-secondary">
+        Siguiente
+    </button>
+</div>
 }
+

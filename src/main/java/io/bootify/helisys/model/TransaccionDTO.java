@@ -16,7 +16,7 @@ public class TransaccionDTO {
     @NotNull
     private LocalDate tceFechaTransaccion;
 
-    // le quite la anotacion para que sea opcional "@NotNull"
+
     @Size(max = 500)
     private String tceObservaciones;
 

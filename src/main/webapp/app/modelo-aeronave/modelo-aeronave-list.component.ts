@@ -41,7 +41,7 @@ export class ModeloAeronaveListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.navigationSubscription!.unsubscribe();
   }
-  
+
   loadData() {
     this.modeloAeronaveService.getAllModeloAeronaves()
         .subscribe({

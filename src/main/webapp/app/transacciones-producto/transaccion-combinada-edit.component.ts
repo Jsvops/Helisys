@@ -55,11 +55,7 @@ export class TransaccionCombinadaEditComponent implements OnInit {
       this.currentTceId = +params['tceId'];
       this.currentTcoId = +params['tcoId'];
 
-      console.log('currentTceId:', this.currentTceId);
-      console.log('currentTcoId:', this.currentTcoId);
-
       if (isNaN(this.currentTceId) || isNaN(this.currentTcoId)) {
-        console.error('Invalid route parameters');
         return;
       }
 
@@ -68,7 +64,6 @@ export class TransaccionCombinadaEditComponent implements OnInit {
         .subscribe({
           next: (data) => {
             this.tceTvoValues = data;
-            console.log('tceTvoValues:', this.tceTvoValues);
           },
           error: (error) => this.errorHandler.handleServerError(error.error)
         });
@@ -77,7 +72,6 @@ export class TransaccionCombinadaEditComponent implements OnInit {
         .subscribe({
           next: (data) => {
             this.tceUsrValues = data;
-            console.log('tceUsrValues:', this.tceUsrValues);
           },
           error: (error) => this.errorHandler.handleServerError(error.error)
         });
@@ -86,12 +80,9 @@ export class TransaccionCombinadaEditComponent implements OnInit {
       this.transaccionService.getTransaccion(this.currentTceId!)
         .subscribe({
           next: (transaccionData) => {
-            console.log('transaccionData:', transaccionData);
             this.transaccionesProductoService.getTransaccionesProducto(this.currentTcoId!)
               .subscribe({
                 next: (transaccionProductoData) => {
-                  console.log('transaccionProductoData:', transaccionProductoData);
-
                   // Obtener el número de parte del producto
                   this.transaccionesProductoService.getTcoProValues()
                     .subscribe({
@@ -133,12 +124,10 @@ export class TransaccionCombinadaEditComponent implements OnInit {
     this.editForm.get('tcoPro')?.valueChanges.subscribe((proNumeroParte: string | null) => {
       if (proNumeroParte !== null) {
         const productoId = this.getProIdFromNumeroParte(proNumeroParte);
-        console.log('productoId:', productoId);
         if (productoId) {
           this.transaccionService.getAeronavesCompatibles(productoId).subscribe({
             next: (aeronaves) => {
               this.aeronaves = aeronaves;
-              console.log('aeronaves:', this.aeronaves);
             },
             error: (error) => this.errorHandler.handleServerError(error.error)
           });
@@ -148,7 +137,6 @@ export class TransaccionCombinadaEditComponent implements OnInit {
 
     // Escuchar cambios en el campo tceTvo
     this.editForm.get('tceTvo')?.valueChanges.subscribe(value => {
-      console.log('tceTvo value changed:', value);
       this.checkAeronaveField(value ?? null);
     });
   }
@@ -178,7 +166,6 @@ export class TransaccionCombinadaEditComponent implements OnInit {
     this.editForm.markAllAsTouched();
 
     if (!this.editForm.valid) {
-      console.error('Form is not valid:', this.editForm.errors);
       return;
     }
 
@@ -186,19 +173,16 @@ export class TransaccionCombinadaEditComponent implements OnInit {
     const productoId = this.getProIdFromNumeroParte(proNumeroParte);
 
     if (!productoId) {
-      console.error('No se pudo obtener el ID del producto');
       return;
     }
 
     const tceUsrValue = this.editForm.get('tceUsr')?.value;
     if (tceUsrValue == null) {
-      console.error('tceUsr is null');
       return;
     }
 
     const tcoTceValue = this.currentTceId;
     if (tcoTceValue == null) {
-      console.error('tcoTce is null');
       return;
     }
 
@@ -218,9 +202,6 @@ export class TransaccionCombinadaEditComponent implements OnInit {
       tcoPro: productoId, // Usar el productoId obtenido
       tcoTce: tcoTceValue // Usar el valor de currentTceId manualmente
     });
-
-    console.log('Submitting transaccionData:', transaccionData);
-    console.log('Submitting transaccionProductoData:', transaccionProductoData);
 
     // Actualizar la transacción y el producto de la transacción
     this.transaccionService.updateTransaccion(this.currentTceId!, transaccionData)

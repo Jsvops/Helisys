@@ -3,12 +3,11 @@ package io.bootify.helisys.model;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
-
-import lombok.AllArgsConstructor;
+import java.util.List;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Setter
@@ -43,15 +42,15 @@ public class ProductoDTO {
     private String proTipoDocumento;
 
     @NotNull
-    private Integer proTpo;
+    private Integer proTpo; // ID del TipoProducto
 
     @NotNull
-    private Integer proAmc;
+    private Integer proAmc; // ID del AlmacenContenedor
 
     @NotNull
-    private Integer proMre;
+    private Integer proPve; // ID del Proveedor
 
-    @NotNull
-    private Integer proPve;
+    // Lista de DetalleProductoModeloAeronaveDTO para representar la relación
+    private List<DetalleProductoModeloAeronaveDTO> detallesModeloAeronave;
 
 }

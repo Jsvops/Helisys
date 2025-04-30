@@ -20,4 +20,4 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByUsrNombre(String usrNombre);
 
 }
-//
+

@@ -10,37 +10,37 @@
 <div class="table-responsive">
     <table class="table table-striped table-hover align-middle">
         <thead>
-            <tr>
-                <th scope="col" i18n="@@producto.proId.label">Pro Id</th>
-                <th scope="col" i18n="@@producto.proNumeroParte.label">Pro Numero Parte</th>
-                <th scope="col" i18n="@@producto.proNombre.label">Pro Nombre</th>
-                <th scope="col" i18n="@@producto.proNumeroParteAlterno.label">Pro Numero Parte Alterno</th>
-                <th scope="col" i18n="@@producto.proNumeroSerie.label">Pro Numero Serie</th>
-                <th scope="col" i18n="@@producto.proUnidades.label">Pro Unidades</th>
-                <th scope="col" i18n="@@producto.proFechaVencimiento.label">Pro Fecha Vencimiento</th>
-                <th scope="col" i18n="@@producto.proTipoDocumento.label">Pro Tipo Documento</th>
-                <th><!-- --></th>
-            </tr>
+        <tr>
+            <th scope="col" i18n="@@producto.proId.label">Pro Id</th>
+            <th scope="col" i18n="@@producto.proNumeroParte.label">Pro Numero Parte</th>
+            <th scope="col" i18n="@@producto.proNombre.label">Pro Nombre</th>
+            <th scope="col" i18n="@@producto.proNumeroParteAlterno.label">Pro Numero Parte Alterno</th>
+            <th scope="col" i18n="@@producto.proNumeroSerie.label">Pro Numero Serie</th>
+            <th scope="col" i18n="@@producto.proUnidades.label">Pro Unidades</th>
+            <th scope="col" i18n="@@producto.proFechaVencimiento.label">Pro Fecha Vencimiento</th>
+            <th scope="col" i18n="@@producto.proTipoDocumento.label">Pro Tipo Documento</th>
+            <th><!-- --></th>
+        </tr>
         </thead>
         <tbody>
-            @for (producto of productos; track producto.proId) {
-            <tr>
-                <td>{{ producto.proId }}</td>
-                <td>{{ producto.proNumeroParte }}</td>
-                <td>{{ producto.proNombre }}</td>
-                <td>{{ producto.proNumeroParteAlterno }}</td>
-                <td>{{ producto.proNumeroSerie }}</td>
-                <td>{{ producto.proUnidades }}</td>
-                <td>{{ producto.proFechaVencimiento }}</td>
-                <td>{{ producto.proTipoDocumento }}</td>
-                <td>
-                    <div class="float-end text-nowrap">
-                        <a [routerLink]="['/productos/edit', producto.proId]" class="btn btn-sm btn-secondary" i18n="@@producto.list.edit">Edit</a>
-                        <button type="button" (click)="confirmDelete(producto.proId!)" class="btn btn-sm btn-secondary" i18n="@@producto.list.delete">Delete</button>
-                    </div>
-                </td>
-            </tr>
-            }
+        @for (producto of productos; track producto.proId) {
+        <tr>
+            <td>{{ producto.proId }}</td>
+            <td>{{ producto.proNumeroParte }}</td>
+            <td>{{ producto.proNombre }}</td>
+            <td>{{ producto.proNumeroParteAlterno }}</td>
+            <td>{{ producto.proNumeroSerie }}</td>
+            <td>{{ producto.proUnidades }}</td>
+            <td>{{ producto.proFechaVencimiento }}</td>
+            <td>{{ producto.proTipoDocumento }}</td>
+            <td>
+                <div class="float-end text-nowrap">
+                    <a [routerLink]="['/productos/edit', producto.proId]" class="btn btn-sm btn-secondary" i18n="@@producto.list.edit">Edit</a>
+                    <button type="button" (click)="confirmDelete(producto.proId!)" class="btn btn-sm btn-secondary" i18n="@@producto.list.delete">Delete</button>
+                </div>
+            </td>
+        </tr>
+        }
         </tbody>
     </table>
 </div>

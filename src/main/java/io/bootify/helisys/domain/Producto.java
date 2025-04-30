@@ -14,7 +14,6 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Entity
 @Getter
 @Setter
@@ -55,10 +54,6 @@ public class Producto {
     private AlmacenContenedor proAmc;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pro_mre_id", nullable = false)
-    private ModeloAeronave proMre;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pro_pve_id", nullable = false)
     private Proveedor proPve;
 
@@ -67,5 +62,8 @@ public class Producto {
 
     @OneToMany(mappedBy = "tcoPro")
     private Set<TransaccionesProducto> tcoProTransaccionesProductos;
+
+    @OneToMany(mappedBy = "dpmaPro")
+    private Set<DetalleProductoModeloAeronave> dpmaProDetalleProductoModeloAeronaves;
 
 }

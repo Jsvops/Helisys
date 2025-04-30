@@ -6,11 +6,11 @@ import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { ProductoService } from 'app/producto/producto.service';
 import { ProductoDTO } from 'app/producto/producto.model';
 
-
 @Component({
   selector: 'app-producto-list',
   imports: [CommonModule, RouterLink],
-  templateUrl: './producto-list.component.html'})
+  templateUrl: './producto-list.component.html'
+})
 export class ProductoListComponent implements OnInit, OnDestroy {
 
   productoService = inject(ProductoService);
@@ -44,35 +44,34 @@ export class ProductoListComponent implements OnInit, OnDestroy {
 
   loadData() {
     this.productoService.getAllProductos()
-        .subscribe({
-          next: (data) => this.productos = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+      .subscribe({
+        next: (data) => this.productos = data,
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
   }
 
   confirmDelete(proId: number) {
     if (confirm(this.getMessage('confirm'))) {
       this.productoService.deleteProducto(proId)
-          .subscribe({
-            next: () => this.router.navigate(['/productos'], {
-              state: {
-                msgInfo: this.getMessage('deleted')
-              }
-            }),
-            error: (error) => {
-              if (error.error?.code === 'REFERENCED') {
-                const messageParts = error.error.message.split(',');
-                this.router.navigate(['/productos'], {
-                  state: {
-                    msgError: this.getMessage(messageParts[0], { id: messageParts[1] })
-                  }
-                });
-                return;
-              }
-              this.errorHandler.handleServerError(error.error)
+        .subscribe({
+          next: () => this.router.navigate(['/productos'], {
+            state: {
+              msgInfo: this.getMessage('deleted')
             }
-          });
+          }),
+          error: (error) => {
+            if (error.error?.code === 'REFERENCED') {
+              const messageParts = error.error.message.split(',');
+              this.router.navigate(['/productos'], {
+                state: {
+                  msgError: this.getMessage(messageParts[0], { id: messageParts[1] })
+                }
+              });
+              return;
+            }
+            this.errorHandler.handleServerError(error.error);
+          }
+        });
     }
   }
-
 }

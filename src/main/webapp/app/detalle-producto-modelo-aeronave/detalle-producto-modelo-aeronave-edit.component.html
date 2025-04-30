@@ -1,0 +1,20 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@detalle.edit.headline">Editar Detalle de Producto Modelo Aeronave</h1>
+    <div>
+        <a routerLink="/detalle-producto-modelo-aeronave-list" class="btn btn-secondary" i18n="@@detalle.edit.back">Volver a la lista</a>
+    </div>
+</div>
+
+<form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
+    <!-- Campo: ID (solo lectura) -->
+    <app-input-row [group]="editForm" field="dpmaId" rowType="number" i18n-label="@@detalle.dpmaId.label" label="ID" />
+
+    <!-- Campo: Producto -->
+    <app-input-row [group]="editForm" field="dpmaPro" i18n-label="@@detalle.dpmaPro.label" label="Producto" />
+
+    <!-- Campo: Modelo Aeronave -->
+    <app-input-row [group]="editForm" field="dpmaMre" i18n-label="@@detalle.dpmaMre.label" label="Modelo Aeronave" />
+
+    <!-- Botón de envío -->
+    <input type="submit" i18n-value="@@detalle.edit.headline" value="Editar Detalle" class="btn btn-primary mt-4" />
+</form>

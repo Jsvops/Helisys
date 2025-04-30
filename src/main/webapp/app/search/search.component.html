@@ -22,27 +22,25 @@
     </form>
 
     <!-- Tabla de resultados -->
-    <div *ngIf="products?.length" class="results-container">
+    <div *ngIf="groupedProducts?.length" class="results-container">
         <table class="results-table">
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Part Number</th>
-                <th>Name</th>
-                <th>Alternate Part Number</th>
-                <th>Serial Number</th>
-                <th>Units</th>
-                <th>Expiration Date</th>
-                <th>Document Type</th>
-                <th>Product Type</th>
-                <th>Combined Container</th>
-                <th>Aircraft Model</th>
-                <th>Supplier</th>
+                <th>Número de parte</th>
+                <th>Nombre</th>
+                <th>Número de parte alterna</th>
+                <th>Número de serie</th>
+                <th>Unidades</th>
+                <th>Fecha de vencimiento</th>
+                <th>Tipo de documento</th>
+                <th>Tipo de producto</th>
+                <th>Ubicación</th>
+                <th>Modelo de aeronave</th>
+                <th>Proveedor</th>
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.proId }}</td>
+            <tr *ngFor="let product of groupedProducts">
                 <td>{{ product.proNumeroParte }}</td>
                 <td>{{ product.proNombre }}</td>
                 <td>{{ product.proNumeroParteAlterno }}</td>
@@ -60,7 +58,7 @@
     </div>
 
     <!-- Mensaje de no resultados -->
-    <div *ngIf="searchPerformed && (!products || products.length === 0)">
+    <div *ngIf="searchPerformed && (!groupedProducts || groupedProducts.length === 0)">
         <p class="no-results">No se encontraron resultados.</p>
     </div>
 </div>

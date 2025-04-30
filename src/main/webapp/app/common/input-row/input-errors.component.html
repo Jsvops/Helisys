@@ -3,9 +3,9 @@
     @for (error of control?.errors | keyvalue; track error.key) {
     <div class="mb-0">
         @if (isString(error.value)) {
-            {{ error.value }}
+        {{ error.value }}
         } @else {
-            {{ getMessage(error.key, error.value) }}
+        {{ getMessage(error.key, error.value) }}
         }
     </div>
     }

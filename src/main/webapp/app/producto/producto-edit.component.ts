@@ -8,7 +8,6 @@ import { ProductoDTO } from 'app/producto/producto.model';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { updateForm } from 'app/common/utils';
 
-
 @Component({
   selector: 'app-producto-edit',
   imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
@@ -21,10 +20,9 @@ export class ProductoEditComponent implements OnInit {
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
 
-  proTpoValues?: Map<number,string>;
-  proAmcValues?: Map<number,string>;
-  proMreValues?: Map<number,string>;
-  proPveValues?: Map<number,string>;
+  proTpoValues?: Map<number, string>;
+  proAmcValues?: Map<number, string>;
+  proPveValues?: Map<number, string>;
   currentProId?: number;
 
   editForm = new FormGroup({
@@ -38,7 +36,6 @@ export class ProductoEditComponent implements OnInit {
     proTipoDocumento: new FormControl(null, [Validators.required, Validators.maxLength(25)]),
     proTpo: new FormControl(null, [Validators.required]),
     proAmc: new FormControl(null, [Validators.required]),
-    proMre: new FormControl(null, [Validators.required]),
     proPve: new FormControl(null, [Validators.required])
   }, { updateOn: 'submit' });
 
@@ -52,30 +49,25 @@ export class ProductoEditComponent implements OnInit {
   ngOnInit() {
     this.currentProId = +this.route.snapshot.params['proId'];
     this.productoService.getProTpoValues()
-        .subscribe({
-          next: (data) => this.proTpoValues = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+      .subscribe({
+        next: (data) => this.proTpoValues = data,
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
     this.productoService.getProAmcValues()
-        .subscribe({
-          next: (data) => this.proAmcValues = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
-    this.productoService.getProMreValues()
-        .subscribe({
-          next: (data) => this.proMreValues = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+      .subscribe({
+        next: (data) => this.proAmcValues = data,
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
     this.productoService.getProPveValues()
-        .subscribe({
-          next: (data) => this.proPveValues = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+      .subscribe({
+        next: (data) => this.proPveValues = data,
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
     this.productoService.getProducto(this.currentProId!)
-        .subscribe({
-          next: (data) => updateForm(this.editForm, data),
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+      .subscribe({
+        next: (data) => updateForm(this.editForm, data),
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
   }
 
   handleSubmit() {
@@ -86,14 +78,13 @@ export class ProductoEditComponent implements OnInit {
     }
     const data = new ProductoDTO(this.editForm.value);
     this.productoService.updateProducto(this.currentProId!, data)
-        .subscribe({
-          next: () => this.router.navigate(['/productos'], {
-            state: {
-              msgSuccess: this.getMessage('updated')
-            }
-          }),
-          error: (error) => this.errorHandler.handleServerError(error.error, this.editForm, this.getMessage)
-        });
+      .subscribe({
+        next: () => this.router.navigate(['/productos'], {
+          state: {
+            msgSuccess: this.getMessage('updated')
+          }
+        }),
+        error: (error) => this.errorHandler.handleServerError(error.error, this.editForm, this.getMessage)
+      });
   }
-
 }

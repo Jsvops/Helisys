@@ -52,3 +52,5 @@ springdoc:
 logging:
   level:
     org.springframework.web: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+

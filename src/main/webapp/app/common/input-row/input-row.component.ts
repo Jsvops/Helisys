@@ -7,15 +7,16 @@ import flatpickr from 'flatpickr';
 @Component({
   selector: 'app-input-row',
   templateUrl: './input-row.component.html',
-  imports: [ReactiveFormsModule, InputErrorsComponent, KeyValuePipe]
+  imports: [ReactiveFormsModule, InputErrorsComponent, KeyValuePipe],
+  styleUrls: ['./input-row.component.css']
 })
 export class InputRowComponent implements AfterViewInit, OnChanges, OnInit {
 
   @Input({ required: true })
-  group?: FormGroup;
+  group!: FormGroup;
 
   @Input({ required: true })
-  field = '';
+  field!: string;
 
   @Input()
   rowType = 'text';
@@ -24,29 +25,31 @@ export class InputRowComponent implements AfterViewInit, OnChanges, OnInit {
   inputClass = '';
 
   @Input()
-  options?: Record<string, string> | Map<number, string>; // Acepta un Map o un Record
+  options?: Record<string, string> | Map<number, string>;
 
   @Input({ required: true })
-  label = '';
+  label!: string;
 
   @Input()
   datepicker?: 'datepicker' | 'timepicker' | 'datetimepicker';
 
-  control?: AbstractControl;
-  optionsMap?: Map<string | number, string>; // Mapa para almacenar las opciones
+  @Input()
+  required = false;
 
-  elRef = inject(ElementRef);
+  control?: AbstractControl; // Definido como opcional sin incluir null
+
+  optionsMap?: Map<string | number, string>;
+
+  private elRef = inject(ElementRef);
 
   ngOnInit() {
-    this.control = this.group!.get(this.field)!;
+    this.control = this.group.get(this.field) ?? undefined;
   }
 
   ngOnChanges() {
     if (!this.options || this.options instanceof Map) {
-      // Si options es un Map o no está definido, lo asignamos directamente
       this.optionsMap = this.options;
     } else {
-      // Si options es un Record, lo convertimos a un Map
       this.optionsMap = new Map(Object.entries(this.options));
     }
   }
@@ -58,12 +61,21 @@ export class InputRowComponent implements AfterViewInit, OnChanges, OnInit {
   @HostListener('input', ['$event.target'])
   onEvent(target: HTMLInputElement) {
     if (target.value === '') {
-      this.control!.setValue(null);
+      this.control?.setValue(null);
     }
   }
 
-  isRequired() {
-    return this.control?.hasValidator(Validators.required);
+  isRequired(): boolean {
+    if (this.required) return true;
+    if (!this.control) return false;
+
+    const validator = this.control.validator;
+    if (validator) {
+      const validationResult = validator({} as AbstractControl);
+      return !!validationResult?.['required'] || !!validationResult?.['requiredTrue'];
+    }
+
+    return false;
   }
 
   getInputClasses() {
@@ -71,44 +83,49 @@ export class InputRowComponent implements AfterViewInit, OnChanges, OnInit {
   }
 
   hasErrors() {
-    return this.control?.invalid && (this.control?.dirty || this.control?.touched);
+    return !!this.control?.invalid && (this.control?.dirty || this.control?.touched);
   }
 
-  initDatepicker() {
-    if (!this.datepicker) {
-      return;
-    }
+  private initDatepicker() {
+    if (!this.datepicker) return;
+
     const flatpickrConfig: any = {
       allowInput: true,
       time_24hr: true,
       enableSeconds: true
     };
+
     if (this.datepicker === 'datepicker') {
       flatpickrConfig.dateFormat = 'Y-m-d';
     } else if (this.datepicker === 'timepicker') {
       flatpickrConfig.enableTime = true;
       flatpickrConfig.noCalendar = true;
       flatpickrConfig.dateFormat = 'H:i:S';
-    } else { // datetimepicker
+    } else {
       flatpickrConfig.enableTime = true;
       flatpickrConfig.altInput = true;
       flatpickrConfig.altFormat = 'Y-m-d H:i:S';
       flatpickrConfig.dateFormat = 'Y-m-dTH:i:S';
-      // workaround label issue
-      flatpickrConfig.onReady = function () {
-        const id = this.input.id;
-        this.input.id = null;
-        this.altInput.id = id;
+      flatpickrConfig.onReady = () => {
+        const input = this.elRef.nativeElement.querySelector('input');
+        if (input) {
+          const id = input.id;
+          input.id = '';
+          this.elRef.nativeElement.querySelector('.flatpickr-alt-input').id = id;
+        }
       };
     }
+
     const input = this.elRef.nativeElement.querySelector('input');
-    const flatpicker = flatpickr(input, flatpickrConfig);
-    this.control!.valueChanges.subscribe(val => {
-      // update in case value changes after initialization
-      flatpicker.setDate(val);
-    });
+    if (input) {
+      const flatpicker = flatpickr(input, flatpickrConfig);
+      this.control?.valueChanges.subscribe(val => {
+        flatpicker.setDate(val);
+      });
+    }
   }
 
-  // Método para verificar si el campo es tcoTce
-  isTcoTceField(): boolean { return this.field === 'tcoTce'; }
+  isTcoTceField(): boolean {
+    return this.field === 'tcoTce';
+  }
 }
