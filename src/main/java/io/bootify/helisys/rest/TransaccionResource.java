@@ -59,7 +59,7 @@ public class TransaccionResource {
     }
 
 
-    @PostMapping("/completa")
+    @PostMapping("/")
     @Operation(summary = "Crear una transacción completa con todos sus componentes")
     @ApiResponse(responseCode = "201", description = "Transacción completa creada exitosamente")
     public ResponseEntity<Integer> createTransaccionCompleta(

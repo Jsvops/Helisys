@@ -3,6 +3,7 @@ package io.bootify.helisys.service;
 import io.bootify.helisys.domain.*;
 import io.bootify.helisys.model.TransaccionCompletaDTO;
 import io.bootify.helisys.model.TransaccionDTO;
+import io.bootify.helisys.model.TransaccionEventoDTO;
 import io.bootify.helisys.repos.*;
 import io.bootify.helisys.util.NotFoundException;
 import io.bootify.helisys.util.ReferencedWarning;
@@ -27,6 +28,7 @@ public class TransaccionService {
     private final ProductoRepository productoRepository;
     private final LoteRepository loteRepository;
     private final LoteTransaccionProductoDetalleRepository loteTransaccionProductoDetalleRepository;
+    private final TransaccionEventoService transaccionEventoService;
 
 
     public TransaccionService(final TransaccionRepository transaccionRepository,
@@ -36,7 +38,8 @@ public class TransaccionService {
                               final ProductoRepository productoRepository,
                               final TransaccionesProductoRepository transaccionesProductoRepository,
                               final LoteRepository loteRepository,
-                              final LoteTransaccionProductoDetalleRepository loteTransaccionProductoDetalleRepository) {
+                              final LoteTransaccionProductoDetalleRepository loteTransaccionProductoDetalleRepository,
+                              final TransaccionEventoService transaccionEventoService) {
         this.transaccionRepository = transaccionRepository;
         this.transaccionEventoRepository = transaccionEventoRepository;
         this.usuarioRepository = usuarioRepository;
@@ -45,6 +48,7 @@ public class TransaccionService {
         this.transaccionesProductoRepository = transaccionesProductoRepository;
         this.loteRepository = loteRepository;
         this.loteTransaccionProductoDetalleRepository = loteTransaccionProductoDetalleRepository;
+        this.transaccionEventoService = transaccionEventoService;
     }
 
     public List<TransaccionDTO> findAll() {
@@ -200,11 +204,12 @@ public class TransaccionService {
         transaccionProducto = transaccionesProductoRepository.save(transaccionProducto);
 
         // 8. Manejar lógica diferente para altas y bajas
-        if (dto.getTceTvo() <= 3) { // Eventos de ALTA (1, 2, 3)
+        if (transaccionEventoService.isStockIn(dto.getTceTvo())) { // Eventos de ALTA (1, 2, 3)
             // Crear nuevo lote para la entrada
             if (dto.getLtFechaVencimiento() != null) {
-                Lote lote = new Lote();
-                lote.setLtFechaVencimiento(dto.getLtFechaVencimiento());
+                Lote lote = Lote.builder()
+                    .ltFechaVencimiento(dto.getLtFechaVencimiento())
+                    .build();
                 lote = loteRepository.save(lote);
 
                 // Registrar detalle del lote
