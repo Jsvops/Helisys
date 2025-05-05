@@ -62,10 +62,10 @@ public class TransaccionesProductoService {
                                               final TransaccionesProductoDTO transaccionesProductoDTO) {
         transaccionesProductoDTO.setTcoId(transaccionesProducto.getTcoId());
         transaccionesProductoDTO.setTcoUnidades(transaccionesProducto.getTcoUnidades());
-        // Convertimos el id del producto a String para el DTO
+        // Ahora asignamos directamente el ID del producto como Integer
         transaccionesProductoDTO.setTcoPro(transaccionesProducto.getTcoPro() == null
             ? null
-            : String.valueOf(transaccionesProducto.getTcoPro().getProId()));
+            : transaccionesProducto.getTcoPro().getProId());
         transaccionesProductoDTO.setTcoTce(transaccionesProducto.getTcoTce() == null
             ? null
             : transaccionesProducto.getTcoTce().getTceId());
@@ -77,22 +77,14 @@ public class TransaccionesProductoService {
         final TransaccionesProducto transaccionesProducto) {
         transaccionesProducto.setTcoUnidades(transaccionesProductoDTO.getTcoUnidades());
 
-        // Se convierte el campo tcoPro de String a Producto utilizando casting
-        Producto tcoPro = null;
+        // Ahora tcoPro en el DTO es Integer, no necesita conversión
         if (transaccionesProductoDTO.getTcoPro() != null) {
-            try {
-                // Se intenta convertir el String a Integer (id numérico)
-                Integer proId = Integer.valueOf(transaccionesProductoDTO.getTcoPro());
-                tcoPro = productoRepository.findById(proId)
-                    .orElseThrow(() -> new NotFoundException("Producto not found with id " + proId));
-            } catch (NumberFormatException e) {
-                // Si el valor no es numérico, se asume que es un código alfanumérico y se busca por dicho código.
-                tcoPro = productoRepository.findByProNumeroParte(transaccionesProductoDTO.getTcoPro())
-                    .orElseThrow(() -> new NotFoundException("Producto not found with part number " + transaccionesProductoDTO.getTcoPro()));
-
-            }
+            Producto tcoPro = productoRepository.findById(transaccionesProductoDTO.getTcoPro())
+                .orElseThrow(() -> new NotFoundException("Producto not found with id " + transaccionesProductoDTO.getTcoPro()));
+            transaccionesProducto.setTcoPro(tcoPro);
+        } else {
+            transaccionesProducto.setTcoPro(null);
         }
-        transaccionesProducto.setTcoPro(tcoPro);
 
         final Transaccion tcoTce = transaccionesProductoDTO.getTcoTce() == null
             ? null

@@ -6,17 +6,17 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TransaccionesProductoDTO {
+public class LoteTransaccionProductoDetalleDTO {
 
-    private Integer tcoId;
-
-    @NotNull
-    private Integer tcoUnidades;
+    private Integer ltpdId;
 
     @NotNull
-    private Integer tcoPro;
+    private Integer ltpdUnidades;
 
     @NotNull
-    private Integer tcoTce;
+    private Integer ltpdLt;
+
+    @NotNull
+    private Integer ltpdTco;
 
 }

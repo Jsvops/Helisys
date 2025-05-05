@@ -2,6 +2,7 @@ package io.bootify.helisys.rest;
 
 import io.bootify.helisys.domain.TransaccionEvento;
 import io.bootify.helisys.domain.Usuario;
+import io.bootify.helisys.model.TransaccionCompletaDTO;
 import io.bootify.helisys.model.TransaccionDTO;
 import io.bootify.helisys.repos.TransaccionEventoRepository;
 import io.bootify.helisys.repos.UsuarioRepository;
@@ -9,6 +10,7 @@ import io.bootify.helisys.service.TransaccionService;
 import io.bootify.helisys.util.CustomCollectors;
 import io.bootify.helisys.util.ReferencedException;
 import io.bootify.helisys.util.ReferencedWarning;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
@@ -56,29 +58,25 @@ public class TransaccionResource {
         return ResponseEntity.ok(transaccionService.get(tceId));
     }
 
-    @PostMapping
-    @ApiResponse(responseCode = "201")
-    public ResponseEntity<Integer> createTransaccion(
-        @RequestBody @Valid final TransaccionDTO transaccionDTO) {
 
-        // Obtiene el nombre de usuario autenticado
+    @PostMapping("/completa")
+    @Operation(summary = "Crear una transacción completa con todos sus componentes")
+    @ApiResponse(responseCode = "201", description = "Transacción completa creada exitosamente")
+    public ResponseEntity<Integer> createTransaccionCompleta(
+        @RequestBody @Valid final TransaccionCompletaDTO transaccionCompletaDTO) {
+
+        // Obtiene el usuario autenticado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        // Busca el ID del usuario en la base de datos
+        // Busca el ID del usuario
         Usuario usuario = usuarioRepository.findByUsrNombre(username)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Asigna el ID del usuario al campo tceUsr de la transacción
-        transaccionDTO.setTceUsr(usuario.getUsrId());
+        // Procesa la transacción completa
+        final Integer createdTceId = transaccionService.procesarTransaccionCompleta(
+            transaccionCompletaDTO, usuario.getUsrId());
 
-        // Asigna la fecha actual si no se proporciona
-        if (transaccionDTO.getTceFechaTransaccion() == null) {
-            transaccionDTO.setTceFechaTransaccion(LocalDate.now());
-        }
-
-        // Crea la transacción
-        final Integer createdTceId = transaccionService.create(transaccionDTO);
         return new ResponseEntity<>(createdTceId, HttpStatus.CREATED);
     }
 
