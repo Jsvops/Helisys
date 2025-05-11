@@ -81,11 +81,20 @@ public class TransaccionEventoService {
         return null;
     }
 
+    public TransaccionEvento getEvento(Integer id) {
+        return transaccionEventoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Tipo de evento no válido"));
+    }
+
     public boolean isStockIn(int tvoId) {
         return InventoryEventType.isSTOCKIN(tvoId);
     }
 
-    enum InventoryEventType {
+    public boolean isStockOut(int tvoId) {
+        return !isStockIn(tvoId);
+    }
+
+    public enum InventoryEventType {
         STOCKIN(new int[]{1, 2, 3}),
         STOCKOUT(new int[]{4, 5, 6, 7, 8, 9});
 
@@ -107,9 +116,6 @@ public class TransaccionEventoService {
         public static boolean isSTOCKIN(int id) {
             return STOCKIN.containsId(id);
         }
-
-        public static InventoryEventType fromId(int id) {
-            return STOCKIN.containsId(id) ? STOCKIN : STOCKOUT;
-        }
     }
 }
+

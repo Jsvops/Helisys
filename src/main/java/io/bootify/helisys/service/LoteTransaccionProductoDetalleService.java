@@ -9,10 +9,14 @@ import io.bootify.helisys.repos.LoteTransaccionProductoDetalleRepository;
 import io.bootify.helisys.repos.TransaccionesProductoRepository;
 import io.bootify.helisys.util.NotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.bootify.helisys.util.ReferencedWarning;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LoteTransaccionProductoDetalleService {
@@ -88,4 +92,56 @@ public class LoteTransaccionProductoDetalleService {
         return loteTransaccionProductoDetalle;
     }
 
+    public void crearDetalle(Lote lote, TransaccionesProducto transaccionProducto, Integer cantidad) {
+        LoteTransaccionProductoDetalle detalle = new LoteTransaccionProductoDetalle();
+        detalle.setLtpdLt(lote);
+        detalle.setLtpdTco(transaccionProducto);
+        detalle.setLtpdUnidades(cantidad);
+        loteTransaccionProductoDetalleRepository.save(detalle);
+    }
+
+    @Transactional
+    public void manejarBajaProducto(Integer productoId, TransaccionesProducto transaccionProducto, Integer cantidadRequerida) {
+        List<LoteDisponible> lotesDisponibles = obtenerLotesDisponibles(productoId);
+        Integer cantidadRestante = cantidadRequerida;
+
+        for (LoteDisponible lote : lotesDisponibles) {
+            if (cantidadRestante <= 0) break;
+
+            Integer cantidadADescontar = Math.min(lote.getCantidadDisponible(), cantidadRestante);
+            registrarSalidaLote(lote.getLote(), transaccionProducto, cantidadADescontar);
+            cantidadRestante -= cantidadADescontar;
+        }
+
+        if (cantidadRestante > 0) {
+            throw new RuntimeException("Error al completar la baja: stock insuficiente en lotes disponibles");
+        }
+    }
+
+    private List<LoteDisponible> obtenerLotesDisponibles(Integer productoId) {
+        return loteTransaccionProductoDetalleRepository
+            .findLotesDisponiblesByProductoOrderByFecha(productoId)
+            .stream()
+            .map(result -> new LoteDisponible(
+                (Lote) result[0],
+                ((Number) result[1]).intValue()
+            ))
+            .collect(Collectors.toList());
+    }
+
+    private void registrarSalidaLote(Lote lote, TransaccionesProducto transaccionProducto, Integer cantidad) {
+        LoteTransaccionProductoDetalle detalle = new LoteTransaccionProductoDetalle();
+        detalle.setLtpdLt(lote);
+        detalle.setLtpdTco(transaccionProducto);
+        detalle.setLtpdUnidades(-cantidad);
+        loteTransaccionProductoDetalleRepository.save(detalle);
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private static class LoteDisponible {
+        private final Lote lote;
+        private final Integer cantidadDisponible;
+    }
 }
+

@@ -11,6 +11,7 @@ import io.bootify.helisys.util.NotFoundException;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TransaccionesProductoService {
@@ -93,5 +94,14 @@ public class TransaccionesProductoService {
         transaccionesProducto.setTcoTce(tcoTce);
 
         return transaccionesProducto;
+    }
+
+    @Transactional
+    public TransaccionesProducto createProductTransaction (Transaccion transaccion, Producto producto, Integer unidades) {
+        TransaccionesProducto tp = new TransaccionesProducto();
+        tp.setTcoTce(transaccion);
+        tp.setTcoPro(producto);
+        tp.setTcoUnidades(unidades);
+        return transaccionesProductoRepository.save(tp);
     }
 }

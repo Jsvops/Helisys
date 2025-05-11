@@ -2,11 +2,12 @@ package io.bootify.helisys.rest;
 
 import io.bootify.helisys.domain.TransaccionEvento;
 import io.bootify.helisys.domain.Usuario;
-import io.bootify.helisys.model.TransaccionCompletaDTO;
 import io.bootify.helisys.model.TransaccionDTO;
+import io.bootify.helisys.model.TransactionRequestDTO;
 import io.bootify.helisys.repos.TransaccionEventoRepository;
 import io.bootify.helisys.repos.UsuarioRepository;
 import io.bootify.helisys.service.TransaccionService;
+import io.bootify.helisys.service.UsuarioService;
 import io.bootify.helisys.util.CustomCollectors;
 import io.bootify.helisys.util.ReferencedException;
 import io.bootify.helisys.util.ReferencedWarning;
@@ -38,13 +39,17 @@ public class TransaccionResource {
     private final TransaccionService transaccionService;
     private final TransaccionEventoRepository transaccionEventoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
+
 
     public TransaccionResource(final TransaccionService transaccionService,
                                final TransaccionEventoRepository transaccionEventoRepository,
-                               final UsuarioRepository usuarioRepository) {
+                               final UsuarioRepository usuarioRepository,
+                               final UsuarioService usuarioService) {
         this.transaccionService = transaccionService;
         this.transaccionEventoRepository = transaccionEventoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping
@@ -60,24 +65,17 @@ public class TransaccionResource {
 
 
     @PostMapping("/")
-    @Operation(summary = "Crear una transacción completa con todos sus componentes")
+    @Operation(summary = "Inicia una transacción con las solicitudes de productos y lotes")
     @ApiResponse(responseCode = "201", description = "Transacción completa creada exitosamente")
-    public ResponseEntity<Integer> createTransaccionCompleta(
-        @RequestBody @Valid final TransaccionCompletaDTO transaccionCompletaDTO) {
+    public ResponseEntity<Integer> startTransaction (
+        @RequestBody @Valid TransactionRequestDTO dto,
+        Authentication authentication) {
 
-        // Obtiene el usuario autenticado
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
+        Integer usuarioId = usuarioService.findIdByUsername(username);
 
-        // Busca el ID del usuario
-        Usuario usuario = usuarioRepository.findByUsrNombre(username)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        // Procesa la transacción completa
-        final Integer createdTceId = transaccionService.procesarTransaccionCompleta(
-            transaccionCompletaDTO, usuario.getUsrId());
-
-        return new ResponseEntity<>(createdTceId, HttpStatus.CREATED);
+        Integer transaccionId = transaccionService.executeTransaction(dto, usuarioId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(transaccionId);
     }
 
     @PutMapping("/{tceId}")

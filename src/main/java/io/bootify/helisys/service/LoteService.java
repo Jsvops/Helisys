@@ -6,6 +6,8 @@ import io.bootify.helisys.repos.LoteRepository;
 import io.bootify.helisys.repos.LoteTransaccionProductoDetalleRepository;
 import io.bootify.helisys.util.NotFoundException;
 import io.bootify.helisys.util.ReferencedWarning;
+
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -74,6 +76,12 @@ public class LoteService {
     private Lote mapToEntity(final LoteDTO loteDTO, final Lote lote) {
         lote.setLtFechaVencimiento(loteDTO.getLtFechaVencimiento());
         return lote;
+    }
+
+    public Lote crear(LocalDate fechaVencimiento) {
+        Lote lote = new Lote();
+        lote.setLtFechaVencimiento(fechaVencimiento);
+        return loteRepository.save(lote);
     }
 
 }

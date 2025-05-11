@@ -1,4 +1,3 @@
-// TransaccionCompletaDTO.java
 package io.bootify.helisys.model;
 
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +8,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class TransaccionCompletaDTO {
+public class TransactionRequestDTO {
 
     @NotNull
     private Integer tceTvo; // ID del tipo de evento (1-9)
@@ -20,9 +19,11 @@ public class TransaccionCompletaDTO {
     private Integer tceAnv; // ID de aeronave (opcional)
 
     @NotNull
-    private Integer cantidad;
+    private Integer unidades;
 
     private LocalDate ltFechaVencimiento; // Obligatorio para productos perecederos
 
     private String tceObservaciones;
 }
+
+

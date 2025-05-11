@@ -135,5 +135,10 @@ public class UsuarioService {
         return null;
     }
 
+    public Usuario getUsuario(Integer usuarioId) {
+        return usuarioRepository.findById(usuarioId)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
+
 }
-//
+

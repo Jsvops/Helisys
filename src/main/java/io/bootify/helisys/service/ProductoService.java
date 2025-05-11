@@ -204,11 +204,36 @@ public class ProductoService {
         return null;
     }
 
-    // ... otros métodos existentes ...
 
     public List<ProductoExpiradoDTO> findProductosVencidosYPorVencer() {
         LocalDate hoy = LocalDate.now();
         LocalDate enUnAnio = hoy.plusYears(1);
         return productoRepository.findProductosVencidosYPorVencer(hoy, enUnAnio);
+    }
+
+    public Producto getProducto(Integer id) {
+        return productoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+    }
+
+    public void StockDisponible(Integer productoId, Integer cantidad) {
+        Producto producto = getProducto(productoId);
+        if (producto.getProUnidades() < cantidad) {
+            throw new RuntimeException(String.format(
+                "No hay suficiente stock para realizar la baja. Disponible: %d, Solicitado: %d",
+                producto.getProUnidades(), cantidad));
+        }
+    }
+
+    public void aumentarStock(Integer productoId, Integer cantidad) {
+        Producto producto = getProducto(productoId);
+        producto.setProUnidades(producto.getProUnidades() + cantidad);
+        productoRepository.save(producto);
+    }
+
+    public void reducirStock(Integer productoId, Integer cantidad) {
+        Producto producto = getProducto(productoId);
+        producto.setProUnidades(producto.getProUnidades() - cantidad);
+        productoRepository.save(producto);
     }
 }

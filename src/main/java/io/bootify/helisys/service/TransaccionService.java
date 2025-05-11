@@ -1,13 +1,13 @@
 package io.bootify.helisys.service;
 
 import io.bootify.helisys.domain.*;
-import io.bootify.helisys.model.TransaccionCompletaDTO;
+import io.bootify.helisys.model.TransactionRequestDTO;
 import io.bootify.helisys.model.TransaccionDTO;
-import io.bootify.helisys.model.TransaccionEventoDTO;
 import io.bootify.helisys.repos.*;
 import io.bootify.helisys.util.NotFoundException;
 import io.bootify.helisys.util.ReferencedWarning;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -25,30 +25,39 @@ public class TransaccionService {
     private final UsuarioRepository usuarioRepository;
     private final AeronaveRepository aeronaveRepository;
     private final TransaccionesProductoRepository transaccionesProductoRepository;
-    private final ProductoRepository productoRepository;
-    private final LoteRepository loteRepository;
-    private final LoteTransaccionProductoDetalleRepository loteTransaccionProductoDetalleRepository;
     private final TransaccionEventoService transaccionEventoService;
+    private final ProductoService productoService;
+    private final UsuarioService usuarioService;
+    private final AeronaveService aeronaveService;
+    private final TransaccionesProductoService transaccionesProductoService;
+    private final LoteService loteService;
+    private final LoteTransaccionProductoDetalleService loteTransaccionProductoDetalleService;
 
 
     public TransaccionService(final TransaccionRepository transaccionRepository,
                               final TransaccionEventoRepository transaccionEventoRepository,
                               final UsuarioRepository usuarioRepository,
                               final AeronaveRepository aeronaveRepository,
-                              final ProductoRepository productoRepository,
                               final TransaccionesProductoRepository transaccionesProductoRepository,
-                              final LoteRepository loteRepository,
-                              final LoteTransaccionProductoDetalleRepository loteTransaccionProductoDetalleRepository,
-                              final TransaccionEventoService transaccionEventoService) {
+                              final TransaccionEventoService transaccionEventoService,
+                              final ProductoService productoService,
+                              final UsuarioService usuarioService,
+                              final AeronaveService aeronaveService,
+                              final TransaccionesProductoService transaccionesProductoService,
+                              final LoteService loteService,
+                              final LoteTransaccionProductoDetalleService loteTransaccionProductoDetalleService) {
         this.transaccionRepository = transaccionRepository;
         this.transaccionEventoRepository = transaccionEventoRepository;
         this.usuarioRepository = usuarioRepository;
         this.aeronaveRepository = aeronaveRepository;
-        this.productoRepository = productoRepository;
         this.transaccionesProductoRepository = transaccionesProductoRepository;
-        this.loteRepository = loteRepository;
-        this.loteTransaccionProductoDetalleRepository = loteTransaccionProductoDetalleRepository;
         this.transaccionEventoService = transaccionEventoService;
+        this.productoService = productoService;
+        this.usuarioService = usuarioService;
+        this.aeronaveService = aeronaveService;
+        this.transaccionesProductoService = transaccionesProductoService;
+        this.loteService = loteService;
+        this.loteTransaccionProductoDetalleService = loteTransaccionProductoDetalleService;
     }
 
     public List<TransaccionDTO> findAll() {
@@ -158,33 +167,17 @@ public class TransaccionService {
     }
 
     @Transactional
-    public Integer procesarTransaccionCompleta(TransaccionCompletaDTO dto, Integer usuarioId) {
-        // 1. Verificar y obtener el tipo de evento
-        TransaccionEvento evento = transaccionEventoRepository.findById(dto.getTceTvo())
-            .orElseThrow(() -> new RuntimeException("Tipo de evento no válido"));
+    public Integer executeTransaction(@Valid TransactionRequestDTO dto, Integer usuarioId) {
+        // Validar y obtener entidades relacionadas
 
-        // 2. Verificar el producto
-        Producto producto = productoRepository.findById(dto.getTcoPro())
-            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        TransaccionEvento evento = transaccionEventoService.getEvento(dto.getTceTvo());
+        Producto producto = productoService.getProducto(dto.getTcoPro());
+        Usuario usuario = usuarioService.getUsuario(usuarioId);
+        Aeronave aeronave = dto.getTceAnv() != null ? aeronaveService.getAeronave(dto.getTceAnv()) : null;
 
-        // 3. Verificar usuario
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        // 4. Verificar aeronave si fue proporcionada
-        Aeronave aeronave = null;
-        if (dto.getTceAnv() != null) {
-            aeronave = aeronaveRepository.findById(dto.getTceAnv())
-                .orElseThrow(() -> new RuntimeException("Aeronave no encontrada"));
-        }
-
-        // 5. Validar stock para bajas
-        if (dto.getTceTvo() >= 4 && dto.getTceTvo() <= 9) { // Eventos de BAJA
-            if (producto.getProUnidades() < dto.getCantidad()) {
-                throw new RuntimeException(String.format(
-                    "No hay suficiente stock para realizar la baja. Disponible: %d, Solicitado: %d",
-                    producto.getProUnidades(), dto.getCantidad()));
-            }
+        // Validar stock para bajas
+        if (transaccionEventoService.isStockOut(dto.getTceTvo())) {
+            productoService.StockDisponible(producto.getProId(), dto.getUnidades());
         }
 
         // 6. Crear y guardar la transacción principal
@@ -195,75 +188,36 @@ public class TransaccionService {
         transaccion.setTceUsr(usuario);
         transaccion.setTceAnv(aeronave);
         transaccion = transaccionRepository.save(transaccion);
+        //Aqui podria aplicar el builder?
 
-        // 7. Crear relación transacción-producto
-        TransaccionesProducto transaccionProducto = new TransaccionesProducto();
-        transaccionProducto.setTcoTce(transaccion);
-        transaccionProducto.setTcoPro(producto);
-        transaccionProducto.setTcoUnidades(dto.getCantidad());
-        transaccionProducto = transaccionesProductoRepository.save(transaccionProducto);
+        // Crear relación transacciónes-producto
+        TransaccionesProducto transaccionProducto = transaccionesProductoService.createProductTransaction (
+            transaccion,
+            producto,
+            dto.getUnidades()
+        );
 
-        // 8. Manejar lógica diferente para altas y bajas
-        if (transaccionEventoService.isStockIn(dto.getTceTvo())) { // Eventos de ALTA (1, 2, 3)
-            // Crear nuevo lote para la entrada
-            if (dto.getLtFechaVencimiento() != null) {
-                Lote lote = Lote.builder()
-                    .ltFechaVencimiento(dto.getLtFechaVencimiento())
-                    .build();
-                lote = loteRepository.save(lote);
-
-                // Registrar detalle del lote
-                LoteTransaccionProductoDetalle detalle = new LoteTransaccionProductoDetalle();
-                detalle.setLtpdLt(lote);
-                detalle.setLtpdTco(transaccionProducto);
-                detalle.setLtpdUnidades(dto.getCantidad());
-                loteTransaccionProductoDetalleRepository.save(detalle);
-            }
-
-            // Actualizar stock
-            producto.setProUnidades(producto.getProUnidades() + dto.getCantidad());
-        } else { // Eventos de BAJA (4-9)
-            // Manejar la baja con lógica FIFO
-            manejarBajaProducto(producto, transaccionProducto, dto.getCantidad());
+        // Manejar lógica según tipo de evento
+        if (transaccionEventoService.isStockIn(dto.getTceTvo())) {
+            procesarAlta(dto, transaccionProducto, producto);
+        } else {
+            procesarBaja(producto, transaccionProducto, dto.getUnidades());
         }
 
-        productoRepository.save(producto);
         return transaccion.getTceId();
     }
 
-    private void manejarBajaProducto(Producto producto, TransaccionesProducto transaccionProducto, Integer cantidadRequerida) {
-        // Obtener lotes ordenados por fecha de vencimiento (más antiguos primero)
-        List<Object[]> lotesDisponibles = loteTransaccionProductoDetalleRepository
-            .findLotesDisponiblesByProductoOrderByFecha(producto.getProId());
-
-        Integer cantidadRestante = cantidadRequerida;
-
-        for (Object[] loteInfo : lotesDisponibles) {
-            Lote lote = (Lote) loteInfo[0];
-            Integer disponibleEnLote = ((Number) loteInfo[1]).intValue();
-
-            if (disponibleEnLote <= 0) continue;
-
-            // Calcular cuánto tomar de este lote
-            Integer cantidadADescontar = Math.min(disponibleEnLote, cantidadRestante);
-
-            // Registrar la salida (detalle con cantidad negativa)
-            LoteTransaccionProductoDetalle detalleSalida = new LoteTransaccionProductoDetalle();
-            detalleSalida.setLtpdLt(lote);
-            detalleSalida.setLtpdTco(transaccionProducto);
-            detalleSalida.setLtpdUnidades(-cantidadADescontar);
-            loteTransaccionProductoDetalleRepository.save(detalleSalida);
-
-            cantidadRestante -= cantidadADescontar;
-
-            if (cantidadRestante <= 0) break;
+    private void procesarAlta(TransactionRequestDTO dto, TransaccionesProducto transaccionProducto, Producto producto) {
+        if (dto.getLtFechaVencimiento() != null) {
+            Lote lote = loteService.crear(dto.getLtFechaVencimiento());
+            loteTransaccionProductoDetalleService.crearDetalle(lote, transaccionProducto, dto.getUnidades());
         }
+        productoService.aumentarStock(producto.getProId(), dto.getUnidades());
+    }
 
-        if (cantidadRestante > 0) {
-            throw new RuntimeException("Error inesperado al procesar bajas: no se pudo completar la transacción");
-        }
-
-        // Actualizar stock del producto
-        producto.setProUnidades(producto.getProUnidades() - cantidadRequerida);
+    private void procesarBaja(Producto producto, TransaccionesProducto transaccionProducto, Integer cantidad) {
+        loteTransaccionProductoDetalleService.manejarBajaProducto(producto.getProId(), transaccionProducto, cantidad);
+        productoService.reducirStock(producto.getProId(), cantidad);
     }
 }
+

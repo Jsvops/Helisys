@@ -95,4 +95,9 @@ public class AeronaveService {
         aeronave.setAnvMre(anvMre);
         return aeronave;
     }
+
+    public Aeronave getAeronave(Integer aeronaveId) {
+        return aeronaveRepository.findById(aeronaveId)
+            .orElseThrow(() -> new RuntimeException("Aeronave no encontrada"));
+    }
 }
