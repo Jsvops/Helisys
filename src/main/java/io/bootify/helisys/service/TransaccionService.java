@@ -1,6 +1,7 @@
 package io.bootify.helisys.service;
 
 import io.bootify.helisys.domain.*;
+import io.bootify.helisys.mapper.TransaccionesProductoMapper;
 import io.bootify.helisys.model.TransactionRequestDTO;
 import io.bootify.helisys.model.TransaccionDTO;
 import io.bootify.helisys.repos.*;
@@ -32,7 +33,7 @@ public class TransaccionService {
     private final TransaccionesProductoService transaccionesProductoService;
     private final LoteService loteService;
     private final LoteTransaccionProductoDetalleService loteTransaccionProductoDetalleService;
-
+    private final TransaccionesProductoMapper transaccionesProductoMapper;
 
     public TransaccionService(final TransaccionRepository transaccionRepository,
                               final TransaccionEventoRepository transaccionEventoRepository,
@@ -45,7 +46,7 @@ public class TransaccionService {
                               final AeronaveService aeronaveService,
                               final TransaccionesProductoService transaccionesProductoService,
                               final LoteService loteService,
-                              final LoteTransaccionProductoDetalleService loteTransaccionProductoDetalleService) {
+                              final LoteTransaccionProductoDetalleService loteTransaccionProductoDetalleService, TransaccionesProductoMapper transaccionesProductoMapper) {
         this.transaccionRepository = transaccionRepository;
         this.transaccionEventoRepository = transaccionEventoRepository;
         this.usuarioRepository = usuarioRepository;
@@ -58,6 +59,7 @@ public class TransaccionService {
         this.transaccionesProductoService = transaccionesProductoService;
         this.loteService = loteService;
         this.loteTransaccionProductoDetalleService = loteTransaccionProductoDetalleService;
+        this.transaccionesProductoMapper = transaccionesProductoMapper;
     }
 
     public List<TransaccionDTO> findAll() {
@@ -198,26 +200,29 @@ public class TransaccionService {
         );
 
         // Manejar lógica según tipo de evento
-        if (transaccionEventoService.isStockIn(dto.getTceTvo())) {
-            procesarAlta(dto, transaccionProducto, producto);
-        } else {
-            procesarBaja(producto, transaccionProducto, dto.getUnidades());
-        }
-
+        procesarTransaccion(transaccionEventoService.isStockIn(dto.getTceTvo()), dto);
         return transaccion.getTceId();
     }
 
-    private void procesarAlta(TransactionRequestDTO dto, TransaccionesProducto transaccionProducto, Producto producto) {
-        if (dto.getLtFechaVencimiento() != null) {
-            Lote lote = loteService.crear(dto.getLtFechaVencimiento());
-            loteTransaccionProductoDetalleService.crearDetalle(lote, transaccionProducto, dto.getUnidades());
+    private void procesarTransaccion(boolean isStockIn, TransactionRequestDTO transactionRequestDTO) {
+        //si es alta
+        if(isStockIn) {
+            if (transactionRequestDTO.getLtFechaVencimiento() != null) {
+                Lote lote = loteService.crear(transactionRequestDTO.getLtFechaVencimiento());
+                loteTransaccionProductoDetalleService.crearDetalle(lote,
+                    transaccionesProductoMapper.toEntity(
+                        transaccionesProductoService.get(transactionRequestDTO.getTcoPro())),
+                    transactionRequestDTO.getUnidades());
+            }
+            productoService.aumentarStock(transactionRequestDTO.getTcoPro(), transactionRequestDTO.getUnidades());
+        } else { //si es baja
+            loteTransaccionProductoDetalleService.manejarBajaProducto(
+                transactionRequestDTO.getTcoPro(),
+                transaccionesProductoMapper.toEntity(
+                    transaccionesProductoService.get(transactionRequestDTO.getTcoPro())),
+                transactionRequestDTO.getUnidades());
+            productoService.reducirStock(transactionRequestDTO.getTcoPro(), transactionRequestDTO.getUnidades());
         }
-        productoService.aumentarStock(producto.getProId(), dto.getUnidades());
-    }
-
-    private void procesarBaja(Producto producto, TransaccionesProducto transaccionProducto, Integer cantidad) {
-        loteTransaccionProductoDetalleService.manejarBajaProducto(producto.getProId(), transaccionProducto, cantidad);
-        productoService.reducirStock(producto.getProId(), cantidad);
     }
 }
 
