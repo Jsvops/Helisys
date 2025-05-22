@@ -81,6 +81,7 @@ public class TransaccionEventoService {
         return null;
     }
 
+    //Metodo que esta siendo llamado en el TransaccionService.java para la obtencion de la entidad
     public TransaccionEvento getEvento(Integer id) {
         return transaccionEventoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Tipo de evento no válido"));

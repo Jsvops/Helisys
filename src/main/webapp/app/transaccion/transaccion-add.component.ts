@@ -7,6 +7,7 @@ import { TransaccionService } from 'app/transaccion/transaccion.service';
 import { TransaccionDTO } from 'app/transaccion/transaccion.model';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { AuthService } from 'app/auth.service'; // Importa el servicio de autenticación
+import { TransaccionRequestDTO } from 'app/transaccion/transaccion-request.dto'
 
 @Component({
   selector: 'app-transaccion-add',
@@ -30,13 +31,56 @@ export class TransaccionAddComponent implements OnInit {
     tceObservaciones: new FormControl(null, [Validators.maxLength(500)]), // Eliminando Validators.required  para que sea opcional
     tceTvo: new FormControl(null, [Validators.required]),
     tceUsr: new FormControl<number | null>({ value: null, disabled: true }, [Validators.required]),
-  }, { updateOn: 'submit' });
+
+     // Campos adicionales para executeSampleTransaction()
+      tcoPro: new FormControl(null, [Validators.required]), // Producto
+      unidades: new FormControl(null, [Validators.required, Validators.min(1)]), // Cantidad
+      tceAnv: new FormControl(null, [Validators.required]), // Aeronave
+      ltFechaVencimiento: new FormControl(null, [Validators.required]) // Fecha de vencimiento
+  }, { updateOn: 'change' });
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
       created: $localize`:@@transaccion.create.success:Transaccion was created successfully.`
     };
     return messages[key];
+  }
+
+  executeSampleTransaction() {
+    console.log('Form values:', this.addForm.value);
+    console.log('Form valid:', this.addForm.valid);
+    console.log('Current user ID:', this.currentUserId);
+
+    this.addForm.markAllAsTouched();
+
+    if (!this.addForm.valid || !this.currentUserId) {
+      console.error('Formulario inválido o usuario no autenticado');
+      return;
+    }
+
+    const formValue = this.addForm.getRawValue();
+
+    const dto: TransaccionRequestDTO = {
+      tceTvo: formValue.tceTvo!,
+      tcoPro: formValue.tcoPro!,
+      unidades: formValue.unidades!,
+      tceObservaciones: formValue.tceObservaciones || '',
+      tceAnv: formValue.tceAnv!,
+      ltFechaVencimiento: formValue.ltFechaVencimiento!
+    };
+
+    this.transaccionService.executeTransaction(dto).subscribe({
+      next: (id) => {
+        console.log('Transacción ejecutada con ID:', id);
+        this.router.navigate(['/transacciones'], {
+          state: { msgSuccess: 'Transacción ejecutada correctamente.' }
+        });
+      },
+      error: (err) => {
+        console.error('Error al ejecutar transacción', err);
+        this.errorHandler.handleServerError(err.error);
+      }
+    });
   }
 
   ngOnInit() {

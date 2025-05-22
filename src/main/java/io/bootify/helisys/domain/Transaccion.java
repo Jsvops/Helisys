@@ -11,12 +11,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transaccion {
 
     @Id
@@ -27,7 +30,7 @@ public class Transaccion {
     @Column(nullable = false)
     private LocalDate tceFechaTransaccion;
 
-    // Cambio de false a true porque el campo tceObservaciones es opcional
+
     @Column(nullable = true, length = 500)
     private String tceObservaciones;
 

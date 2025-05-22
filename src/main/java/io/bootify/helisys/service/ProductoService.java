@@ -210,7 +210,7 @@ public class ProductoService {
         LocalDate enUnAnio = hoy.plusYears(1);
         return productoRepository.findProductosVencidosYPorVencer(hoy, enUnAnio);
     }
-
+    //Metodo que esta siendo llamado en el TransaccionService.java para la obtencion de la entidad
     public Producto getProducto(Integer id) {
         return productoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Producto no encontrado"));

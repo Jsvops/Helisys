@@ -4,6 +4,7 @@ import { environment } from 'environments/environment';
 import { TransaccionDTO } from 'app/transaccion/transaccion.model';
 import { map, Observable, catchError, tap } from 'rxjs';
 import { transformRecordToMap } from 'app/common/utils'; // Asegúrate de que la ruta sea correcta
+import { TransaccionRequestDTO } from './transaccion-request.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -60,4 +61,8 @@ export class TransaccionService {
       })
     );
   }
+  executeTransaction(dto: TransaccionRequestDTO): Observable<number> {
+    return this.http.post<number>(this.resourcePath + '/', dto);
+  }
+
 }

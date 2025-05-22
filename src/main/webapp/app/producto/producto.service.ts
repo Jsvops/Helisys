@@ -50,11 +50,6 @@ export class ProductoService {
       .pipe(map(transformRecordToMap));
   }
 
-  // Eliminamos getProMreValues ya que la relación directa ya no existe
-  // getProMreValues() {
-  //   return this.http.get<Record<string, string>>(this.resourcePath + '/proMreValues')
-  //     .pipe(map(transformRecordToMap));
-  // }
 
   getProPveValues() {
     return this.http.get<Record<string, string>>(this.resourcePath + '/proPveValues')
@@ -78,4 +73,5 @@ export class ProductoService {
   getAlmacenCombinado(): Observable<AlmacenCombinadoDTO[]> {
     return this.http.get<AlmacenCombinadoDTO[]>('/api/productos/almacen-combinado');
   }
+
 }

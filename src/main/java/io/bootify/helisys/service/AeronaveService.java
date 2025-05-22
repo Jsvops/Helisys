@@ -96,6 +96,7 @@ public class AeronaveService {
         return aeronave;
     }
 
+    //Metodo que esta siendo llamado en el TransaccionService.java para la obtencion de la entidad
     public Aeronave getAeronave(Integer aeronaveId) {
         return aeronaveRepository.findById(aeronaveId)
             .orElseThrow(() -> new RuntimeException("Aeronave no encontrada"));

@@ -2,8 +2,9 @@ package io.bootify.helisys.service;
 
 import io.bootify.helisys.domain.*;
 import io.bootify.helisys.mapper.TransaccionesProductoMapper;
-import io.bootify.helisys.model.TransactionRequestDTO;
 import io.bootify.helisys.model.TransaccionDTO;
+import io.bootify.helisys.model.TransaccionesProductoDTO;
+import io.bootify.helisys.model.TransactionRequestDTO;
 import io.bootify.helisys.repos.*;
 import io.bootify.helisys.util.NotFoundException;
 import io.bootify.helisys.util.ReferencedWarning;
@@ -170,59 +171,79 @@ public class TransaccionService {
 
     @Transactional
     public Integer executeTransaction(@Valid TransactionRequestDTO dto, Integer usuarioId) {
-        // Validar y obtener entidades relacionadas
 
+        // Obtener entidades relacionadas
         TransaccionEvento evento = transaccionEventoService.getEvento(dto.getTceTvo());
         Producto producto = productoService.getProducto(dto.getTcoPro());
-        Usuario usuario = usuarioService.getUsuario(usuarioId);
+        Usuario usuario = usuarioService.getUsuario(usuarioId);/*duda: como se obtuvo el id del "usuarioId" para pasarlo como metodo*/
         Aeronave aeronave = dto.getTceAnv() != null ? aeronaveService.getAeronave(dto.getTceAnv()) : null;
+        // != "no igual a" o "distinto de"
 
-        // Validar stock para bajas
+        //Metodo que devuelve true si el tipo de evento es bajaA
         if (transaccionEventoService.isStockOut(dto.getTceTvo())) {
+            //Metodo que valida si hay suficiente stock
             productoService.StockDisponible(producto.getProId(), dto.getUnidades());
         }
 
-        // 6. Crear y guardar la transacción principal
-        Transaccion transaccion = new Transaccion();
-        transaccion.setTceFechaTransaccion(LocalDate.now());
-        transaccion.setTceObservaciones(dto.getTceObservaciones());
-        transaccion.setTceTvo(evento);
-        transaccion.setTceUsr(usuario);
-        transaccion.setTceAnv(aeronave);
-        transaccion = transaccionRepository.save(transaccion);
-        //Aqui podria aplicar el builder?
+        // Crear y guardar la transacción principal
+        Transaccion transaccion = Transaccion.builder()
+            .tceFechaTransaccion(LocalDate.now())
+            .tceObservaciones(dto.getTceObservaciones())
+            .tceTvo(evento)
+            .tceUsr(usuario)
+            .tceAnv(aeronave)
+            .build(); //construye y devuelve la instancia Transaccion.
+        Transaccion savedTransaccion = transaccionRepository.save(transaccion); //método de spring data JPA que persiste la entidad y devuelve la version "gestionada (con IDs y campos generados por la BD)
 
-        // Crear relación transacciónes-producto
-        TransaccionesProducto transaccionProducto = transaccionesProductoService.createProductTransaction (
-            transaccion,
-            producto,
-            dto.getUnidades()
+
+        // Crear relación transacción-producto
+        TransaccionesProductoDTO transaccionesProductoDTO = new TransaccionesProductoDTO();
+        transaccionesProductoDTO.setTcoTce(savedTransaccion.getTceId());
+        transaccionesProductoDTO.setTcoPro(producto.getProId());
+        transaccionesProductoDTO.setTcoUnidades(dto.getUnidades());
+
+        TransaccionesProductoDTO savedDto =
+            transaccionesProductoService.createProductTransaction(transaccionesProductoDTO);
+
+
+        // Procesar la lógica adicional según el tipo de transacción
+        procesarTransaccion(
+            transaccionEventoService.isStockIn(dto.getTceTvo()),
+            dto,
+            savedDto.getTcoId() // ID recién creado de la transacción-producto
         );
 
-        // Manejar lógica según tipo de evento
-        procesarTransaccion(transaccionEventoService.isStockIn(dto.getTceTvo()), dto);
-        return transaccion.getTceId();
+        return savedTransaccion.getTceId();
     }
 
-    private void procesarTransaccion(boolean isStockIn, TransactionRequestDTO transactionRequestDTO) {
-        //si es alta
-        if(isStockIn) {
+    private void procesarTransaccion(boolean isStockIn, TransactionRequestDTO transactionRequestDTO, Integer transaccionesProductoId) {
+        TransaccionesProducto transProdEntity = transaccionesProductoMapper.toEntity(
+            transaccionesProductoService.get(transaccionesProductoId));
+
+        if (isStockIn) {
             if (transactionRequestDTO.getLtFechaVencimiento() != null) {
                 Lote lote = loteService.crear(transactionRequestDTO.getLtFechaVencimiento());
-                loteTransaccionProductoDetalleService.crearDetalle(lote,
-                    transaccionesProductoMapper.toEntity(
-                        transaccionesProductoService.get(transactionRequestDTO.getTcoPro())),
-                    transactionRequestDTO.getUnidades());
+                //Vincula el lote con la transaccion-producto
+                loteTransaccionProductoDetalleService.crearDetalle(
+                    lote,
+                    transProdEntity,
+                    transactionRequestDTO.getUnidades()
+                );
             }
             productoService.aumentarStock(transactionRequestDTO.getTcoPro(), transactionRequestDTO.getUnidades());
-        } else { //si es baja
+        }
+
+        else {
             loteTransaccionProductoDetalleService.manejarBajaProducto(
                 transactionRequestDTO.getTcoPro(),
-                transaccionesProductoMapper.toEntity(
-                    transaccionesProductoService.get(transactionRequestDTO.getTcoPro())),
-                transactionRequestDTO.getUnidades());
+                transProdEntity,
+                transactionRequestDTO.getUnidades()
+            );
             productoService.reducirStock(transactionRequestDTO.getTcoPro(), transactionRequestDTO.getUnidades());
         }
     }
+
+
+
 }
 
