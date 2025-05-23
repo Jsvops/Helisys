@@ -74,4 +74,8 @@ export class ProductoService {
     return this.http.get<AlmacenCombinadoDTO[]>('/api/productos/almacen-combinado');
   }
 
+  searchByPartNumber(partNumber: string) {
+    return this.http.get<ProductoDTO[]>(`/api/productos/search?partNumber=${encodeURIComponent(partNumber)}`);
+  }
+
 }
