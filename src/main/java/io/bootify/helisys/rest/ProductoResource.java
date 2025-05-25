@@ -136,7 +136,6 @@ public class ProductoResource {
         return ResponseEntity.ok(datosCombinados);
     }
 
-    // Nuevo endpoint para obtener modelos de aeronave asociados a un producto
     @GetMapping("/{proId}/modelos")
     public ResponseEntity<List<DetalleProductoModeloAeronaveDTO>> getModelosByProductoId(
         @PathVariable(name = "proId") final Integer proId) {
@@ -144,7 +143,6 @@ public class ProductoResource {
         return ResponseEntity.ok(detalles);
     }
 
-    // Nuevo endpoint para actualizar modelos de aeronave asociados a un producto
     @PutMapping("/{proId}/modelos")
     public ResponseEntity<Void> updateModelosByProductoId(
         @PathVariable(name = "proId") final Integer proId,
@@ -152,7 +150,6 @@ public class ProductoResource {
         productoService.updateModelosByProductoId(proId, mreIds);
         return ResponseEntity.noContent().build();
     }
-    // ... otros endpoints existentes ...
 
     @GetMapping("/vencidos-y-por-vencer")
     public ResponseEntity<List<ProductoExpiradoDTO>> getProductosVencidosYPorVencer() {

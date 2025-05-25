@@ -11,17 +11,17 @@ import java.time.LocalDate;
 public class TransactionRequestDTO {
 
     @NotNull
-    private Integer tceTvo; // ID del tipo de evento (1-9)
+    private Integer tceTvo;
 
     @NotNull
-    private Integer tcoPro; // ID del producto
+    private Integer tcoPro;
 
-    private Integer tceAnv; // ID de aeronave (opcional)
+    private Integer tceAnv;
 
     @NotNull
     private Integer unidades;
 
-    private LocalDate ltFechaVencimiento; // Obligatorio para productos perecederos
+    private LocalDate ltFechaVencimiento;
 
     private String tceObservaciones;
 }

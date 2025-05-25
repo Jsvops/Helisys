@@ -16,7 +16,6 @@ public class ModeloAeronaveDTO {
     @Size(max = 45)
     private String mreNombre;
 
-    // Lista de DetalleProductoModeloAeronaveDTO para representar la relación
     private List<DetalleProductoModeloAeronaveDTO> detallesProducto;
 
 }

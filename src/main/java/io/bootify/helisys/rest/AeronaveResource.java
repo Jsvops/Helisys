@@ -76,7 +76,6 @@ public class AeronaveResource {
             .collect(CustomCollectors.toSortedMap(ModeloAeronave::getMreId, ModeloAeronave::getMreNombre)));
     }
 
-    // Nuevo endpoint para obtener aeronaves compatibles con un producto
     @GetMapping("/compatibles")
     @Operation(summary = "Obtener aeronaves compatibles con un producto")
     @ApiResponse(responseCode = "200", description = "Aeronaves compatibles encontradas")

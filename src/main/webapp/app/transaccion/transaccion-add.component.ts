@@ -30,10 +30,12 @@ export class TransaccionAddComponent implements OnInit {
 
   tceTvoValues?: Map<number, string>;
   tceUsrValues?: Map<number, string>;
+  tceAnvValues?: Map<number, string>;
   currentUserId?: number;
   currentUserName?: string;
   showFechaVencimiento = false;
   showAeronave = false;
+
 
 
       addForm = new FormGroup({
@@ -89,7 +91,16 @@ export class TransaccionAddComponent implements OnInit {
             state: { msgSuccess: 'Transacción ejecutada correctamente.' }
           });
         },
-        error: (err) => this.errorHandler.handleServerError(err.error)
+
+      error: (err) => {
+        const errorMsg = err?.error?.message || err?.error;
+
+        if (typeof errorMsg === 'string' && errorMsg.includes('stock insuficiente')) {
+          alert('No se puede completar la transacción: stock insuficiente en los lotes disponibles.');
+        } else {
+          this.errorHandler.handleServerError(err.error);
+        }
+      }
       });
     },
     error: (err) => {
@@ -128,6 +139,56 @@ export class TransaccionAddComponent implements OnInit {
             this.updateFieldVisibility(value);
           }
         });
+
+        this.transaccionService.getTceAnvValues()
+          .subscribe({
+            next: (data) => this.tceAnvValues = data,
+            error: (error) => this.errorHandler.handleServerError(error.error)
+          });
+
+        this.addForm.get('tcoProNumeroParte')?.valueChanges.subscribe((numeroParte) => {
+          if (numeroParte) {
+            this.productoService.searchByPartNumber(numeroParte).subscribe({
+              next: (productos) => {
+                if (productos.length === 0) {
+                  this.tceAnvValues = new Map(); // limpia si no hay productos
+                  this.addForm.patchValue({ tceAnv: null }); // limpia selección anterior
+                  return;
+                }
+
+                const producto = productos[0];
+                const productoId = producto.proId;
+
+                // Llama a las aeronaves compatibles
+                this.transaccionService.getAeronavesCompatibles(productoId!).subscribe({
+                  next: (aeronaves) => {
+                    // Convierte la lista a Map para usarla en el selector
+                    this.tceAnvValues = new Map(
+                      aeronaves.map((a) => [a.anvId, a.anvMatricula])
+                    );
+                    this.addForm.patchValue({ tceAnv: null }); // Limpia selección anterior
+                  },
+                  error: (err) => {
+                    console.error('Error al obtener aeronaves compatibles', err);
+                    this.tceAnvValues = new Map(); // limpia si falla
+                    this.addForm.patchValue({ tceAnv: null });
+                  }
+                });
+              },
+              error: (err) => {
+                console.error('Error al buscar producto por número de parte', err);
+                this.tceAnvValues = new Map();
+                this.addForm.patchValue({ tceAnv: null });
+              }
+            });
+          } else {
+            // Limpia si el campo está vacío
+            this.tceAnvValues = new Map();
+            this.addForm.patchValue({ tceAnv: null });
+          }
+        });
+
+
 
       }
 

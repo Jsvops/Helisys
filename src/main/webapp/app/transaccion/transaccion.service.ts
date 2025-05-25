@@ -39,6 +39,12 @@ export class TransaccionService {
       .pipe(map(transformRecordToMap));
   }
 
+  getTceAnvValues(): Observable<Map<number, string>> {
+    return this.http.get<Record<string, string>>(`${this.resourcePath}/tceAnvValues`)
+      .pipe(map(transformRecordToMap));
+  }
+
+
   getTceUsrValues(): Observable<Map<number, string>> {
     return this.http.get<Record<string, string>>(`${this.resourcePath}/tceUsrValues`)
       .pipe(map(transformRecordToMap));
@@ -55,12 +61,9 @@ export class TransaccionService {
   getAeronavesCompatibles(productoId: number): Observable<{ anvId: number, anvMatricula: string }[]> {
     return this.http.get<{ anvId: number, anvMatricula: string }[]>(
       `${environment.apiPath}/api/aeronaves/compatibles?productoId=${productoId}`
-    ).pipe(
-      catchError((error) => {
-        throw error; // Propagar el error
-      })
     );
   }
+
   executeTransaction(dto: TransaccionRequestDTO): Observable<number> {
     return this.http.post<number>(this.resourcePath + '/', dto);
   }

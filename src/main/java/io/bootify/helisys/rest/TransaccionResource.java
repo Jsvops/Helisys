@@ -1,9 +1,11 @@
 package io.bootify.helisys.rest;
 
+import io.bootify.helisys.domain.Aeronave;
 import io.bootify.helisys.domain.TransaccionEvento;
 import io.bootify.helisys.domain.Usuario;
 import io.bootify.helisys.model.TransaccionDTO;
 import io.bootify.helisys.model.TransactionRequestDTO;
+import io.bootify.helisys.repos.AeronaveRepository;
 import io.bootify.helisys.repos.TransaccionEventoRepository;
 import io.bootify.helisys.repos.UsuarioRepository;
 import io.bootify.helisys.service.TransaccionService;
@@ -40,16 +42,20 @@ public class TransaccionResource {
     private final TransaccionEventoRepository transaccionEventoRepository;
     private final UsuarioRepository usuarioRepository;
     private final UsuarioService usuarioService;
+    private final AeronaveRepository aeronaveRepository;
+
 
 
     public TransaccionResource(final TransaccionService transaccionService,
                                final TransaccionEventoRepository transaccionEventoRepository,
                                final UsuarioRepository usuarioRepository,
-                               final UsuarioService usuarioService) {
+                               final UsuarioService usuarioService,
+                                final AeronaveRepository aeronaveRepository) {
         this.transaccionService = transaccionService;
         this.transaccionEventoRepository = transaccionEventoRepository;
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
+        this.aeronaveRepository = aeronaveRepository;
     }
 
     @GetMapping
@@ -104,6 +110,15 @@ public class TransaccionResource {
             .stream()
             .collect(CustomCollectors.toSortedMap(TransaccionEvento::getTvoId, TransaccionEvento::getTvoEvento)));
     }
+
+    @GetMapping("/tceAnvValues")
+    public ResponseEntity<Map<Integer, String>> getTceAnvValues() {
+        return ResponseEntity.ok(
+            aeronaveRepository.findAll(Sort.by("anvId"))
+                .stream()
+                .collect(CustomCollectors.toSortedMap(Aeronave::getAnvId, Aeronave::getAnvMatricula)));
+    }
+
 
     @GetMapping("/tceUsrValues")
     public ResponseEntity<Map<Integer, String>> getTceUsrValues() {
