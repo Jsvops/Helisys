@@ -5,6 +5,7 @@ import io.bootify.helisys.domain.TransaccionEvento;
 import io.bootify.helisys.domain.Usuario;
 import io.bootify.helisys.model.TransaccionDTO;
 import io.bootify.helisys.model.TransactionRequestDTO;
+import io.bootify.helisys.model.TransactionResponseDTO;
 import io.bootify.helisys.repos.AeronaveRepository;
 import io.bootify.helisys.repos.TransaccionEventoRepository;
 import io.bootify.helisys.repos.UsuarioRepository;
@@ -19,7 +20,11 @@ import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -82,6 +87,13 @@ public class TransaccionResource {
 
         Integer transaccionId = transaccionService.executeTransaction(dto, usuarioId);
         return ResponseEntity.status(HttpStatus.CREATED).body(transaccionId);
+    }
+
+    @GetMapping("/lista")
+    public ResponseEntity<Page<TransactionResponseDTO>> listAll(
+        @PageableDefault(page = 0, size = 20) Pageable pageable) {
+        Page<TransactionResponseDTO> page = transaccionService.getAllTransactions(pageable);
+        return ResponseEntity.ok(page);
     }
 
     @PutMapping("/{tceId}")

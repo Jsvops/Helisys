@@ -5,10 +5,13 @@ import io.bootify.helisys.mapper.TransaccionesProductoMapper;
 import io.bootify.helisys.model.TransaccionDTO;
 import io.bootify.helisys.model.TransaccionesProductoDTO;
 import io.bootify.helisys.model.TransactionRequestDTO;
+import io.bootify.helisys.model.TransactionResponseDTO;
 import io.bootify.helisys.repos.*;
 import io.bootify.helisys.util.NotFoundException;
 import io.bootify.helisys.util.ReferencedWarning;
-import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -243,6 +246,10 @@ public class TransaccionService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Page<TransactionResponseDTO> getAllTransactions(final Pageable pageable) {
+        return transaccionRepository.findAllTransactionResponses(pageable);
+    }
 
 
 }

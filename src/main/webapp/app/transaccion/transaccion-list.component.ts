@@ -4,20 +4,27 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { TransaccionService } from 'app/transaccion/transaccion.service';
-import { TransaccionDTO } from 'app/transaccion/transaccion.model';
-
+import { TransactionResponseDTO } from './transaction-response.dto';
 
 @Component({
   selector: 'app-transaccion-list',
+  standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './transaccion-list.component.html'})
+  templateUrl: './transaccion-list.component.html'
+})
 export class TransaccionListComponent implements OnInit, OnDestroy {
 
   transaccionService = inject(TransaccionService);
   errorHandler = inject(ErrorHandler);
   router = inject(Router);
-  transacciones?: TransaccionDTO[];
+
+  transacciones: TransactionResponseDTO[] = [];
   navigationSubscription?: Subscription;
+
+  page = 0;
+  size = 10;
+  total = 0;
+  totalPages = 0;
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
@@ -38,40 +45,55 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.navigationSubscription!.unsubscribe();
+    this.navigationSubscription?.unsubscribe();
   }
 
   loadData() {
-    this.transaccionService.getAllTransacciones()
-        .subscribe({
-          next: (data) => this.transacciones = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+    this.transaccionService.getResumenTransacciones(this.page, this.size).subscribe({
+      next: (data) => {
+        this.transacciones = data.content;
+        this.total = data.totalElements;
+        this.totalPages = Math.ceil(this.total / this.size);
+      },
+      error: (error) => this.errorHandler.handleServerError(error.error)
+    });
+  }
+
+  nextPage() {
+    if ((this.page + 1) < this.totalPages) {
+      this.page++;
+      this.loadData();
+    }
+  }
+
+  previousPage() {
+    if (this.page > 0) {
+      this.page--;
+      this.loadData();
+    }
   }
 
   confirmDelete(tceId: number) {
     if (confirm(this.getMessage('confirm'))) {
-      this.transaccionService.deleteTransaccion(tceId)
-          .subscribe({
-            next: () => this.router.navigate(['/transacciones'], {
+      this.transaccionService.deleteTransaccion(tceId).subscribe({
+        next: () => this.router.navigate(['/transacciones'], {
+          state: {
+            msgInfo: this.getMessage('deleted')
+          }
+        }),
+        error: (error) => {
+          if (error.error?.code === 'REFERENCED') {
+            const messageParts = error.error.message.split(',');
+            this.router.navigate(['/transacciones'], {
               state: {
-                msgInfo: this.getMessage('deleted')
+                msgError: this.getMessage(messageParts[0], { id: messageParts[1] })
               }
-            }),
-            error: (error) => {
-              if (error.error?.code === 'REFERENCED') {
-                const messageParts = error.error.message.split(',');
-                this.router.navigate(['/transacciones'], {
-                  state: {
-                    msgError: this.getMessage(messageParts[0], { id: messageParts[1] })
-                  }
-                });
-                return;
-              }
-              this.errorHandler.handleServerError(error.error)
-            }
-          });
+            });
+            return;
+          }
+          this.errorHandler.handleServerError(error.error);
+        }
+      });
     }
   }
-
 }

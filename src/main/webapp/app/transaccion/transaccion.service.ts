@@ -2,9 +2,18 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { TransaccionDTO } from 'app/transaccion/transaccion.model';
-import { map, Observable, catchError, tap } from 'rxjs';
-import { transformRecordToMap } from 'app/common/utils'; // Asegúrate de que la ruta sea correcta
+import { map, Observable } from 'rxjs';
+import { transformRecordToMap } from 'app/common/utils';
 import { TransaccionRequestDTO } from './transaccion-request.dto';
+import { TransactionResponseDTO } from './transaction-response.dto';
+
+interface Page<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  number: number;
+  size: number;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -44,7 +53,6 @@ export class TransaccionService {
       .pipe(map(transformRecordToMap));
   }
 
-
   getTceUsrValues(): Observable<Map<number, string>> {
     return this.http.get<Record<string, string>>(`${this.resourcePath}/tceUsrValues`)
       .pipe(map(transformRecordToMap));
@@ -66,6 +74,15 @@ export class TransaccionService {
 
   executeTransaction(dto: TransaccionRequestDTO): Observable<number> {
     return this.http.post<number>(this.resourcePath + '/', dto);
+  }
+
+  getResumenTransacciones(page = 0, size = 10): Observable<Page<TransactionResponseDTO>> {
+    const params = {
+      page,
+      size,
+      sort: 'tceId,desc'
+    };
+    return this.http.get<Page<TransactionResponseDTO>>(`${this.resourcePath}/lista`, { params });
   }
 
 }
