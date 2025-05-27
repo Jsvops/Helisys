@@ -5,11 +5,13 @@ import { Subscription } from 'rxjs';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { TransaccionService } from 'app/transaccion/transaccion.service';
 import { TransactionResponseDTO } from './transaction-response.dto';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-transaccion-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './transaccion-list.component.html'
 })
 export class TransaccionListComponent implements OnInit, OnDestroy {
@@ -25,6 +27,10 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
   size = 10;
   total = 0;
   totalPages = 0;
+
+  fechaInicio: string | null = null;
+  fechaFin: string | null = null;
+
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
@@ -48,16 +54,31 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
     this.navigationSubscription?.unsubscribe();
   }
 
-  loadData() {
-    this.transaccionService.getResumenTransacciones(this.page, this.size).subscribe({
-      next: (data) => {
-        this.transacciones = data.content;
-        this.total = data.totalElements;
-        this.totalPages = Math.ceil(this.total / this.size);
-      },
-      error: (error) => this.errorHandler.handleServerError(error.error)
-    });
+  loadData(): void {
+    this.transaccionService.getResumenTransacciones(this.page, this.size, this.fechaInicio, this.fechaFin)
+      .subscribe({
+        next: (data) => {
+          this.transacciones = data.content;
+          this.totalPages = data.totalPages;
+        },
+        error: (err) => {
+          console.error('Error al cargar transacciones', err);
+        }
+      });
   }
+
+  filtrarPorFechas() {
+    this.page = 0;
+    this.loadData();
+  }
+
+  limpiarFiltro() {
+    this.fechaInicio = null;
+    this.fechaFin = null;
+    this.page = 0;
+    this.loadData();
+  }
+
 
   nextPage() {
     if ((this.page + 1) < this.totalPages) {

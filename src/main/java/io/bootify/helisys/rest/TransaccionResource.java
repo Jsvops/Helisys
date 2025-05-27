@@ -25,19 +25,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/transacciones", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -91,10 +85,14 @@ public class TransaccionResource {
 
     @GetMapping("/lista")
     public ResponseEntity<Page<TransactionResponseDTO>> listAll(
-        @PageableDefault(page = 0, size = 20) Pageable pageable) {
-        Page<TransactionResponseDTO> page = transaccionService.getAllTransactions(pageable);
+        @PageableDefault(page = 0, size = 20) Pageable pageable,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin
+    ) {
+        Page<TransactionResponseDTO> page = transaccionService.getAllTransactions(pageable, fechaInicio, fechaFin);
         return ResponseEntity.ok(page);
     }
+
 
     @PutMapping("/{tceId}")
     public ResponseEntity<Integer> updateTransaccion(

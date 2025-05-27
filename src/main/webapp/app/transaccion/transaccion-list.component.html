@@ -11,6 +11,22 @@
 <div i18n="@@transaccion.list.empty">No Transacciones could be found.</div>
 } @else {
 <div class="table-responsive">
+    <form class="row mb-3" (ngSubmit)="filtrarPorFechas()">
+        <div class="col-md-4">
+            <label for="fechaInicio" class="form-label" i18n="@@fecha.inicio">Fecha desde:</label>
+            <input type="date" id="fechaInicio" class="form-control" [(ngModel)]="fechaInicio" name="fechaInicio">
+        </div>
+        <div class="col-md-4">
+            <label for="fechaFin" class="form-label" i18n="@@fecha.fin">Fecha hasta:</label>
+            <input type="date" id="fechaFin" class="form-control" [(ngModel)]="fechaFin" name="fechaFin">
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-90" i18n="@@filtrar">Filtrar</button>
+            <button class="btn btn-secondary ms-2" type="button" (click)="limpiarFiltro()">Limpiar filtro</button>
+        </div>
+
+    </form>
+
     <table class="table table-striped table-hover align-middle">
         <thead>
         <tr>
@@ -22,9 +38,6 @@
             <th scope="col" i18n="@@transaccion.aeronaveMatricula.label">Aeronave</th>
             <th scope="col" i18n="@@transaccion.productoNumeroParte.label">Numero de parte</th>
             <th scope="col" i18n="@@transaccion.unidades.label">Unidades</th>
-
-
-            <th><!-- Acción --></th>
         </tr>
         </thead>
         <tbody>
@@ -41,12 +54,7 @@
 
 
 
-            <td>
-                <div class="float-end text-nowrap">
-                    <a [routerLink]="['/transacciones/edit', transaccion.tceId]" class="btn btn-sm btn-secondary" i18n="@@transaccion.list.edit">Edit</a>
-                    <button type="button" (click)="confirmDelete(transaccion.tceId!)" class="btn btn-sm btn-secondary" i18n="@@transaccion.list.delete">Delete</button>
-                </div>
-            </td>
+
         </tr>
         }
         </tbody>

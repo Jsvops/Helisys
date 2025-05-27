@@ -247,9 +247,10 @@ public class TransaccionService {
     }
 
     @Transactional(readOnly = true)
-    public Page<TransactionResponseDTO> getAllTransactions(final Pageable pageable) {
-        return transaccionRepository.findAllTransactionResponses(pageable);
+    public Page<TransactionResponseDTO> getAllTransactions(Pageable pageable, LocalDate fechaInicio, LocalDate fechaFin) {
+        return transaccionRepository.findAllTransactionResponses(pageable, fechaInicio, fechaFin);
     }
+
 
 
 }

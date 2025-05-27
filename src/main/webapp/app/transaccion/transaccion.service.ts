@@ -76,13 +76,24 @@ export class TransaccionService {
     return this.http.post<number>(this.resourcePath + '/', dto);
   }
 
-  getResumenTransacciones(page = 0, size = 10): Observable<Page<TransactionResponseDTO>> {
-    const params = {
+  getResumenTransacciones(
+    page = 0,
+    size = 10,
+    fechaInicio?: string | null,
+    fechaFin?: string | null
+  ): Observable<Page<TransactionResponseDTO>> {
+    const params: any = {
       page,
       size,
       sort: 'tceId,desc'
+
     };
+
+    if (fechaInicio) params.fechaInicio = fechaInicio;
+    if (fechaFin) params.fechaFin = fechaFin;
+
     return this.http.get<Page<TransactionResponseDTO>>(`${this.resourcePath}/lista`, { params });
   }
+
 
 }

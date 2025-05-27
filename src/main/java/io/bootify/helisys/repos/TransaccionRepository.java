@@ -44,32 +44,33 @@ public interface TransaccionRepository extends JpaRepository<Transaccion, Intege
         @Param("fechaInicio") LocalDate fechaInicio,
         @Param("fechaFin") LocalDate fechaFin);
 
-    @Query(
-        value = """
-        SELECT new io.bootify.helisys.model.TransactionResponseDTO(
-            t.tceId,
-            t.tceFechaTransaccion,
-            t.tceObservaciones,
-            te.tvoEvento,
-            u.usrNombre,
-            CASE WHEN a IS NULL THEN '' ELSE a.anvMatricula END,
-            p.proNumeroParte,
-            tp.tcoUnidades
-        )
-        FROM Transaccion t
-        JOIN t.tceTvo te
-        JOIN t.tceUsr u
-        LEFT JOIN t.tceAnv a
-        JOIN t.tcoTceTransaccionesProductos tp
-        JOIN tp.tcoPro p
-        """,
-        countQuery = """
-        SELECT count(tp)
-        FROM Transaccion t
-        JOIN t.tcoTceTransaccionesProductos tp
-        """
+    @Query("""
+    SELECT new io.bootify.helisys.model.TransactionResponseDTO(
+        t.tceId,
+        t.tceFechaTransaccion,
+        t.tceObservaciones,
+        te.tvoEvento,
+        u.usrNombre,
+        CASE WHEN a IS NULL THEN '' ELSE a.anvMatricula END,
+        p.proNumeroParte,
+        tp.tcoUnidades
     )
-    Page<TransactionResponseDTO> findAllTransactionResponses(Pageable pageable);
+    FROM Transaccion t
+    JOIN t.tceTvo te
+    JOIN t.tceUsr u
+    LEFT JOIN t.tceAnv a
+    JOIN t.tcoTceTransaccionesProductos tp
+    JOIN tp.tcoPro p
+    WHERE (:fechaInicio IS NULL OR t.tceFechaTransaccion >= :fechaInicio)
+      AND (:fechaFin IS NULL OR t.tceFechaTransaccion <= :fechaFin)
+    ORDER BY t.tceId DESC
+""")
+    Page<TransactionResponseDTO> findAllTransactionResponses(
+        Pageable pageable,
+        @Param("fechaInicio") LocalDate fechaInicio,
+        @Param("fechaFin") LocalDate fechaFin
+    );
+
 }
 
 
