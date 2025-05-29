@@ -6,6 +6,8 @@ import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { TransaccionService } from 'app/transaccion/transaccion.service';
 import { TransactionResponseDTO } from './transaction-response.dto';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+
 
 
 @Component({
@@ -19,6 +21,8 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
   transaccionService = inject(TransaccionService);
   errorHandler = inject(ErrorHandler);
   router = inject(Router);
+  http = inject(HttpClient);
+
 
   transacciones: TransactionResponseDTO[] = [];
   navigationSubscription?: Subscription;
@@ -92,6 +96,26 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
       this.page--;
       this.loadData();
     }
+  }
+
+  generarReporte(): void {
+    if (!this.fechaInicio || !this.fechaFin) {
+      alert("Por favor seleccione una fecha de inicio y fin.");
+      return;
+    }
+
+    const url = `/generar-pdf?fechaInicio=${this.fechaInicio}&fechaFin=${this.fechaFin}`;
+
+    this.http.get(url, { responseType: 'blob' }).subscribe((blob: Blob) => {
+      const file = new Blob([blob], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(file);
+      link.download = 'reporte-transacciones.pdf';
+      link.click();
+    }, (error: any) => {
+      console.error('Error al generar el reporte', error);
+      alert('Hubo un error al generar el reporte.');
+    });
   }
 
   confirmDelete(tceId: number) {

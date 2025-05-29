@@ -20,7 +20,7 @@ public class PdfService {
     public byte[] generatePdf(List<Map<String, Object>> transacciones, String fechaInicio, String fechaFin) {
         try {
             // Dividir la lista de transacciones en grupos de 8
-            List<List<Map<String, Object>>> transaccionesPaginadas = dividirEnBloques(transacciones, 8);
+            List<List<Map<String, Object>>> transaccionesPaginadas = dividirEnBloques(transacciones, 11);
 
             // Crear el contexto de Thymeleaf
             Context context = new Context();

@@ -1,8 +1,8 @@
 <div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@transaccion.list.headline">Transacciones</h1>
+    <h1 class="flex-grow-1" i18n="@@transaccion.list.headline">Lista de transacciones</h1>
     <div>
         <a routerLink="/transacciones/add" class="btn btn-primary ms-2" i18n="@@transaccion.list.createNew">
-            Create new Transaccion
+            Añadir transacción
         </a>
     </div>
 </div>
@@ -23,6 +23,8 @@
         <div class="col-md-4 d-flex align-items-end">
             <button type="submit" class="btn btn-primary w-90" i18n="@@filtrar">Filtrar</button>
             <button class="btn btn-secondary ms-2" type="button" (click)="limpiarFiltro()">Limpiar filtro</button>
+            <button class="btn btn-success ms-2" type="button" (click)="generarReporte()">Generar Reporte</button>
+
         </div>
 
     </form>
@@ -30,30 +32,25 @@
     <table class="table table-striped table-hover align-middle">
         <thead>
         <tr>
-            <th scope="col" i18n="@@transaccion.tceId.label">Tce Id</th>
-            <th scope="col" i18n="@@transaccion.tceFechaTransaccion.label">Fecha de Transaccion</th>
-            <th scope="col" i18n="@@transaccion.tceObservaciones.label">Observaciones</th>
-            <th scope="col" i18n="@@transaccion.eventoNombre.label">Movimiento</th>
-            <th scope="col" i18n="@@transaccion.usuarioNombre.label">Usuario</th>
-            <th scope="col" i18n="@@transaccion.aeronaveMatricula.label">Aeronave</th>
             <th scope="col" i18n="@@transaccion.productoNumeroParte.label">Numero de parte</th>
+            <th scope="col" i18n="@@transaccion.eventoNombre.label">Movimiento</th>
             <th scope="col" i18n="@@transaccion.unidades.label">Unidades</th>
+            <th scope="col" i18n="@@transaccion.aeronaveMatricula.label">Aeronave</th>
+            <th scope="col" i18n="@@transaccion.tceFechaTransaccion.label">Fecha de Transaccion</th>
+            <th scope="col" i18n="@@transaccion.usuarioNombre.label">Usuario</th>
+            <th scope="col" i18n="@@transaccion.tceObservaciones.label">Observaciones</th>
         </tr>
         </thead>
         <tbody>
         @for (transaccion of transacciones; track transaccion.tceId) {
         <tr>
-            <td>{{ transaccion.tceId }}</td>
-            <td>{{ transaccion.tceFechaTransaccion }}</td>
-            <td>{{ transaccion.tceObservaciones }}</td>
-            <td>{{ transaccion.eventoNombre }}</td>
-            <td>{{ transaccion.usuarioNombre }}</td>
-            <td>{{ transaccion.aeronaveMatricula }}</td>
             <td>{{ transaccion.productoNumeroParte }}</td>
+            <td>{{ transaccion.eventoNombre }}</td>
             <td>{{ transaccion.unidades }}</td>
-
-
-
+            <td>{{ transaccion.aeronaveMatricula }}</td>
+            <td>{{ transaccion.tceFechaTransaccion }}</td>
+            <td>{{ transaccion.usuarioNombre }}</td>
+            <td>{{ transaccion.tceObservaciones }}</td>
 
         </tr>
         }
