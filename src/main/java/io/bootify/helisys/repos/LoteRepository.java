@@ -5,8 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LoteRepository extends JpaRepository<Lote, Integer> {
 
-    // Se puede agregar métodos personalizados aquí si los necesitas
-    // Por ejemplo:
-    // List<Lote> findByLtFechaVencimientoBefore(LocalDate fecha);
+
 
 }

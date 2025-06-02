@@ -16,7 +16,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     boolean existsByUsrPasswordIgnoreCase(String usrPassword);
 
-    // AGREGA EL METODO PARA BUSCAR POR "usrNombre"
     Optional<Usuario> findByUsrNombre(String usrNombre);
 
 }

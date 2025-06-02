@@ -10,12 +10,12 @@ import { AuthService } from 'app/auth.service';
 import { TransaccionRequestDTO } from 'app/transaccion/transaccion-request.dto'
 import { ProductoService } from 'app/producto/producto.service';
 import { ProductoDTO } from 'app/producto/producto.model';
-
-
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { SearchComponent } from 'app/search/search.component';
 
 @Component({
   selector: 'app-transaccion-add',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatDialogModule],
   templateUrl: './transaccion-add.component.html'
 })
 
@@ -26,6 +26,7 @@ export class TransaccionAddComponent implements OnInit {
   productoService = inject(ProductoService);
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
+   dialog = inject(MatDialog);
 
 
   tceTvoValues?: Map<number, string>;
@@ -35,8 +36,6 @@ export class TransaccionAddComponent implements OnInit {
   currentUserName?: string;
   showFechaVencimiento = false;
   showAeronave = false;
-
-
 
       addForm = new FormGroup({
         tceFechaTransaccion: new FormControl({ value: this.getCurrentDate(), disabled: true }, [Validators.required]),
@@ -109,6 +108,19 @@ export class TransaccionAddComponent implements OnInit {
     }
   });
 }
+      abrirBuscadorProductos(): void {
+          const dialogRef = this.dialog.open(SearchComponent, {
+            width: '800px',
+            data: {} // aquí puedes pasar datos si lo necesitas
+          });
+
+      dialogRef.afterClosed().subscribe((result: any) => {
+            if (result) {
+              console.log('Producto seleccionado:', result);
+              // Aquí puedes guardar el producto seleccionado o hacer otra acción
+            }
+          });
+        }
 
       ngOnInit() {
         // Obtener la información del usuario autenticado y asignar el ID al campo tceUsr

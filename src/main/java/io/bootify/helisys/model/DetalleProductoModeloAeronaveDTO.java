@@ -11,9 +11,9 @@ public class DetalleProductoModeloAeronaveDTO {
     private Integer dpmaId;
 
     @NotNull
-    private Integer dpmaPro; // Representa el ID del Producto
+    private Integer dpmaPro;
 
     @NotNull
-    private Integer dpmaMre; // Representa el ID del ModeloAeronave
+    private Integer dpmaMre;
 
 }

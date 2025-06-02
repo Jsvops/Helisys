@@ -6,6 +6,10 @@ import { map, Observable } from 'rxjs';
 import { transformRecordToMap } from 'app/common/utils';
 import { ProductViewDTO } from 'app/producto/product-view.dto';
 import { AlmacenCombinadoDTO } from 'app/almacen-combinado/almacen-combinado.model';
+import { ProductRequestDTO } from 'app/producto/product-request.dto';
+import { ModeloAeronaveDTO } from 'app/modelo-aeronave/modelo-aeronave.model';
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -28,8 +32,8 @@ export class ProductoService {
     return this.http.get<ProductoDTO>(this.resourcePath + '/' + proId);
   }
 
-  createProducto(productoDTO: ProductoDTO) {
-    return this.http.post<number>(this.resourcePath, productoDTO);
+  crearProducto(producto: ProductRequestDTO): Observable<number> {
+    return this.http.post<number>(this.resourcePath + '/', producto);
   }
 
   updateProducto(proId: number, productoDTO: ProductoDTO) {
@@ -76,6 +80,10 @@ export class ProductoService {
 
   searchByPartNumber(partNumber: string) {
     return this.http.get<ProductoDTO[]>(`/api/productos/search?partNumber=${encodeURIComponent(partNumber)}`);
+  }
+
+  getModeloAeronaveValues(): Observable<ModeloAeronaveDTO[]> {
+    return this.http.get<ModeloAeronaveDTO[]>('/api/modeloAeronaves');
   }
 
 }

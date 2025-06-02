@@ -16,6 +16,4 @@ public class ModeloAeronaveDTO {
     @Size(max = 45)
     private String mreNombre;
 
-    private List<DetalleProductoModeloAeronaveDTO> detallesProducto;
-
 }

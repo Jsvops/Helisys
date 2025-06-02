@@ -36,11 +36,8 @@ public class Producto {
     @Column(nullable = false, length = 45)
     private String proNumeroSerie;
 
-    @Column(nullable = false)
-    private Integer proUnidades;
-
-    @Column
-    private LocalDate proFechaVencimiento;
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private Integer proUnidades = 0;
 
     @Column(nullable = false, length = 25)
     private String proTipoDocumento;

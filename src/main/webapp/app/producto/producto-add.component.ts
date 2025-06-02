@@ -4,14 +4,19 @@ import { Router, RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { InputRowComponent } from 'app/common/input-row/input-row.component';
 import { ProductoService } from 'app/producto/producto.service';
-import { ProductoDTO } from 'app/producto/producto.model';
+import { ProductRequestDTO } from 'app/producto/product-request.dto';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { AlmacenCombinadoDTO } from 'app/almacen-combinado/almacen-combinado.model';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatOptionModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-producto-add',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
-  templateUrl: './producto-add.component.html'
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatFormFieldModule,MatSelectModule, MatOptionModule],
+  templateUrl: './producto-add.component.html',
+  styleUrls: ['./producto-add.component.css'],
 })
 export class ProductoAddComponent implements OnInit {
 
@@ -22,18 +27,22 @@ export class ProductoAddComponent implements OnInit {
   proTpoValues?: Map<number, string>;
   proAmcValues?: Map<number, string>;
   proPveValues?: Map<number, string>;
+  modeloAeronaveValues?: Map<number, string>;
+  modeloAeronaveArray: { value: number, label: string }[] = [];
+
+
 
   addForm = new FormGroup({
     proNumeroParte: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
     proNombre: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
     proNumeroParteAlterno: new FormControl(null, [Validators.maxLength(45)]),
     proNumeroSerie: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
-    proUnidades: new FormControl(null, [Validators.required]),
-    proFechaVencimiento: new FormControl(null),
     proTipoDocumento: new FormControl(null, [Validators.required, Validators.maxLength(25)]),
     proTpo: new FormControl(null, [Validators.required]),
     proAmc: new FormControl(null, [Validators.required]),
-    proPve: new FormControl(null, [Validators.required])
+    proPve: new FormControl(null, [Validators.required]),
+    modeloAeronaveIds: new FormControl([], [Validators.required])
+
   }, { updateOn: 'submit' });
 
   getMessage(key: string, details?: any) {
@@ -47,6 +56,8 @@ export class ProductoAddComponent implements OnInit {
     this.loadProTpoValues();
     this.loadProPveValues();
     this.loadAlmacenCombinado();
+    this.loadModeloAeronaveValues(); // <-- Agrega esto
+
   }
 
   private loadProTpoValues() {
@@ -75,14 +86,44 @@ export class ProductoAddComponent implements OnInit {
       });
   }
 
+  private loadModeloAeronaveValues() {
+    this.productoService.getModeloAeronaveValues()
+      .subscribe({
+        next: (data) => {
+          const filtered = data.filter(item => item.mreId != null && item.mreNombre != null);
+          this.modeloAeronaveValues = new Map(filtered.map(item => [item.mreId!, item.mreNombre!]));
+          this.modeloAeronaveArray = filtered.map(item => ({
+            value: item.mreId!,
+            label: item.mreNombre!
+          }));
+        },
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
+  }
+
   handleSubmit() {
     window.scrollTo(0, 0);
     this.addForm.markAllAsTouched();
     if (!this.addForm.valid) {
       return;
     }
-    const data = new ProductoDTO(this.addForm.value);
-    this.productoService.createProducto(data)
+
+    const formData = this.addForm.value;
+    const data: ProductRequestDTO = {
+      proNumeroParte: formData.proNumeroParte!,
+      proNombre: formData.proNombre!,
+      proNumeroParteAlterno: formData.proNumeroParteAlterno || undefined,
+      proNumeroSerie: formData.proNumeroSerie!,
+      proTipoDocumento: formData.proTipoDocumento!,
+      proTpo: formData.proTpo!,
+      proAmc: formData.proAmc!,
+      proPve: formData.proPve!,
+      proUnidades: 0, // valor por defecto (puede omitirse si el backend lo asigna)
+      modeloAeronaveIds: formData.modeloAeronaveIds || []
+
+    };
+
+    this.productoService.crearProducto(data)
       .subscribe({
         next: () => this.router.navigate(['/productos'], {
           state: {
@@ -92,4 +133,5 @@ export class ProductoAddComponent implements OnInit {
         error: (error) => this.errorHandler.handleServerError(error.error, this.addForm, this.getMessage)
       });
   }
+
 }

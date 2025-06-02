@@ -22,6 +22,9 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
     Producto findFirstByProPve(Proveedor proveedor);
 
+    boolean existsByProNumeroParte(String proNumeroParte);
+
+
     @Query("SELECT new io.bootify.helisys.model.ProductViewDTO( " +
         "p.proId, " +
         "p.proNumeroParte, " +
@@ -29,7 +32,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
         "p.proNumeroParteAlterno, " +
         "p.proNumeroSerie, " +
         "p.proUnidades, " +
-        "p.proFechaVencimiento, " +
         "p.proTipoDocumento, " +
         "tpo.tpoNombreTipo, " +
         "CONCAT(amt.amtDescripcion, amr.amrNombre, amc.amcNumero), " +
@@ -49,21 +51,4 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     List<ProductViewDTO> findProducts(@Param("partNumber") String partNumber,
                                       @Param("name") String name,
                                       @Param("alterPartNumber") String alterPartNumber);
-
-    // Método para buscar por código alfanumérico
-    Optional<Producto> findByProNumeroParte(String proNumeroParte);
-
-
-    @Query("SELECT new io.bootify.helisys.model.ProductoExpiradoDTO(" +
-        "p.proId, p.proNumeroParte, p.proNombre, p.proUnidades, " +
-        "p.proFechaVencimiento, p.proTipoDocumento, :fechaActual) " +
-        "FROM Producto p " +
-        "WHERE p.proFechaVencimiento IS NOT NULL " +
-        "AND (p.proFechaVencimiento < :fechaActual OR p.proFechaVencimiento BETWEEN :fechaActual AND :fechaFin) " +
-        "ORDER BY p.proFechaVencimiento ASC")
-    List<ProductoExpiradoDTO> findProductosVencidosYPorVencer(
-        @Param("fechaActual") LocalDate fechaActual,
-        @Param("fechaFin") LocalDate fechaFin);
-
-
 }

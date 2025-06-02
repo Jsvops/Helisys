@@ -2,6 +2,8 @@
     <h1 class="flex-grow-1" i18n="@@transaccion.add.headline">Añadir nueva transacción</h1>
     <div>
         <a routerLink="/transacciones" class="btn btn-secondary" i18n="@@transaccion.add.back">Lista de transacciones</a>
+        <button class="btn btn-success ms-2" (click)="abrirBuscadorProductos()">Buscar Producto</button>
+
     </div>
 </div>
 <form [formGroup]="addForm" (ngSubmit)="executeSampleTransaction()">
@@ -12,5 +14,5 @@
     <app-input-row [group]="addForm" field="unidades" i18n-label="@@transaccion.unidades.label" label="Unidades"/>
     <app-input-row [group]="addForm" field="tceObservaciones" i18n-label="@@transaccion.tceObservaciones.label" label="Observaciones" />
     <input id="tceUsr" formControlName="tceUsr" type="hidden" class="form-control" />
-    <input type="submit" value="Guardar transacción" class="btn btn-success mt-4">
+    <input type="submit" value="Guardar transacción" class="btn btn-primary ms-2">
 </form>

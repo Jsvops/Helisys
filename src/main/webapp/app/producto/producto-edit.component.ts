@@ -31,8 +31,6 @@ export class ProductoEditComponent implements OnInit {
     proNombre: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
     proNumeroParteAlterno: new FormControl(null, [Validators.maxLength(45)]),
     proNumeroSerie: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
-    proUnidades: new FormControl(null, [Validators.required]),
-    proFechaVencimiento: new FormControl(null),
     proTipoDocumento: new FormControl(null, [Validators.required, Validators.maxLength(25)]),
     proTpo: new FormControl(null, [Validators.required]),
     proAmc: new FormControl(null, [Validators.required]),
@@ -76,15 +74,27 @@ export class ProductoEditComponent implements OnInit {
     if (!this.editForm.valid) {
       return;
     }
-    const data = new ProductoDTO(this.editForm.value);
-    this.productoService.updateProducto(this.currentProId!, data)
-      .subscribe({
-        next: () => this.router.navigate(['/productos'], {
-          state: {
-            msgSuccess: this.getMessage('updated')
-          }
-        }),
-        error: (error) => this.errorHandler.handleServerError(error.error, this.editForm, this.getMessage)
-      });
+
+    // Obtener el producto actual para mantener las unidades originales
+    this.productoService.getProducto(this.currentProId!).subscribe({
+      next: (productoActual) => {
+        const formData = this.editForm.value;
+        const data = new ProductoDTO({
+          ...formData,
+          proUnidades: productoActual.proUnidades // Mantener el valor original
+        });
+
+        this.productoService.updateProducto(this.currentProId!, data)
+          .subscribe({
+            next: () => this.router.navigate(['/productos'], {
+              state: {
+                msgSuccess: this.getMessage('updated')
+              }
+            }),
+            error: (error) => this.errorHandler.handleServerError(error.error, this.editForm, this.getMessage)
+          });
+      },
+      error: (error) => this.errorHandler.handleServerError(error.error)
+    });
   }
 }

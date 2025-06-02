@@ -17,6 +17,8 @@ import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -75,12 +77,10 @@ public class ProductoResource {
     }
 
     // Endpoint para crear un producto
-    @PostMapping
-    @ApiResponse(responseCode = "201")
-    public ResponseEntity<Integer> createProducto(
-        @RequestBody @Valid final ProductoDTO productoDTO) {
-        final Integer createdProId = productoService.create(productoDTO);
-        return new ResponseEntity<>(createdProId, HttpStatus.CREATED);
+    @PostMapping("/")
+    public ResponseEntity<Integer> crearProducto(@RequestBody @Valid ProductRequestDTO requestDTO) {
+        Integer productoId = productoService.crearProductoConModelos(requestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productoId);
     }
 
     // Endpoint para actualizar un producto
@@ -150,9 +150,7 @@ public class ProductoResource {
         productoService.updateModelosByProductoId(proId, mreIds);
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/vencidos-y-por-vencer")
-    public ResponseEntity<List<ProductoExpiradoDTO>> getProductosVencidosYPorVencer() {
-        return ResponseEntity.ok(productoService.findProductosVencidosYPorVencer());
-    }
 }
+
+
+

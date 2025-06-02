@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 
 
 
+
 @Component({
   selector: 'app-transaccion-list',
   standalone: true,
@@ -26,12 +27,10 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
 
   transacciones: TransactionResponseDTO[] = [];
   navigationSubscription?: Subscription;
-
   page = 0;
   size = 10;
   total = 0;
   totalPages = 0;
-
   fechaInicio: string | null = null;
   fechaFin: string | null = null;
 

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,5 +86,19 @@ public class ModeloAeronaveService {
             return referencedWarning;
         }
         return null;
+    }
+
+
+    public void relacionarModelos(Producto producto, Set<Integer> modeloIds) {
+        if (modeloIds != null) {
+            modeloIds.stream().distinct().forEach(id -> {
+                ModeloAeronave modelo = modeloAeronaveRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("ModeloAeronave con ID " + id + " no encontrado"));
+                DetalleProductoModeloAeronave detalle = new DetalleProductoModeloAeronave();
+                detalle.setDpmaPro(producto);
+                detalle.setDpmaMre(modelo);
+                detalleProductoModeloAeronaveRepository.save(detalle);
+            });
+        }
     }
 }

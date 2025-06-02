@@ -3,6 +3,8 @@ package io.bootify.helisys.model;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.List;
+import java.util.Set;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
@@ -12,9 +14,7 @@ import lombok.NoArgsConstructor;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductoDTO {
-
-    private Integer proId;
+public class ProductRequestDTO {
 
     @NotNull
     @Size(max = 45)
@@ -32,7 +32,7 @@ public class ProductoDTO {
     private String proNumeroSerie;
 
     @NotNull
-    private Integer proUnidades;
+    private Integer proUnidades = 0;
 
     @NotNull
     @Size(max = 25)
@@ -47,5 +47,6 @@ public class ProductoDTO {
     @NotNull
     private Integer proPve;
 
-
+    // Lista de IDs de modelos de aeronave a asociar con este producto
+    private Set<Integer> modeloAeronaveIds;
 }
