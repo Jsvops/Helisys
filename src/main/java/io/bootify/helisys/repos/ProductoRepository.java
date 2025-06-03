@@ -6,6 +6,8 @@ import io.bootify.helisys.domain.Proveedor;
 import io.bootify.helisys.domain.TipoProducto;
 import io.bootify.helisys.model.ProductViewDTO;
 import io.bootify.helisys.model.ProductoExpiradoDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -42,8 +44,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
         "JOIN p.proAmc amc " +
         "JOIN amc.amcAmr amr " +
         "JOIN amr.amrAmt amt " +
-        "JOIN p.dpmaProDetalleProductoModeloAeronaves dpma " + // Nueva relación
-        "JOIN dpma.dpmaMre mre " + // Relación con ModeloAeronave a través de DetalleProductoModeloAeronave
+        "JOIN p.dpmaProDetalleProductoModeloAeronaves dpma " +
+        "JOIN dpma.dpmaMre mre " +
         "JOIN p.proPve pve " +
         "WHERE p.proNumeroParte = :partNumber " +
         "   OR p.proNombre LIKE %:name% " +
@@ -51,4 +53,14 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     List<ProductViewDTO> findProducts(@Param("partNumber") String partNumber,
                                       @Param("name") String name,
                                       @Param("alterPartNumber") String alterPartNumber);
+
+    @Query("SELECT p " +
+        "FROM Producto p " +
+        "JOIN p.dpmaProDetalleProductoModeloAeronaves dpma " +
+        "WHERE dpma.dpmaMre.mreId = :modeloAeronaveId")
+    Page<Producto> findByModeloAeronaveId(
+        @Param("modeloAeronaveId") Integer modeloAeronaveId,
+        Pageable pageable
+    );
+
 }

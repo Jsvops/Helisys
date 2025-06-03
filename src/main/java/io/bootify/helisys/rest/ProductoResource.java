@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -46,28 +48,20 @@ public class ProductoResource {
         this.proveedorRepository = proveedorRepository;
     }
 
-    // Endpoint para obtener unidades disponibles
-    @GetMapping("/{id}/unidades-disponibles")
-    public ResponseEntity<Integer> getUnidadesDisponibles(@PathVariable(name = "id") final Integer id) {
-        int unidadesDisponibles = productoService.getUnidadesDisponibles(id);
-        return ResponseEntity.ok(unidadesDisponibles);
-    }
-
-    // Endpoint para buscar productos filtrados
-    @GetMapping("/search")
-    public ResponseEntity<List<ProductViewDTO>> findFilteredProducts(
-        @RequestParam(name = "partNumber", required = false) String partNumber,
-        @RequestParam(name = "name", required = false) String name,
-        @RequestParam(name = "alterPartNumber", required = false) String alterPartNumber) {
-        List<ProductViewDTO> products = productoService.findFilteredProducts(partNumber, name, alterPartNumber);
-        return ResponseEntity.ok(products);
-    }
 
     // Endpoint para obtener todos los productos
     @GetMapping
-    public ResponseEntity<List<ProductoDTO>> getAllProductos() {
-        return ResponseEntity.ok(productoService.findAll());
+    public Page<ProductResponseDTO> listarProductos(Pageable pageable) {
+        return productoService.listarProductos(pageable);
     }
+
+    @GetMapping("/filtrar-por-modelo")
+    public Page<ProductResponseDTO> listarPorModeloAeronave(
+        @RequestParam Integer modeloAeronaveId,
+        Pageable pageable) {
+        return productoService.listarProductosPorModeloAeronave(modeloAeronaveId, pageable);
+    }
+
 
     // Endpoint para obtener un producto por ID
     @GetMapping("/{proId}")
@@ -149,6 +143,23 @@ public class ProductoResource {
         @RequestBody List<Integer> mreIds) {
         productoService.updateModelosByProductoId(proId, mreIds);
         return ResponseEntity.noContent().build();
+    }
+
+    // Endpoint para buscar productos filtrados
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductViewDTO>> findFilteredProducts(
+        @RequestParam(name = "partNumber", required = false) String partNumber,
+        @RequestParam(name = "name", required = false) String name,
+        @RequestParam(name = "alterPartNumber", required = false) String alterPartNumber) {
+        List<ProductViewDTO> products = productoService.findFilteredProducts(partNumber, name, alterPartNumber);
+        return ResponseEntity.ok(products);
+    }
+
+    // Endpoint para obtener unidades disponibles
+    @GetMapping("/{id}/unidades-disponibles")
+    public ResponseEntity<Integer> getUnidadesDisponibles(@PathVariable(name = "id") final Integer id) {
+        int unidadesDisponibles = productoService.getUnidadesDisponibles(id);
+        return ResponseEntity.ok(unidadesDisponibles);
     }
 }
 

@@ -1,17 +1,20 @@
 package io.bootify.helisys.service;
 
 import io.bootify.helisys.domain.*;
+import io.bootify.helisys.mapper.ProductoMapper;
 import io.bootify.helisys.model.*;
 import io.bootify.helisys.repos.*;
 import io.bootify.helisys.util.NotFoundException;
 import io.bootify.helisys.util.ReferencedWarning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,8 @@ public class ProductoService {
     private final AlmacenContenedorService almacenContenedorService;
     private final ProveedorService proveedorService;
     private final ModeloAeronaveService modeloAeronaveService;
+    private final ProductoMapper productoMapper;
+
 
     public ProductoService(
         final ProductoRepository productoRepository,
@@ -43,7 +48,8 @@ public class ProductoService {
         final TipoProductoService tipoProductoService,
         final AlmacenContenedorService almacenContenedorService,
         final ProveedorService proveedorService,
-        final ModeloAeronaveService modeloAeronaveService) {
+        final ModeloAeronaveService modeloAeronaveService,
+        final ProductoMapper productoMapper) {
 
         this.productoRepository = productoRepository;
         this.tipoProductoRepository = tipoProductoRepository;
@@ -57,6 +63,7 @@ public class ProductoService {
         this.almacenContenedorService = almacenContenedorService;
         this.proveedorService = proveedorService;
         this.modeloAeronaveService = modeloAeronaveService;
+        this.productoMapper = productoMapper;
     }
 
 
@@ -210,8 +217,6 @@ public class ProductoService {
         return null;
     }
 
-
-    //Metodo que esta siendo llamado en el TransaccionService.java para la obtencion de la entidad
     public Producto getProducto(Integer id) {
         return productoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
@@ -262,7 +267,17 @@ public class ProductoService {
         return producto.getProId();
     }
 
+    @Transactional(readOnly = true)
+    public Page<ProductResponseDTO> listarProductos(Pageable pageable) {
+        return productoRepository.findAll(pageable)
+            .map(productoMapper::toDto);
+    }
 
+    @Transactional(readOnly = true)
+    public Page<ProductResponseDTO> listarProductosPorModeloAeronave(Integer modeloAeronaveId, Pageable pageable) {
+        return productoRepository.findByModeloAeronaveId(modeloAeronaveId, pageable)
+            .map(productoMapper::toDto);
+    }
 
 
 }

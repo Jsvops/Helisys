@@ -2,7 +2,6 @@ package io.bootify.helisys.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.util.List;
 import java.util.Set;
 
 import lombok.Getter;
@@ -47,6 +46,5 @@ public class ProductRequestDTO {
     @NotNull
     private Integer proPve;
 
-    // Lista de IDs de modelos de aeronave a asociar con este producto
     private Set<Integer> modeloAeronaveIds;
 }
