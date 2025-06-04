@@ -2,7 +2,11 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { FormsModule } from '@angular/forms'; // Importar FormsModule para usar ngModel
+import { FormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { TransaccionService } from 'app/transaccion/transaccion.service';
 import { TransaccionDTO } from 'app/transaccion/transaccion.model';
@@ -16,15 +20,24 @@ import { UsuarioDTO } from 'app/usuario/usuario.model';
 import { AeronaveDTO } from 'app/aeronave/aeronave.model';
 import { TransaccionEventoService } from 'app/transaccion-evento/transaccion-evento.service';
 import { TransaccionEventoDTO } from 'app/transaccion-evento/transaccion-evento.model';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-transaccion-combinada-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule], // Agregar FormsModule
-  templateUrl: './transaccion-combinada-list.component.html'
+  imports: [
+    CommonModule,
+    RouterLink,
+    FormsModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
+  ],
+  templateUrl: './transaccion-combinada-list.component.html',
+  styleUrls: ['./transaccion-combinada-list.component.css'],
 })
 export class TransaccionCombinadaListComponent implements OnInit, OnDestroy {
-
   transaccionService = inject(TransaccionService);
   transaccionesProductoService = inject(TransaccionesProductoService);
   productoService = inject(ProductoService);
@@ -33,19 +46,23 @@ export class TransaccionCombinadaListComponent implements OnInit, OnDestroy {
   transaccionEventoService = inject(TransaccionEventoService);
   errorHandler = inject(ErrorHandler);
   router = inject(Router);
+  http = inject(HttpClient);
 
   transaccionesCombinadas: (TransaccionDTO & TransaccionesProductoDTO & {
-    tcoProNombre: string,
-    tceUsrNombre: string,
-    tceAnvMatricula: string,
-    tcoUnidades: number,
-    tceTvoEvento: string
+    tcoProNombre: string;
+    tceUsrNombre: string;
+    tceAnvMatricula: string;
+    tcoUnidades: number;
+    tceTvoEvento: string;
   })[] = [];
 
-  transaccionesFiltradas: any[] = []; // Lista filtrada
-  filtroAnio: number | null = null;
-  filtroMes: number | null = null;
-  filtroDia: number | null = null;
+  transaccionesFiltradas: any[] = [];
+  fechaInicio: Date | null = null;
+  fechaFin: Date | null = null;
+
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  totalItems: number = 0;
 
   navigationSubscription?: Subscription;
 
@@ -76,12 +93,18 @@ export class TransaccionCombinadaListComponent implements OnInit, OnDestroy {
                         this.transaccionEventoService.getAllTransaccionEventos().subscribe({
                           next: (transaccionEventos) => {
                             // Combinar transacciones con sus valores asociados
-                            this.transaccionesCombinadas = transacciones.map(transaccion => {
-                              const producto = productos.find(p => p.proId === transaccion.tceTvo);
-                              const usuario = usuarios.find(u => u.usrId === transaccion.tceUsr);
-                              const aeronave = aeronaves.find(a => a.anvId === transaccion.tceAnv);
-                              const transaccionProducto = transaccionesProducto.find(tp => tp.tcoTce === transaccion.tceId);
-                              const transaccionEvento = transaccionEventos.find(te => te.tvoId === transaccion.tceTvo);
+                            this.transaccionesCombinadas = transacciones.map((transaccion) => {
+                              const transaccionProducto = transaccionesProducto.find(
+                                (tp) => tp.tcoTce === transaccion.tceId
+                              );
+                              const producto = productos.find(
+                                (p) => p.proId === Number(transaccionProducto?.tcoPro)
+                              );
+                              const usuario = usuarios.find((u) => u.usrId === transaccion.tceUsr);
+                              const aeronave = aeronaves.find((a) => a.anvId === transaccion.tceAnv);
+                              const transaccionEvento = transaccionEventos.find(
+                                (te) => te.tvoId === transaccion.tceTvo
+                              );
 
                               return {
                                 ...transaccion,
@@ -90,79 +113,141 @@ export class TransaccionCombinadaListComponent implements OnInit, OnDestroy {
                                 tceAnvMatricula: aeronave?.anvMatricula || 'N/A',
                                 tcoUnidades: transaccionProducto?.tcoUnidades || 0,
                                 tceTvoEvento: transaccionEvento?.tvoEvento || 'N/A',
-                                tcoId: transaccionProducto?.tcoId
+                                tcoId: transaccionProducto?.tcoId,
                               };
+                            });
+
+                            // Ordenar de más reciente a más antiguo
+                            this.transaccionesCombinadas.sort((a, b) => {
+                              const fechaA = a.tceFechaTransaccion ? new Date(a.tceFechaTransaccion).getTime() : 0;
+                              const fechaB = b.tceFechaTransaccion ? new Date(b.tceFechaTransaccion).getTime() : 0;
+                              return fechaB - fechaA; // Orden descendente (más reciente primero)
                             });
 
                             // Inicializar la lista filtrada con todas las transacciones
                             this.transaccionesFiltradas = this.transaccionesCombinadas;
+                            this.totalItems = this.transaccionesFiltradas.length;
                           },
-                          error: (error) => this.errorHandler.handleServerError(error.error)
+                          error: (error) => this.errorHandler.handleServerError(error.error),
                         });
                       },
-                      error: (error) => this.errorHandler.handleServerError(error.error)
+                      error: (error) => this.errorHandler.handleServerError(error.error),
                     });
                   },
-                  error: (error) => this.errorHandler.handleServerError(error.error)
+                  error: (error) => this.errorHandler.handleServerError(error.error),
                 });
               },
-              error: (error) => this.errorHandler.handleServerError(error.error)
+              error: (error) => this.errorHandler.handleServerError(error.error),
             });
           },
-          error: (error) => this.errorHandler.handleServerError(error.error)
+          error: (error) => this.errorHandler.handleServerError(error.error),
         });
       },
-      error: (error) => this.errorHandler.handleServerError(error.error)
+      error: (error) => this.errorHandler.handleServerError(error.error),
     });
   }
 
-  aplicarFiltro() {
-    this.transaccionesFiltradas = this.transaccionesCombinadas.filter(transaccion => {
-      // Validar que tceFechaTransaccion no sea null o undefined
-      if (!transaccion.tceFechaTransaccion) {
-        return false; // Omitir transacciones sin fecha
-      }
+  aplicarFiltroPorRango() {
+    if (this.fechaInicio && this.fechaFin) {
+      this.transaccionesFiltradas = this.transaccionesCombinadas.filter((transaccion) => {
+        if (!transaccion.tceFechaTransaccion) {
+          return false; // Omitir transacciones sin fecha
+        }
+        const fechaTransaccion = new Date(transaccion.tceFechaTransaccion);
+        return fechaTransaccion >= this.fechaInicio! && fechaTransaccion <= this.fechaFin!;
+      });
 
-      // Crear un objeto Date en UTC
-      const fechaTransaccion = new Date(transaccion.tceFechaTransaccion + 'T00:00:00Z'); // Asegurar que sea UTC
+      // Ordenar de más reciente a más antiguo
+      this.transaccionesFiltradas.sort((a, b) => {
+        const fechaA = a.tceFechaTransaccion ? new Date(a.tceFechaTransaccion).getTime() : 0;
+        const fechaB = b.tceFechaTransaccion ? new Date(b.tceFechaTransaccion).getTime() : 0;
+        return fechaB - fechaA; // Orden descendente (más reciente primero)
+      });
 
-      // Obtener año, mes y día en UTC
-      const anioTransaccion = fechaTransaccion.getUTCFullYear();
-      const mesTransaccion = fechaTransaccion.getUTCMonth() + 1; // getUTCMonth() devuelve 0-11
-      const diaTransaccion = fechaTransaccion.getUTCDate();
+      this.totalItems = this.transaccionesFiltradas.length;
+      this.currentPage = 1; // Reiniciar a la primera página
+    } else {
+      this.transaccionesFiltradas = this.transaccionesCombinadas;
 
-      // Comparar con los filtros
-      const coincideAnio = this.filtroAnio ? anioTransaccion === this.filtroAnio : true;
-      const coincideMes = this.filtroMes ? mesTransaccion === this.filtroMes : true;
-      const coincideDia = this.filtroDia ? diaTransaccion === this.filtroDia : true;
+      // Ordenar de más reciente a más antiguo
+      this.transaccionesFiltradas.sort((a, b) => {
+        const fechaA = a.tceFechaTransaccion ? new Date(a.tceFechaTransaccion).getTime() : 0;
+        const fechaB = b.tceFechaTransaccion ? new Date(b.tceFechaTransaccion).getTime() : 0;
+        return fechaB - fechaA; // Orden descendente (más reciente primero)
+      });
 
-      return coincideAnio && coincideMes && coincideDia;
-    });
+      this.totalItems = this.transaccionesFiltradas.length;
+      this.currentPage = 1; // Reiniciar a la primera página
+    }
   }
 
   limpiarFiltro() {
-    this.filtroAnio = null;
-    this.filtroMes = null;
-    this.filtroDia = null;
+    this.fechaInicio = null;
+    this.fechaFin = null;
     this.transaccionesFiltradas = this.transaccionesCombinadas;
+
+    // Ordenar de más reciente a más antiguo
+    this.transaccionesFiltradas.sort((a, b) => {
+      const fechaA = a.tceFechaTransaccion ? new Date(a.tceFechaTransaccion).getTime() : 0;
+      const fechaB = b.tceFechaTransaccion ? new Date(b.tceFechaTransaccion).getTime() : 0;
+      return fechaB - fechaA; // Orden descendente (más reciente primero)
+    });
+
+    this.totalItems = this.transaccionesFiltradas.length;
+    this.currentPage = 1; // Reiniciar a la primera página
   }
 
   confirmDelete(tceId: number) {
     if (confirm('¿Está seguro de eliminar esta transacción?')) {
       this.transaccionService.deleteTransaccion(tceId).subscribe({
-        next: () => this.router.navigate(['/transaccion-combinada-list'], {
-          state: { msgInfo: 'Transacción eliminada correctamente.' }
-        }),
-        error: (error) => this.errorHandler.handleServerError(error.error)
+        next: () =>
+          this.router.navigate(['/transaccion-combinada-list'], {
+            state: { msgInfo: 'Transacción eliminada correctamente.' },
+          }),
+        error: (error) => this.errorHandler.handleServerError(error.error),
       });
     }
   }
 
-  logIds(tceId: number | null | undefined, tcoId: number | null | undefined) {
-    if (tceId != null && tcoId != null) {
-      console.log('Navigating to edit with tceId:', tceId, 'and tcoId:', tcoId);
-    } else {
-      console.error('Invalid IDs:', tceId, tcoId);
+  generarReportePdf() {
+    if (!this.fechaInicio || !this.fechaFin) {
+      alert('Por favor, seleccione un rango de fechas.');
+      return;
     }
+
+    const fechaInicio = this.fechaInicio.toISOString().split('T')[0];
+    const fechaFin = this.fechaFin.toISOString().split('T')[0];
+
+    this.http.get('/generar-pdf', {
+      params: { fechaInicio, fechaFin },
+      responseType: 'blob' as 'json'
+    }).subscribe((response: any) => {
+      const blob = new Blob([response], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
+    });
+  }
+
+  // Métodos de paginación
+  get paginatedTransacciones() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.transaccionesFiltradas.slice(startIndex, endIndex);
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  get totalPages() {
+    return Math.ceil(this.transaccionesFiltradas.length / this.itemsPerPage);
   }
 }

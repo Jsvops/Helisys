@@ -45,9 +45,13 @@ import { TransaccionesProductoEditComponent } from './transacciones-producto/tra
 import { SearchComponent } from './search/search.component';
 import { TransaccionCombinadaAddComponent } from './transacciones-producto/transaccion-combinada-add.component';
 import { TransaccionCombinadaListComponent } from './transacciones-producto/transaccion-combinada-list.component';
-import { TransaccionCombinadaEditComponent } from './transacciones-producto/transaccion-combinada-edit.component'; // Asegúrate de importar el componente
-import { AlmacenCombinadoAddComponent } from './almacen-contenedor/almacen-combinado-add.component'; // Importa el nuevo componente
+import { TransaccionCombinadaEditComponent } from './transacciones-producto/transaccion-combinada-edit.component';
+import { AlmacenCombinadoAddComponent } from './almacen-contenedor/almacen-combinado-add.component';
+import { DetalleProductoModeloAeronaveAddComponent } from './detalle-producto-modelo-aeronave/detalle-producto-modelo-aeronave-add.component';
+import { DetalleProductoModeloAeronaveListComponent } from './detalle-producto-modelo-aeronave/detalle-producto-modelo-aeronave-list.component';
+import { DetalleProductoModeloAeronaveEditComponent } from './detalle-producto-modelo-aeronave/detalle-producto-modelo-aeronave-edit.component';
 import { ErrorComponent } from './error/error.component';
+
 
 export const routes: Routes = [
   {
@@ -286,9 +290,24 @@ export const routes: Routes = [
     title: $localize`:@@transaccionCombinada.edit.headline:Edit Transacción Combinada`
   },
   {
-    path: 'almacen-combinado-add', // Nueva ruta para AlmacenCombinadoAddComponent
+    path: 'almacen-combinado-add',
     component: AlmacenCombinadoAddComponent,
     title: $localize`:@@almacenCombinado.add.headline:Add Almacen Combinado`
+  },
+  {
+      path: 'detalle-producto-modelo-aeronave-add',
+      component: DetalleProductoModeloAeronaveAddComponent,
+      title: $localize`:@@detalleProductoModeloAeronave.add.headline:Agregar Detalle Producto Modelo Aeronave` // Título localizado
+  },
+  {
+      path: 'detalle-producto-modelo-aeronave-list',
+      component: DetalleProductoModeloAeronaveListComponent,
+      title: $localize`:@@detalle.list.headline:Lista de Detalles de Producto Modelo Aeronave`
+  },
+  {
+     path: 'detalle-producto-modelo-aeronave-edit/:dpmaId',
+     component: DetalleProductoModeloAeronaveEditComponent,
+     title: $localize`:@@detalle.edit.headline:Editar Detalle de Producto Modelo Aeronave`
   },
   {
     path: 'error',

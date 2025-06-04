@@ -11,9 +11,10 @@ import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class TransaccionEventoService {
+
+
 
     private final TransaccionEventoRepository transaccionEventoRepository;
     private final TransaccionRepository transaccionRepository;
@@ -80,4 +81,42 @@ public class TransaccionEventoService {
         return null;
     }
 
+    //Metodo que esta siendo llamado en el TransaccionService.java para la obtencion de la entidad
+    public TransaccionEvento getEvento(Integer id) {
+        return transaccionEventoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Tipo de evento no válido"));
+    }
+
+    public boolean isStockIn(int tvoId) {
+        return InventoryEventType.isSTOCKIN(tvoId);
+    }
+
+    public boolean isStockOut(int tvoId) {
+        return !isStockIn(tvoId);
+    }
+
+    public enum InventoryEventType {
+        STOCKIN(new int[]{1, 2, 3}),
+        STOCKOUT(new int[]{4, 5, 6, 7, 8, 9});
+
+        private final int[] ids;
+
+        InventoryEventType(int[] ids) {
+            this.ids = ids;
+        }
+
+        public boolean containsId(int id) {
+            for (int value : ids) {
+                if (value == id) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static boolean isSTOCKIN(int id) {
+            return STOCKIN.containsId(id);
+        }
+    }
 }
+

@@ -1,28 +1,18 @@
 <div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@transaccion.add.headline">Add Transaccion</h1>
+    <h1 class="flex-grow-1" i18n="@@transaccion.add.headline">Añadir nueva transacción</h1>
     <div>
-        <a routerLink="/transacciones" class="btn btn-secondary" i18n="@@transaccion.add.back">Back to list</a>
+        <a routerLink="/transacciones" class="btn btn-secondary" i18n="@@transaccion.add.back">Lista de transacciones</a>
+        <button class="btn btn-success ms-2" (click)="abrirBuscadorProductos()">Buscar Producto</button>
+
     </div>
 </div>
-<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
-    <!-- Campo para la fecha de transacción -->
-    <app-input-row [group]="addForm" field="tceFechaTransaccion" datepicker="datepicker" i18n-label="@@transaccion.tceFechaTransaccion.label" label="Tce Fecha Transaccion" disabled="true" />
-
-    <!-- Campo para las observaciones -->
-    <app-input-row [group]="addForm" field="tceObservaciones" i18n-label="@@transaccion.tceObservaciones.label" label="Tce Observaciones" />
-
-    <!-- Campo para el evento de transacción (tceTvo) -->
-    <app-input-row [group]="addForm" field="tceTvo" rowType="select" [options]="tceTvoValues" i18n-label="@@transaccion.tceTvo.label" label="Tce Tvo" />
-
-    <!-- Campo oculto para el ID del usuario (tceUsr) -->
+<form [formGroup]="addForm" (ngSubmit)="executeSampleTransaction()">
+    <app-input-row [group]="addForm" field="tcoProNumeroParte" i18n-label="@@transaccion.tcoPro.label" label="Número de Parte"/>
+    <app-input-row [group]="addForm" field="tceTvo" rowType="select" [options]="tceTvoValues" i18n-label="@@transaccion.tceTvo.label" label="Movimiento" />
+    <app-input-row *ngIf="showFechaVencimiento" [group]="addForm" field="ltFechaVencimiento" datepicker="datepicker" i18n-label="@@transaccion.ltFechaVencimiento.label" label="Fecha de Vencimiento"/>
+    <app-input-row *ngIf="showAeronave" [group]="addForm" field="tceAnv" rowType="select" [options]="tceAnvValues" i18n-label="@@transaccion.tceAnv.label" label="Aeronave"/>
+    <app-input-row [group]="addForm" field="unidades" i18n-label="@@transaccion.unidades.label" label="Unidades"/>
+    <app-input-row [group]="addForm" field="tceObservaciones" i18n-label="@@transaccion.tceObservaciones.label" label="Observaciones" />
     <input id="tceUsr" formControlName="tceUsr" type="hidden" class="form-control" />
-
-    <!-- Mostrar el nombre del usuario -->
-    <div class="form-group">
-        <label for="tceUsrDisplay" i18n="@@transaccion.tceUsr.label">Tce Usr</label>
-        <input id="tceUsrDisplay" type="text" class="form-control" [value]="currentUserName" readonly />
-    </div>
-
-    <!-- Botón para enviar el formulario -->
-    <input type="submit" i18n-value="@@transaccion.add.headline" value="Add Transaccion" class="btn btn-primary mt-4" />
+    <input type="submit" value="Guardar transacción" class="btn btn-primary ms-2">
 </form>

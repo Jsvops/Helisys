@@ -94,4 +94,9 @@ public class AlmacenContenedorService {
         return null;
     }
 
+    public AlmacenContenedor getByIdOrThrow(Integer id) {
+        return almacenContenedorRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("AlmacénContenedor con ID " + id + " no encontrado"));
+    }
+
 }

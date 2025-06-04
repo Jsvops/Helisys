@@ -1,44 +1,37 @@
 <div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@producto.add.headline">Add Producto</h1>
+    <h1 class="flex-grow-1" i18n="@@producto.add.headline">Añadir nueva pieza</h1>
     <div>
-        <a routerLink="/productos" class="btn btn-secondary" i18n="@@producto.add.back">Back to list</a>
+        <a routerLink="/productos" class="btn btn-secondary" i18n="@@producto.add.back">Lista de piezas</a>
     </div>
 </div>
 
 <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
-    <!-- Campo: Número de parte -->
-    <app-input-row [group]="addForm" field="proNumeroParte" i18n-label="@@producto.proNumeroParte.label" label="Pro Numero Parte" />
+    <app-input-row [group]="addForm" field="proNumeroParte" i18n-label="@@producto.proNumeroParte.label" label="Numero de Parte" />
+    <app-input-row [group]="addForm" field="proNombre" i18n-label="@@producto.proNombre.label" label="Nombre" />
+    <app-input-row [group]="addForm" field="proNumeroParteAlterno" i18n-label="@@producto.proNumeroParteAlterno.label" label="Numero Parte Alterno" />
+    <app-input-row [group]="addForm" field="proNumeroSerie" i18n-label="@@producto.proNumeroSerie.label" label="Numero de Serie" />
+    <app-input-row [group]="addForm" field="proTipoDocumento" i18n-label="@@producto.proTipoDocumento.label" label="Tipo Documento" />
+    <app-input-row [group]="addForm" field="proTpo" rowType="select" [options]="proTpoValues" i18n-label="@@producto.proTpo.label" label="Tipo de componete" />
+    <app-input-row [group]="addForm" field="proAmc" rowType="select" [options]="proAmcValues" i18n-label="@@producto.proAmc.label" label="Ubicacion" />
+    <app-input-row [group]="addForm" field="proPve" rowType="select" [options]="proPveValues" i18n-label="@@producto.proPve.label" label="Proveedor" />
 
-    <!-- Campo: Nombre -->
-    <app-input-row [group]="addForm" field="proNombre" i18n-label="@@producto.proNombre.label" label="Pro Nombre" />
+    <div class="row mb-3 align-items-center">
+        <label class="col-md-2 col-form-label required">Modelo Aeronave</label>
+        <div class="col-md-10">
+            <mat-form-field class="w-100 custom-mat-select" appearance="fill">
+                <mat-label>Por favor seleccione</mat-label>
+                <mat-select id="modeloAeronaveIds"
+                            [formControl]="addForm.controls.modeloAeronaveIds"
+                            multiple
+                            panelClass="custom-panel dropdown-below"
+                            disableOptionCentering>
+                    <mat-option *ngFor="let item of modeloAeronaveArray" [value]="item.value">
+                        {{ item.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
 
-    <!-- Campo: Número de parte alterno -->
-    <app-input-row [group]="addForm" field="proNumeroParteAlterno" i18n-label="@@producto.proNumeroParteAlterno.label" label="Pro Numero Parte Alterno" />
-
-    <!-- Campo: Número de serie -->
-    <app-input-row [group]="addForm" field="proNumeroSerie" i18n-label="@@producto.proNumeroSerie.label" label="Pro Numero Serie" />
-
-    <!-- Campo: Unidades -->
-    <app-input-row [group]="addForm" field="proUnidades" rowType="number" i18n-label="@@producto.proUnidades.label" label="Pro Unidades" />
-
-    <!-- Campo: Fecha de vencimiento -->
-    <app-input-row [group]="addForm" field="proFechaVencimiento" datepicker="datepicker" i18n-label="@@producto.proFechaVencimiento.label" label="Pro Fecha Vencimiento" />
-
-    <!-- Campo: Tipo de documento -->
-    <app-input-row [group]="addForm" field="proTipoDocumento" i18n-label="@@producto.proTipoDocumento.label" label="Pro Tipo Documento" />
-
-    <!-- Campo: Tipo de producto (proTpo) -->
-    <app-input-row [group]="addForm" field="proTpo" rowType="select" [options]="proTpoValues" i18n-label="@@producto.proTpo.label" label="Pro Tpo" />
-
-    <!-- Campo: Almacén combinado (proAmc) -->
-
-    <app-input-row [group]="addForm" field="proAmc" rowType="select" [options]="proAmcValues" i18n-label="@@producto.proAmc.label" label="Pro Amc" />
-    <!-- Campo: Marca (proMre) -->
-    <app-input-row [group]="addForm" field="proMre" rowType="select" [options]="proMreValues" i18n-label="@@producto.proMre.label" label="Pro Mre" />
-
-    <!-- Campo: Proveedor (proPve) -->
-    <app-input-row [group]="addForm" field="proPve" rowType="select" [options]="proPveValues" i18n-label="@@producto.proPve.label" label="Pro Pve" />
-
-    <!-- Botón de envío -->
-    <input type="submit" i18n-value="@@producto.add.headline" value="Add Producto" class="btn btn-primary mt-4" />
+    <input type="submit" i18n-value="@@producto.add.headline" value="Guardar" class="btn btn-primary mt-4" />
 </form>

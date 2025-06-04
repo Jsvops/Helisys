@@ -101,4 +101,9 @@ public class ProveedorService {
         return null;
     }
 
+    public Proveedor getByIdOrThrow(Integer id) {
+        return proveedorRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
+    }
+
 }

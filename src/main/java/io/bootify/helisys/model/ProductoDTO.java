@@ -2,13 +2,11 @@ package io.bootify.helisys.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDate;
-
-import lombok.AllArgsConstructor;
+import java.util.List;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Setter
@@ -36,8 +34,6 @@ public class ProductoDTO {
     @NotNull
     private Integer proUnidades;
 
-    private LocalDate proFechaVencimiento;
-
     @NotNull
     @Size(max = 25)
     private String proTipoDocumento;
@@ -49,9 +45,7 @@ public class ProductoDTO {
     private Integer proAmc;
 
     @NotNull
-    private Integer proMre;
-
-    @NotNull
     private Integer proPve;
+
 
 }

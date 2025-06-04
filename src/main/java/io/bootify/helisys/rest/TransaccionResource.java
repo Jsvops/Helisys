@@ -1,33 +1,37 @@
 package io.bootify.helisys.rest;
 
+import io.bootify.helisys.domain.Aeronave;
 import io.bootify.helisys.domain.TransaccionEvento;
 import io.bootify.helisys.domain.Usuario;
 import io.bootify.helisys.model.TransaccionDTO;
+import io.bootify.helisys.model.TransactionRequestDTO;
+import io.bootify.helisys.model.TransactionResponseDTO;
+import io.bootify.helisys.repos.AeronaveRepository;
 import io.bootify.helisys.repos.TransaccionEventoRepository;
 import io.bootify.helisys.repos.UsuarioRepository;
 import io.bootify.helisys.service.TransaccionService;
+import io.bootify.helisys.service.UsuarioService;
 import io.bootify.helisys.util.CustomCollectors;
 import io.bootify.helisys.util.ReferencedException;
 import io.bootify.helisys.util.ReferencedWarning;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/transacciones", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,13 +40,21 @@ public class TransaccionResource {
     private final TransaccionService transaccionService;
     private final TransaccionEventoRepository transaccionEventoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
+    private final AeronaveRepository aeronaveRepository;
+
+
 
     public TransaccionResource(final TransaccionService transaccionService,
                                final TransaccionEventoRepository transaccionEventoRepository,
-                               final UsuarioRepository usuarioRepository) {
+                               final UsuarioRepository usuarioRepository,
+                               final UsuarioService usuarioService,
+                                final AeronaveRepository aeronaveRepository) {
         this.transaccionService = transaccionService;
         this.transaccionEventoRepository = transaccionEventoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.usuarioService = usuarioService;
+        this.aeronaveRepository = aeronaveRepository;
     }
 
     @GetMapping
@@ -56,31 +68,31 @@ public class TransaccionResource {
         return ResponseEntity.ok(transaccionService.get(tceId));
     }
 
-    @PostMapping
-    @ApiResponse(responseCode = "201")
-    public ResponseEntity<Integer> createTransaccion(
-        @RequestBody @Valid final TransaccionDTO transaccionDTO) {
 
-        // Obtiene el nombre de usuario autenticado
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @PostMapping("/")
+    @Operation(summary = "Inicia una transacción con las solicitudes de productos y lotes")
+    @ApiResponse(responseCode = "201", description = "Transacción completa creada exitosamente")
+    public ResponseEntity<Integer> startTransaction (
+        @RequestBody @Valid TransactionRequestDTO dto,
+        Authentication authentication) {
+
         String username = authentication.getName();
+        Integer usuarioId = usuarioService.findIdByUsername(username);
 
-        // Busca el ID del usuario en la base de datos
-        Usuario usuario = usuarioRepository.findByUsrNombre(username)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        // Asigna el ID del usuario al campo tceUsr de la transacción
-        transaccionDTO.setTceUsr(usuario.getUsrId());
-
-        // Asigna la fecha actual si no se proporciona
-        if (transaccionDTO.getTceFechaTransaccion() == null) {
-            transaccionDTO.setTceFechaTransaccion(LocalDate.now());
-        }
-
-        // Crea la transacción
-        final Integer createdTceId = transaccionService.create(transaccionDTO);
-        return new ResponseEntity<>(createdTceId, HttpStatus.CREATED);
+        Integer transaccionId = transaccionService.executeTransaction(dto, usuarioId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(transaccionId);
     }
+
+    @GetMapping("/lista")
+    public ResponseEntity<Page<TransactionResponseDTO>> listAll(
+        @PageableDefault(page = 0, size = 20) Pageable pageable,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin
+    ) {
+        Page<TransactionResponseDTO> page = transaccionService.getAllTransactions(pageable, fechaInicio, fechaFin);
+        return ResponseEntity.ok(page);
+    }
+
 
     @PutMapping("/{tceId}")
     public ResponseEntity<Integer> updateTransaccion(
@@ -108,6 +120,15 @@ public class TransaccionResource {
             .stream()
             .collect(CustomCollectors.toSortedMap(TransaccionEvento::getTvoId, TransaccionEvento::getTvoEvento)));
     }
+
+    @GetMapping("/tceAnvValues")
+    public ResponseEntity<Map<Integer, String>> getTceAnvValues() {
+        return ResponseEntity.ok(
+            aeronaveRepository.findAll(Sort.by("anvId"))
+                .stream()
+                .collect(CustomCollectors.toSortedMap(Aeronave::getAnvId, Aeronave::getAnvMatricula)));
+    }
+
 
     @GetMapping("/tceUsrValues")
     public ResponseEntity<Map<Integer, String>> getTceUsrValues() {

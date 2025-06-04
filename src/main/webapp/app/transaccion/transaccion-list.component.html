@@ -1,41 +1,71 @@
 <div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@transaccion.list.headline">Transacciones</h1>
+    <h1 class="flex-grow-1" i18n="@@transaccion.list.headline">Lista de transacciones</h1>
     <div>
-        <a routerLink="/transacciones/add" class="btn btn-primary ms-2" i18n="@@transaccion.list.createNew">Create new Transaccion</a>
+        <a routerLink="/transacciones/add" class="btn btn-primary ms-2" i18n="@@transaccion.list.createNew">
+            Añadir transacción
+        </a>
     </div>
 </div>
+
 @if (!transacciones || transacciones.length === 0) {
 <div i18n="@@transaccion.list.empty">No Transacciones could be found.</div>
 } @else {
 <div class="table-responsive">
+    <form class="row mb-3" (ngSubmit)="filtrarPorFechas()">
+        <div class="col-md-4">
+            <label for="fechaInicio" class="form-label" i18n="@@fecha.inicio">Fecha desde:</label>
+            <input type="date" id="fechaInicio" class="form-control" [(ngModel)]="fechaInicio" name="fechaInicio">
+        </div>
+        <div class="col-md-4">
+            <label for="fechaFin" class="form-label" i18n="@@fecha.fin">Fecha hasta:</label>
+            <input type="date" id="fechaFin" class="form-control" [(ngModel)]="fechaFin" name="fechaFin">
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-90" i18n="@@filtrar">Filtrar</button>
+            <button class="btn btn-secondary ms-2" type="button" (click)="limpiarFiltro()">Limpiar filtro</button>
+            <button class="btn btn-success ms-2" type="button" (click)="generarReporte()">Generar Reporte</button>
+
+        </div>
+
+    </form>
+
     <table class="table table-striped table-hover align-middle">
         <thead>
-            <tr>
-                <th scope="col" i18n="@@transaccion.tceId.label">Tce Id</th>
-                <th scope="col" i18n="@@transaccion.tceFechaTransaccion.label">Tce Fecha Transaccion</th>
-                <th scope="col" i18n="@@transaccion.tceObservaciones.label">Tce Observaciones</th>
-                <th scope="col" i18n="@@transaccion.tceTvo.label">Tce Tvo</th>
-                <th scope="col" i18n="@@transaccion.tceUsr.label">Tce Usr</th>
-                <th><!-- --></th>
-            </tr>
+        <tr>
+            <th scope="col" i18n="@@transaccion.productoNumeroParte.label">Numero de parte</th>
+            <th scope="col" i18n="@@transaccion.eventoNombre.label">Movimiento</th>
+            <th scope="col" i18n="@@transaccion.unidades.label">Unidades</th>
+            <th scope="col" i18n="@@transaccion.aeronaveMatricula.label">Aeronave</th>
+            <th scope="col" i18n="@@transaccion.tceFechaTransaccion.label">Fecha de Transaccion</th>
+            <th scope="col" i18n="@@transaccion.usuarioNombre.label">Usuario</th>
+            <th scope="col" i18n="@@transaccion.tceObservaciones.label">Observaciones</th>
+        </tr>
         </thead>
         <tbody>
-            @for (transaccion of transacciones; track transaccion.tceId) {
-            <tr>
-                <td>{{ transaccion.tceId }}</td>
-                <td>{{ transaccion.tceFechaTransaccion }}</td>
-                <td>{{ transaccion.tceObservaciones }}</td>
-                <td>{{ transaccion.tceTvo }}</td>
-                <td>{{ transaccion.tceUsr }}</td>
-                <td>
-                    <div class="float-end text-nowrap">
-                        <a [routerLink]="['/transacciones/edit', transaccion.tceId]" class="btn btn-sm btn-secondary" i18n="@@transaccion.list.edit">Edit</a>
-                        <button type="button" (click)="confirmDelete(transaccion.tceId!)" class="btn btn-sm btn-secondary" i18n="@@transaccion.list.delete">Delete</button>
-                    </div>
-                </td>
-            </tr>
-            }
+        @for (transaccion of transacciones; track transaccion.tceId) {
+        <tr>
+            <td>{{ transaccion.productoNumeroParte }}</td>
+            <td>{{ transaccion.eventoNombre }}</td>
+            <td>{{ transaccion.unidades }}</td>
+            <td>{{ transaccion.aeronaveMatricula }}</td>
+            <td>{{ transaccion.tceFechaTransaccion }}</td>
+            <td>{{ transaccion.usuarioNombre }}</td>
+            <td>{{ transaccion.tceObservaciones }}</td>
+
+        </tr>
+        }
         </tbody>
     </table>
 </div>
+
+<div class="d-flex justify-content-center mt-3">
+    <button class="btn btn-outline-primary me-2" (click)="previousPage()" [disabled]="page === 0" i18n="@@pagination.previous">
+        Anterior
+    </button>
+    <span class="align-self-center">Página {{ page + 1 }} de {{ totalPages }}</span>
+    <button class="btn btn-outline-primary ms-2" (click)="nextPage()" [disabled]="(page + 1) >= totalPages" i18n="@@pagination.next">
+        Siguiente
+    </button>
+</div>
+
 }

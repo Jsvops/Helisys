@@ -10,7 +10,6 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Entity
 @Getter
 @Setter
@@ -27,7 +26,7 @@ public class ModeloAeronave {
     @OneToMany(mappedBy = "anvMre")
     private Set<Aeronave> anvMreAeronaves;
 
-    @OneToMany(mappedBy = "proMre")
-    private Set<Producto> proMreProductos;
+    @OneToMany(mappedBy = "dpmaMre")
+    private Set<DetalleProductoModeloAeronave> dpmaMreDetalleProductoModeloAeronaves;
 
 }

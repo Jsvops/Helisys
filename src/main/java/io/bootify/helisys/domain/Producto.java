@@ -14,7 +14,6 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Entity
 @Getter
 @Setter
@@ -37,11 +36,8 @@ public class Producto {
     @Column(nullable = false, length = 45)
     private String proNumeroSerie;
 
-    @Column(nullable = false)
-    private Integer proUnidades;
-
-    @Column
-    private LocalDate proFechaVencimiento;
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private Integer proUnidades = 0;
 
     @Column(nullable = false, length = 25)
     private String proTipoDocumento;
@@ -55,10 +51,6 @@ public class Producto {
     private AlmacenContenedor proAmc;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pro_mre_id", nullable = false)
-    private ModeloAeronave proMre;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pro_pve_id", nullable = false)
     private Proveedor proPve;
 
@@ -67,5 +59,8 @@ public class Producto {
 
     @OneToMany(mappedBy = "tcoPro")
     private Set<TransaccionesProducto> tcoProTransaccionesProductos;
+
+    @OneToMany(mappedBy = "dpmaPro")
+    private Set<DetalleProductoModeloAeronave> dpmaProDetalleProductoModeloAeronaves;
 
 }

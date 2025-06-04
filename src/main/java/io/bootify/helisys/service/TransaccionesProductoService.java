@@ -3,14 +3,18 @@ package io.bootify.helisys.service;
 import io.bootify.helisys.domain.Producto;
 import io.bootify.helisys.domain.Transaccion;
 import io.bootify.helisys.domain.TransaccionesProducto;
+import io.bootify.helisys.mapper.TransaccionesProductoMapper;
 import io.bootify.helisys.model.TransaccionesProductoDTO;
 import io.bootify.helisys.repos.ProductoRepository;
 import io.bootify.helisys.repos.TransaccionRepository;
 import io.bootify.helisys.repos.TransaccionesProductoRepository;
 import io.bootify.helisys.util.NotFoundException;
 import java.util.List;
+
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TransaccionesProductoService {
@@ -18,14 +22,18 @@ public class TransaccionesProductoService {
     private final TransaccionesProductoRepository transaccionesProductoRepository;
     private final ProductoRepository productoRepository;
     private final TransaccionRepository transaccionRepository;
+    private TransaccionesProductoMapper transaccionesProductoMapper;
 
     public TransaccionesProductoService(
         final TransaccionesProductoRepository transaccionesProductoRepository,
         final ProductoRepository productoRepository,
-        final TransaccionRepository transaccionRepository) {
+        final TransaccionRepository transaccionRepository,
+        final TransaccionesProductoMapper tansaccionesProductoMapper
+        ) {
         this.transaccionesProductoRepository = transaccionesProductoRepository;
         this.productoRepository = productoRepository;
         this.transaccionRepository = transaccionRepository;
+        this.transaccionesProductoMapper = tansaccionesProductoMapper;
     }
 
     public List<TransaccionesProductoDTO> findAll() {
@@ -62,10 +70,10 @@ public class TransaccionesProductoService {
                                               final TransaccionesProductoDTO transaccionesProductoDTO) {
         transaccionesProductoDTO.setTcoId(transaccionesProducto.getTcoId());
         transaccionesProductoDTO.setTcoUnidades(transaccionesProducto.getTcoUnidades());
-        // Convertimos el id del producto a String para el DTO
+        // Ahora asignamos directamente el ID del producto como Integer
         transaccionesProductoDTO.setTcoPro(transaccionesProducto.getTcoPro() == null
             ? null
-            : String.valueOf(transaccionesProducto.getTcoPro().getProId()));
+            : transaccionesProducto.getTcoPro().getProId());
         transaccionesProductoDTO.setTcoTce(transaccionesProducto.getTcoTce() == null
             ? null
             : transaccionesProducto.getTcoTce().getTceId());
@@ -77,22 +85,14 @@ public class TransaccionesProductoService {
         final TransaccionesProducto transaccionesProducto) {
         transaccionesProducto.setTcoUnidades(transaccionesProductoDTO.getTcoUnidades());
 
-        // Se convierte el campo tcoPro de String a Producto utilizando casting
-        Producto tcoPro = null;
+        // Ahora tcoPro en el DTO es Integer, no necesita conversión
         if (transaccionesProductoDTO.getTcoPro() != null) {
-            try {
-                // Se intenta convertir el String a Integer (id numérico)
-                Integer proId = Integer.valueOf(transaccionesProductoDTO.getTcoPro());
-                tcoPro = productoRepository.findById(proId)
-                    .orElseThrow(() -> new NotFoundException("Producto not found with id " + proId));
-            } catch (NumberFormatException e) {
-                // Si el valor no es numérico, se asume que es un código alfanumérico y se busca por dicho código.
-                tcoPro = productoRepository.findByProNumeroParte(transaccionesProductoDTO.getTcoPro())
-                    .orElseThrow(() -> new NotFoundException("Producto not found with part number " + transaccionesProductoDTO.getTcoPro()));
-
-            }
+            Producto tcoPro = productoRepository.findById(transaccionesProductoDTO.getTcoPro())
+                .orElseThrow(() -> new NotFoundException("Producto not found with id " + transaccionesProductoDTO.getTcoPro()));
+            transaccionesProducto.setTcoPro(tcoPro);
+        } else {
+            transaccionesProducto.setTcoPro(null);
         }
-        transaccionesProducto.setTcoPro(tcoPro);
 
         final Transaccion tcoTce = transaccionesProductoDTO.getTcoTce() == null
             ? null
@@ -102,4 +102,24 @@ public class TransaccionesProductoService {
 
         return transaccionesProducto;
     }
+
+    @Transactional
+    public TransaccionesProductoDTO createProductTransaction(TransaccionesProductoDTO dto) {
+
+        // Obtener las entidades a partir de los IDs del DTO
+        Producto producto = productoRepository.findById(dto.getTcoPro())
+            .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+        Transaccion transaccion = transaccionRepository.findById(dto.getTcoTce())
+            .orElseThrow(() -> new EntityNotFoundException("Transacción no encontrada"));
+
+        // Crear la entidad y setear los valores
+        TransaccionesProducto tp = new TransaccionesProducto();
+        tp.setTcoPro(producto);
+        tp.setTcoTce(transaccion);
+        tp.setTcoUnidades(dto.getTcoUnidades());
+
+        // Guardar y devolver como DTO
+        return transaccionesProductoMapper.toDto(transaccionesProductoRepository.save(tp));
+    }
+
 }

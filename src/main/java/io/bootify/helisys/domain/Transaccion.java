@@ -11,12 +11,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transaccion {
 
     @Id
@@ -27,7 +30,6 @@ public class Transaccion {
     @Column(nullable = false)
     private LocalDate tceFechaTransaccion;
 
-    // Cambio de false a true porque el campo tceObservaciones es opcional
     @Column(nullable = true, length = 500)
     private String tceObservaciones;
 
@@ -39,9 +41,8 @@ public class Transaccion {
     @JoinColumn(name = "tce_usr_id", nullable = false)
     private Usuario tceUsr;
 
-    // Relación discontinua con Aeronave (opcional)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tce_anv_id", nullable = true) // Permitir valores nulos
+    @JoinColumn(name = "tce_anv_id", nullable = true)
     private Aeronave tceAnv;
 
     @OneToMany(mappedBy = "tcoTce")

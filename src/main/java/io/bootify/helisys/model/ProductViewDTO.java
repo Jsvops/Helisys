@@ -3,47 +3,26 @@ package io.bootify.helisys.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
+@Getter
+@Setter
 public class ProductViewDTO {
 
-    // Getters y Setters
-    @Setter
-    @Getter
-    private Integer proId; // Corresponde a p.id
-    @Setter
-    @Getter
+    private Integer proId;
     private String proNumeroParte;
-    @Setter
-    @Getter
     private String proNombre;
-    @Setter
-    @Getter
     private String proNumeroParteAlterno;
-    @Setter
-    @Getter
     private String proNumeroSerie;
-    @Setter
-    @Getter
     private Integer proUnidades;
-    @Setter
-    @Getter
-    private LocalDate proFechaVencimiento;
-    @Setter
-    @Getter
     private String proTipoDocumento;
-    // cambio de valor
-    private String tpoNombreTipo; // tpo.tpoNombre
-    @Setter
-    @Getter
-    private String contenedorCombinado; // CONCAT(amt.amtDescripcion, amr.amrNombre, amc.amcNumero)
-    private String mreNombre; // mre.mreNombre
-    private String pveNombre; // pve.pveNombre
+    private String tpoNombreTipo;
+    private String contenedorCombinado;
+    private String mreNombre;
+    private String pveNombre;
 
-    // Constructor con parámetros
+
     public ProductViewDTO(Integer proId, String proNumeroParte, String proNombre,
                           String proNumeroParteAlterno, String proNumeroSerie,
-                          Integer proUnidades, LocalDate proFechaVencimiento,
+                          Integer proUnidades,
                           String proTipoDocumento, String tipoProducto,
                           String contenedorCombinado, String modeloAeronave,
                           String proveedor) {
@@ -53,7 +32,6 @@ public class ProductViewDTO {
         this.proNumeroParteAlterno = proNumeroParteAlterno;
         this.proNumeroSerie = proNumeroSerie;
         this.proUnidades = proUnidades;
-        this.proFechaVencimiento = proFechaVencimiento;
         this.proTipoDocumento = proTipoDocumento;
         this.tpoNombreTipo = tipoProducto;
         this.contenedorCombinado = contenedorCombinado;

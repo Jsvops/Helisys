@@ -1,0 +1,17 @@
+<div class="d-flex flex-wrap mb-4">
+    <h1 class="flex-grow-1" i18n="@@detalle.add.headline">Agregar Detalle de Producto Modelo Aeronave</h1>
+    <div>
+        <a routerLink="/detalle-producto-modelo-aeronave-list" class="btn btn-secondary" i18n="@@detalle.add.back">Volver a la lista</a>
+    </div>
+</div>
+
+<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+    <!-- Campo: Producto -->
+    <app-input-row [group]="addForm" field="dpmaPro" i18n-label="@@detalle.dpmaPro.label" label="Producto" />
+
+    <!-- Campo: Modelo Aeronave -->
+    <app-input-row [group]="addForm" field="dpmaMre" i18n-label="@@detalle.dpmaMre.label" label="Modelo Aeronave" />
+
+    <!-- Botón de envío -->
+    <input type="submit" i18n-value="@@detalle.add.headline" value="Agregar Detalle" class="btn btn-primary mt-4" />
+</form>

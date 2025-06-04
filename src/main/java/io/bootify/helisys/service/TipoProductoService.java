@@ -8,6 +8,8 @@ import io.bootify.helisys.repos.TipoProductoRepository;
 import io.bootify.helisys.util.NotFoundException;
 import io.bootify.helisys.util.ReferencedWarning;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +80,12 @@ public class TipoProductoService {
             return referencedWarning;
         }
         return null;
+    }
+
+
+    public TipoProducto getByIdOrThrow(Integer id) {
+        return tipoProductoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("TipoProducto con ID " + id + " no encontrado"));
     }
 
 }

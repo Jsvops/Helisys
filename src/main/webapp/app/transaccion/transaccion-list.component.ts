@@ -4,20 +4,36 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { TransaccionService } from 'app/transaccion/transaccion.service';
-import { TransaccionDTO } from 'app/transaccion/transaccion.model';
+import { TransactionResponseDTO } from './transaction-response.dto';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+
+
 
 
 @Component({
   selector: 'app-transaccion-list',
-  imports: [CommonModule, RouterLink],
-  templateUrl: './transaccion-list.component.html'})
+  standalone: true,
+  imports: [CommonModule, RouterLink, FormsModule],
+  templateUrl: './transaccion-list.component.html'
+})
 export class TransaccionListComponent implements OnInit, OnDestroy {
 
   transaccionService = inject(TransaccionService);
   errorHandler = inject(ErrorHandler);
   router = inject(Router);
-  transacciones?: TransaccionDTO[];
+  http = inject(HttpClient);
+
+
+  transacciones: TransactionResponseDTO[] = [];
   navigationSubscription?: Subscription;
+  page = 0;
+  size = 10;
+  total = 0;
+  totalPages = 0;
+  fechaInicio: string | null = null;
+  fechaFin: string | null = null;
+
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
@@ -38,40 +54,90 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.navigationSubscription!.unsubscribe();
+    this.navigationSubscription?.unsubscribe();
   }
 
-  loadData() {
-    this.transaccionService.getAllTransacciones()
-        .subscribe({
-          next: (data) => this.transacciones = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+  loadData(): void {
+    this.transaccionService.getResumenTransacciones(this.page, this.size, this.fechaInicio, this.fechaFin)
+      .subscribe({
+        next: (data) => {
+          this.transacciones = data.content;
+          this.totalPages = data.totalPages;
+        },
+        error: (err) => {
+          console.error('Error al cargar transacciones', err);
+        }
+      });
+  }
+
+  filtrarPorFechas() {
+    this.page = 0;
+    this.loadData();
+  }
+
+  limpiarFiltro() {
+    this.fechaInicio = null;
+    this.fechaFin = null;
+    this.page = 0;
+    this.loadData();
+  }
+
+
+  nextPage() {
+    if ((this.page + 1) < this.totalPages) {
+      this.page++;
+      this.loadData();
+    }
+  }
+
+  previousPage() {
+    if (this.page > 0) {
+      this.page--;
+      this.loadData();
+    }
+  }
+
+  generarReporte(): void {
+    if (!this.fechaInicio || !this.fechaFin) {
+      alert("Por favor seleccione una fecha de inicio y fin.");
+      return;
+    }
+
+    const url = `/generar-pdf?fechaInicio=${this.fechaInicio}&fechaFin=${this.fechaFin}`;
+
+    this.http.get(url, { responseType: 'blob' }).subscribe((blob: Blob) => {
+      const file = new Blob([blob], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(file);
+      link.download = 'reporte-transacciones.pdf';
+      link.click();
+    }, (error: any) => {
+      console.error('Error al generar el reporte', error);
+      alert('Hubo un error al generar el reporte.');
+    });
   }
 
   confirmDelete(tceId: number) {
     if (confirm(this.getMessage('confirm'))) {
-      this.transaccionService.deleteTransaccion(tceId)
-          .subscribe({
-            next: () => this.router.navigate(['/transacciones'], {
+      this.transaccionService.deleteTransaccion(tceId).subscribe({
+        next: () => this.router.navigate(['/transacciones'], {
+          state: {
+            msgInfo: this.getMessage('deleted')
+          }
+        }),
+        error: (error) => {
+          if (error.error?.code === 'REFERENCED') {
+            const messageParts = error.error.message.split(',');
+            this.router.navigate(['/transacciones'], {
               state: {
-                msgInfo: this.getMessage('deleted')
+                msgError: this.getMessage(messageParts[0], { id: messageParts[1] })
               }
-            }),
-            error: (error) => {
-              if (error.error?.code === 'REFERENCED') {
-                const messageParts = error.error.message.split(',');
-                this.router.navigate(['/transacciones'], {
-                  state: {
-                    msgError: this.getMessage(messageParts[0], { id: messageParts[1] })
-                  }
-                });
-                return;
-              }
-              this.errorHandler.handleServerError(error.error)
-            }
-          });
+            });
+            return;
+          }
+          this.errorHandler.handleServerError(error.error);
+        }
+      });
     }
   }
-
 }

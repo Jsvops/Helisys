@@ -1,1 +1,67 @@
+/* ESTILOS EXISTENTES DEL HEADER */
+.header-container {
+    display: flex;
+    align-items: flex-start;
+    margin-top: -10px;
+}
 
+h1.mb-4 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.header-image {
+    margin-top: -5px;
+    margin-left: 10px;
+}
+
+.larger-image {
+    width: 10%;
+    height: auto;
+}
+
+.higher-image {
+    position: relative;
+    top: -19.5px;
+}
+
+.smaller-image {
+    width: 9.5%;
+}
+
+/* NUEVOS ESTILOS PARA MENÚ E IMAGEN */
+.flex-container {
+    display: flex;
+}
+
+.menu-wrapper {
+    width: 360px;
+    min-width: 280px;
+}
+
+/* CONTROL DE POSICIÓN IMAGEN */
+.img-wrapper {
+    position: relative;
+    margin-left: 20px;
+
+    img {
+        display: block;
+    }
+}
+
+/* Posición Horizontal */
+.img-right { margin-left: 100px; } /* Derecha (default) */
+.img-left {
+    margin-left: -100px;
+    order: -1; /* Mueve a la izquierda */
+}
+
+/* Posición Vertical */
+.img-top { align-self: flex-start; margin-top: 13px; }
+.img-center { align-self: center; margin-top: 0; }
+.img-bottom { align-self: flex-end; margin-top: 20px; }
+
+/* Tamaños de Imagen */
+.img-small img { width: 100px; }
+.img-medium img { width: 400px; }
+.img-large img { width: 200px; }

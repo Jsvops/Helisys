@@ -8,7 +8,6 @@ import { ProductoDTO } from 'app/producto/producto.model';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { updateForm } from 'app/common/utils';
 
-
 @Component({
   selector: 'app-producto-edit',
   imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
@@ -21,10 +20,9 @@ export class ProductoEditComponent implements OnInit {
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
 
-  proTpoValues?: Map<number,string>;
-  proAmcValues?: Map<number,string>;
-  proMreValues?: Map<number,string>;
-  proPveValues?: Map<number,string>;
+  proTpoValues?: Map<number, string>;
+  proAmcValues?: Map<number, string>;
+  proPveValues?: Map<number, string>;
   currentProId?: number;
 
   editForm = new FormGroup({
@@ -33,12 +31,9 @@ export class ProductoEditComponent implements OnInit {
     proNombre: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
     proNumeroParteAlterno: new FormControl(null, [Validators.maxLength(45)]),
     proNumeroSerie: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
-    proUnidades: new FormControl(null, [Validators.required]),
-    proFechaVencimiento: new FormControl(null),
     proTipoDocumento: new FormControl(null, [Validators.required, Validators.maxLength(25)]),
     proTpo: new FormControl(null, [Validators.required]),
     proAmc: new FormControl(null, [Validators.required]),
-    proMre: new FormControl(null, [Validators.required]),
     proPve: new FormControl(null, [Validators.required])
   }, { updateOn: 'submit' });
 
@@ -52,30 +47,25 @@ export class ProductoEditComponent implements OnInit {
   ngOnInit() {
     this.currentProId = +this.route.snapshot.params['proId'];
     this.productoService.getProTpoValues()
-        .subscribe({
-          next: (data) => this.proTpoValues = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+      .subscribe({
+        next: (data) => this.proTpoValues = data,
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
     this.productoService.getProAmcValues()
-        .subscribe({
-          next: (data) => this.proAmcValues = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
-    this.productoService.getProMreValues()
-        .subscribe({
-          next: (data) => this.proMreValues = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+      .subscribe({
+        next: (data) => this.proAmcValues = data,
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
     this.productoService.getProPveValues()
-        .subscribe({
-          next: (data) => this.proPveValues = data,
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+      .subscribe({
+        next: (data) => this.proPveValues = data,
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
     this.productoService.getProducto(this.currentProId!)
-        .subscribe({
-          next: (data) => updateForm(this.editForm, data),
-          error: (error) => this.errorHandler.handleServerError(error.error)
-        });
+      .subscribe({
+        next: (data) => updateForm(this.editForm, data),
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
   }
 
   handleSubmit() {
@@ -84,16 +74,27 @@ export class ProductoEditComponent implements OnInit {
     if (!this.editForm.valid) {
       return;
     }
-    const data = new ProductoDTO(this.editForm.value);
-    this.productoService.updateProducto(this.currentProId!, data)
-        .subscribe({
-          next: () => this.router.navigate(['/productos'], {
-            state: {
-              msgSuccess: this.getMessage('updated')
-            }
-          }),
-          error: (error) => this.errorHandler.handleServerError(error.error, this.editForm, this.getMessage)
-        });
-  }
 
+    // Obtener el producto actual para mantener las unidades originales
+    this.productoService.getProducto(this.currentProId!).subscribe({
+      next: (productoActual) => {
+        const formData = this.editForm.value;
+        const data = new ProductoDTO({
+          ...formData,
+          proUnidades: productoActual.proUnidades // Mantener el valor original
+        });
+
+        this.productoService.updateProducto(this.currentProId!, data)
+          .subscribe({
+            next: () => this.router.navigate(['/productos'], {
+              state: {
+                msgSuccess: this.getMessage('updated')
+              }
+            }),
+            error: (error) => this.errorHandler.handleServerError(error.error, this.editForm, this.getMessage)
+          });
+      },
+      error: (error) => this.errorHandler.handleServerError(error.error)
+    });
+  }
 }

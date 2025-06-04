@@ -10,17 +10,13 @@ import java.util.List;
 
 public interface AeronaveRepository extends JpaRepository<Aeronave, Integer> {
 
-    // Método existente
     Aeronave findFirstByAnvMre(ModeloAeronave modeloAeronave);
 
-    // Método existente
     boolean existsByAnvMatriculaIgnoreCase(String anvMatricula);
 
-    // Nuevo método para obtener aeronaves compatibles con un producto
     @Query("SELECT a FROM Aeronave a " +
         "JOIN a.anvMre m " +
-        "JOIN m.proMreProductos p " +
-        "WHERE p.proId = :productoId")
+        "JOIN m.dpmaMreDetalleProductoModeloAeronaves dpma " +
+        "WHERE dpma.dpmaPro.proId = :productoId")
     List<Aeronave> findAeronavesByProductoId(@Param("productoId") Integer productoId);
-
 }
