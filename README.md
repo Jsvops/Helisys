@@ -1,3 +1,6 @@
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Jsvops/Helisys)
+
+
 # Helisys
 
 This app was created with Bootify.io - tips on working with the code [can be found here](https://bootify.io/next-steps/).
