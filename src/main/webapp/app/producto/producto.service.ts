@@ -8,7 +8,7 @@ import { ProductViewDTO } from 'app/producto/product-view.dto';
 import { AlmacenCombinadoDTO } from 'app/almacen-combinado/almacen-combinado.model';
 import { ProductRequestDTO } from 'app/producto/product-request.dto';
 import { ModeloAeronaveDTO } from 'app/modelo-aeronave/modelo-aeronave.model';
-
+import { ProductResponseDTO } from 'app/producto/product-response.dto';
 
 
 @Injectable({
@@ -24,17 +24,32 @@ export class ProductoService {
     return this.http.get<number>(url);
   }
 
-  getAllProductos() {
-    return this.http.get<ProductoDTO[]>(this.resourcePath);
+  getAllProductos(
+    page: number = 0,
+    size: number = 10,
+    modeloAeronaveId?: number
+  ): Observable<{ content: ProductResponseDTO[]; totalElements: number }> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+
+    if (modeloAeronaveId !== undefined) {
+      params = params.set('modeloAeronaveId', modeloAeronaveId);
+    }
+
+    return this.http.get<{ content: ProductResponseDTO[]; totalElements: number }>(
+      this.resourcePath,
+      { params }
+    );
   }
 
   getProducto(proId: number) {
     return this.http.get<ProductoDTO>(this.resourcePath + '/' + proId);
   }
 
-  crearProducto(producto: ProductRequestDTO): Observable<number> {
-    return this.http.post<number>(this.resourcePath + '/', producto);
-  }
+   crearProducto(producto: ProductRequestDTO): Observable<number> {
+      return this.http.post<number>(this.resourcePath + '/', producto);
+    }
 
   updateProducto(proId: number, productoDTO: ProductoDTO) {
     return this.http.put<number>(this.resourcePath + '/' + proId, productoDTO);
@@ -60,6 +75,10 @@ export class ProductoService {
       .pipe(map(transformRecordToMap));
   }
 
+  getModeloAeronaveValues(): Observable<ModeloAeronaveDTO[]> {
+      return this.http.get<ModeloAeronaveDTO[]>('/api/modeloAeronaves');
+    }
+
   findFilteredProducts(partNumber?: string, name?: string, alterPartNumber?: string): Observable<ProductViewDTO[]> {
     let params = new HttpParams();
     if (partNumber) {
@@ -80,10 +99,6 @@ export class ProductoService {
 
   searchByPartNumber(partNumber: string) {
     return this.http.get<ProductoDTO[]>(`/api/productos/search?partNumber=${encodeURIComponent(partNumber)}`);
-  }
-
-  getModeloAeronaveValues(): Observable<ModeloAeronaveDTO[]> {
-    return this.http.get<ModeloAeronaveDTO[]>('/api/modeloAeronaves');
   }
 
 }

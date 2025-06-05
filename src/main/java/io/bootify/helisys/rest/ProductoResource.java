@@ -49,18 +49,18 @@ public class ProductoResource {
     }
 
 
-    // Endpoint para obtener todos los productos
     @GetMapping
-    public Page<ProductResponseDTO> listarProductos(Pageable pageable) {
-        return productoService.listarProductos(pageable);
+    public Page<ProductResponseDTO> listarProductos(
+        @RequestParam(required = false) Integer modeloAeronaveId,
+        Pageable pageable) {
+
+        if (modeloAeronaveId != null) {
+            return productoService.listarProductosPorModeloAeronave(modeloAeronaveId, pageable);
+        } else {
+            return productoService.listarProductos(pageable);
+        }
     }
 
-    @GetMapping("/filtrar-por-modelo")
-    public Page<ProductResponseDTO> listarPorModeloAeronave(
-        @RequestParam Integer modeloAeronaveId,
-        Pageable pageable) {
-        return productoService.listarProductosPorModeloAeronave(modeloAeronaveId, pageable);
-    }
 
 
     // Endpoint para obtener un producto por ID
