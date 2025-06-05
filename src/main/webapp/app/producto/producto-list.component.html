@@ -4,6 +4,16 @@
         <a routerLink="/productos/add" class="btn btn-primary ms-2" i18n="@@producto.list.createNew">Crear nuevo Producto</a>
     </div>
 </div>
+<div class="mb-3">
+    <label for="modeloAeronaveSelect" class="form-label" i18n="@@producto.filtro.modelo">Filtrar por modelo</label>
+    <select id="modeloAeronaveSelect" class="form-select" [(ngModel)]="modeloAeronaveId" (change)="loadData()">
+        <option [ngValue]="undefined" i18n="@@producto.filtro.todos">Todos los modelos</option>
+        <option *ngFor="let modelo of modelosAeronave" [ngValue]="modelo.mreId">
+            {{ modelo.mreNombre }}
+        </option>
+    </select>
+</div>
+
 
 @if (!productos || productos.length === 0) {
 <div i18n="@@producto.list.empty">No se encontraron productos.</div>
@@ -12,28 +22,36 @@
     <table class="table table-striped table-hover align-middle">
         <thead>
         <tr>
-            <th scope="col" i18n="@@producto.proId.label">ID</th>
             <th scope="col" i18n="@@producto.proNumeroParte.label">Número de Parte</th>
             <th scope="col" i18n="@@producto.proNombre.label">Nombre</th>
             <th scope="col" i18n="@@producto.proNumeroParteAlterno.label">Número Alterno</th>
             <th scope="col" i18n="@@producto.proNumeroSerie.label">Número de Serie</th>
             <th scope="col" i18n="@@producto.proUnidades.label">Unidades</th>
-            <!-- Eliminado: <th scope="col" i18n="@@producto.proFechaVencimiento.label">Pro Fecha Vencimiento</th> -->
-            <th scope="col" i18n="@@producto.proTipoDocumento.label">Tipo Documento</th>
+            <th scope="col" i18n="@@producto.proTpoNombre.label">Tipo Producto</th>
+            <th scope="col" i18n="@@producto.modeloAeronaveNombres.label">Modelos Aeronave</th>
+            <th scope="col" i18n="@@producto.proPveNombre.label">Proveedor</th>
+            <th scope="col" i18n="@@producto.proAmcNombre.label">Almacén</th>
             <th scope="col" i18n="@@producto.list.actions">Acciones</th>
         </tr>
         </thead>
         <tbody>
         @for (producto of productos; track producto.proId) {
         <tr>
-            <td>{{ producto.proId }}</td>
             <td>{{ producto.proNumeroParte }}</td>
             <td>{{ producto.proNombre }}</td>
-            <td>{{ producto.proNumeroParteAlterno ?? 'N/A' }}</td>
+            <td>{{ producto.proNumeroParteAlterno}}</td>
             <td>{{ producto.proNumeroSerie }}</td>
-            <td>{{ producto.proUnidades }}</td> <!-- Mostrar 0 por defecto -->
-            <!-- Eliminado: <td>{{ producto.proFechaVencimiento }}</td> -->
-            <td>{{ producto.proTipoDocumento }}</td>
+            <td>{{ producto.proUnidades }}</td>
+            <td>{{ producto.proTpoNombre }}</td>
+            <td>
+                <ul class="mb-0">
+                    <li *ngFor="let nombre of producto.modeloAeronaveNombres">{{ nombre }}</li>
+                </ul>
+            </td>
+            <td>{{ producto.proPveNombre }}</td>
+            <td>{{ producto.proAmcNombre }}</td>
+
+
             <td>
                 <div class="float-end text-nowrap">
                     <a [routerLink]="['/productos/edit', producto.proId]"
@@ -49,5 +67,31 @@
         }
         </tbody>
     </table>
+
+    <div class="d-flex justify-content-center mt-3">
+        <button
+            class="btn btn-outline-primary me-2"
+            (click)="previousPage()"
+            [disabled]="page === 0"
+            i18n="@@pagination.previous"
+        >
+            Anterior
+        </button>
+
+        <span class="align-self-center">
+    Página {{ page + 1 }} de {{ totalPages }}
+  </span>
+
+        <button
+            class="btn btn-outline-primary ms-2"
+            (click)="nextPage()"
+            [disabled]="(page + 1) >= totalPages"
+            i18n="@@pagination.next"
+        >
+            Siguiente
+        </button>
+    </div>
+
+
 </div>
 }
