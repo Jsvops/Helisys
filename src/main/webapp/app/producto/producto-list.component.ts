@@ -6,9 +6,7 @@ import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { ProductoService } from 'app/producto/producto.service';
 import { ProductResponseDTO } from 'app/producto/product-response.dto';
 import { ModeloAeronaveDTO } from 'app/modelo-aeronave/modelo-aeronave.model';
-
 import { FormsModule } from '@angular/forms';
-
 
 @Component({
   selector: 'app-producto-list',
@@ -20,14 +18,15 @@ export class ProductoListComponent implements OnInit, OnDestroy {
   productoService = inject(ProductoService);
   errorHandler = inject(ErrorHandler);
   router = inject(Router);
-   productos: ProductResponseDTO[] = [];
-   totalItems = 0;
-   page = 0;
-   size = 10;
-   modeloAeronaveId?: number;
-   modelosAeronave: ModeloAeronaveDTO[] = [];
-   Math = Math;
-   totalPages = 0;
+
+  productos: ProductResponseDTO[] = [];
+  totalItems = 0;
+  page = 0;
+  size = 10;
+  modeloAeronaveId?: number;
+  modelosAeronave: ModeloAeronaveDTO[] = [];
+  Math = Math;
+  totalPages = 0;
 
 
   navigationSubscription?: Subscription;
@@ -69,20 +68,17 @@ export class ProductoListComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.productos = response.content;
           this.totalItems = response.totalElements;
-          this.totalPages = Math.ceil(this.totalItems / this.size); // <-- ESTA LÍNEA ES CLAVE
+          this.totalPages = Math.ceil(this.totalItems / this.size);
         },
         error: (error) => this.errorHandler.handleServerError(error.error)
       });
   }
 
-
-
-    onFilterChange(newModeloAeronaveId: number) {
+    onFilterChange(newModeloAeronaveId: number | undefined) {
       this.modeloAeronaveId = newModeloAeronaveId;
       this.page = 0;
       this.loadData();
     }
-
 
     goToPage(page: number) {
       this.page = page;
@@ -102,9 +98,6 @@ export class ProductoListComponent implements OnInit, OnDestroy {
         this.loadData();
       }
     }
-
-
-
 
   confirmDelete(proId: number) {
     if (confirm(this.getMessage('confirm'))) {

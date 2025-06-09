@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductResponseDTO {
 
+    private Integer proId;
     private String proNumeroParte;
     private String proNombre;
     private String proNumeroParteAlterno;

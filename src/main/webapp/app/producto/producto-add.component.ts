@@ -6,7 +6,7 @@ import { InputRowComponent } from 'app/common/input-row/input-row.component';
 import { ProductoService } from 'app/producto/producto.service';
 import { ProductRequestDTO } from 'app/producto/product-request.dto';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
-import { AlmacenCombinadoDTO } from 'app/almacen-combinado/almacen-combinado.model';
+import { AlmacenJerarquicoDTO } from 'app/almacen-jerarquico/almacen-jerarquico.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -55,7 +55,7 @@ export class ProductoAddComponent implements OnInit {
   ngOnInit() {
     this.loadProTpoValues();
     this.loadProPveValues();
-    this.loadAlmacenCombinado();
+    this.loadAlmacenJerarquico();
     this.loadModeloAeronaveValues(); // <-- Agrega esto
 
   }
@@ -76,11 +76,11 @@ export class ProductoAddComponent implements OnInit {
       });
   }
 
-  private loadAlmacenCombinado() {
-    this.productoService.getAlmacenCombinado()
+  private loadAlmacenJerarquico() {
+    this.productoService.getAlmacenJerarquico()
       .subscribe({
         next: (data) => {
-          this.proAmcValues = new Map(data.map(item => [item.amcId, item.descripcionCombinada]));
+          this.proAmcValues = new Map(data.map(item => [item.amcId, item.descripcionJerarquica]));
         },
         error: (error) => this.errorHandler.handleServerError(error.error)
       });

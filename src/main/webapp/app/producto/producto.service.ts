@@ -5,7 +5,7 @@ import { ProductoDTO } from 'app/producto/producto.model';
 import { map, Observable } from 'rxjs';
 import { transformRecordToMap } from 'app/common/utils';
 import { ProductViewDTO } from 'app/producto/product-view.dto';
-import { AlmacenCombinadoDTO } from 'app/almacen-combinado/almacen-combinado.model';
+import { AlmacenJerarquicoDTO } from 'app/almacen-jerarquico/almacen-jerarquico.model';
 import { ProductRequestDTO } from 'app/producto/product-request.dto';
 import { ModeloAeronaveDTO } from 'app/modelo-aeronave/modelo-aeronave.model';
 import { ProductResponseDTO } from 'app/producto/product-response.dto';
@@ -19,10 +19,6 @@ export class ProductoService {
   http = inject(HttpClient);
   resourcePath = environment.apiPath + '/api/productos';
 
-  getUnidadesDisponibles(productoId: number): Observable<number> {
-    const url = `${this.resourcePath}/${productoId}/unidades-disponibles`;
-    return this.http.get<number>(url);
-  }
 
   getAllProductos(
     page: number = 0,
@@ -79,26 +75,26 @@ export class ProductoService {
       return this.http.get<ModeloAeronaveDTO[]>('/api/modeloAeronaves');
     }
 
-  findFilteredProducts(partNumber?: string, name?: string, alterPartNumber?: string): Observable<ProductViewDTO[]> {
-    let params = new HttpParams();
-    if (partNumber) {
-      params = params.append('partNumber', partNumber);
-    }
-    if (name) {
-      params = params.append('name', name);
-    }
-    if (alterPartNumber) {
-      params = params.append('alterPartNumber', alterPartNumber);
-    }
-    return this.http.get<ProductViewDTO[]>(`${this.resourcePath}/search`, { params });
-  }
-
-  getAlmacenCombinado(): Observable<AlmacenCombinadoDTO[]> {
-    return this.http.get<AlmacenCombinadoDTO[]>('/api/productos/almacen-combinado');
+  getAlmacenJerarquico(): Observable<AlmacenJerarquicoDTO[]> {
+    return this.http.get<AlmacenJerarquicoDTO[]>('/api/productos/almacen-jerarquico');
   }
 
   searchByPartNumber(partNumber: string) {
     return this.http.get<ProductoDTO[]>(`/api/productos/search?partNumber=${encodeURIComponent(partNumber)}`);
   }
+
+  findFilteredProducts(partNumber?: string, name?: string, alterPartNumber?: string): Observable<ProductViewDTO[]> {
+      let params = new HttpParams();
+      if (partNumber) {
+        params = params.append('partNumber', partNumber);
+      }
+      if (name) {
+        params = params.append('name', name);
+      }
+      if (alterPartNumber) {
+        params = params.append('alterPartNumber', alterPartNumber);
+      }
+      return this.http.get<ProductViewDTO[]>(`${this.resourcePath}/search`, { params });
+    }
 
 }

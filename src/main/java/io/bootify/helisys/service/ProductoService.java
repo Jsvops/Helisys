@@ -99,56 +99,13 @@ public class ProductoService {
         productoRepository.deleteById(proId);
     }
 
-    public int getUnidadesDisponibles(final Integer productoId) {
-        Producto producto = productoRepository.findById(productoId)
-            .orElseThrow(() -> new NotFoundException("Producto no encontrado con ID: " + productoId));
-        return producto.getProUnidades();
-    }
 
-    // Método para obtener los modelos de aeronave asociados a un producto
-    public List<DetalleProductoModeloAeronaveDTO> getModelosByProductoId(final Integer proId) {
-
-        Producto producto = productoRepository.findById(proId)
-            .orElseThrow(() -> new NotFoundException("Producto no encontrado con ID: " + proId));
-
-        List<DetalleProductoModeloAeronave> detalles = detalleProductoModeloAeronaveRepository.findByDpmaPro(producto);
-
-        return detalles.stream()
-            .map(detalle -> mapDetalleToDTO(detalle, new DetalleProductoModeloAeronaveDTO()))
-            .collect(Collectors.toList());
-    }
-
-    // Método para actualizar los modelos de aeronave asociados a un producto
-    @Transactional // Añadir esta anotación
-    public void updateModelosByProductoId(final Integer proId, final List<Integer> mreIds) {
-        // Buscar el producto por ID
-        Producto producto = productoRepository.findById(proId)
-            .orElseThrow(() -> new NotFoundException("Producto no encontrado con ID: " + proId));
-
-        // Eliminar las relaciones existentes para este producto
-        detalleProductoModeloAeronaveRepository.deleteByDpmaPro(producto);
-
-        // Crear nuevas relaciones con los modelos de aeronave seleccionados
-        for (Integer mreId : mreIds) {
-            // Buscar el modelo de aeronave por ID
-            ModeloAeronave modeloAeronave = modeloAeronaveRepository.findById(mreId)
-                .orElseThrow(() -> new NotFoundException("Modelo de aeronave no encontrado con ID: " + mreId));
-
-            // Crear la nueva relación
-            DetalleProductoModeloAeronave detalle = new DetalleProductoModeloAeronave();
-            detalle.setDpmaPro(producto);
-            detalle.setDpmaMre(modeloAeronave);
-
-            // Guardar la relación
-            detalleProductoModeloAeronaveRepository.save(detalle);
-        }
-    }
     public List<ProductViewDTO> findFilteredProducts(String partNumber, String name, String alterPartNumber) {
         return productoRepository.findProducts(partNumber, name, alterPartNumber);
     }
 
-    public List<AlmacenCombinadoDTO> getAlmacenCombinado() {
-        return almacenContenedorRepository.findAllAlmacenCombinado();
+    public List<AlmacenJerarquicoDTO> getAlmacenJerarquico() {
+        return almacenContenedorRepository.findAllAlmacenJerarquico();
     }
 
     // Método para mapear un Producto a un DTO
@@ -249,18 +206,10 @@ public class ProductoService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un producto con ese número de parte.");
         }
 
-        Producto producto = new Producto();
-        producto.setProNumeroParte(dto.getProNumeroParte());
-        producto.setProNombre(dto.getProNombre());
-        producto.setProNumeroParteAlterno(dto.getProNumeroParteAlterno());
-        producto.setProNumeroSerie(dto.getProNumeroSerie());
-        producto.setProUnidades(dto.getProUnidades());
-        producto.setProTipoDocumento(dto.getProTipoDocumento());
-
+        Producto producto = productoMapper.toEntity(dto);
         producto.setProTpo(tipoProductoService.getByIdOrThrow(dto.getProTpo()));
         producto.setProAmc(almacenContenedorService.getByIdOrThrow(dto.getProAmc()));
         producto.setProPve(proveedorService.getByIdOrThrow(dto.getProPve()));
-
         productoRepository.save(producto);
         modeloAeronaveService.relacionarModelos(producto, dto.getModeloAeronaveIds());
 

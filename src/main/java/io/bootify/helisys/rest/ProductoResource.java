@@ -61,7 +61,12 @@ public class ProductoResource {
         }
     }
 
-
+    // Endpoint para crear un producto
+    @PostMapping("/")
+    public ResponseEntity<Integer> crearProducto(@RequestBody @Valid ProductRequestDTO requestDTO) {
+        Integer productoId = productoService.crearProductoConModelos(requestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productoId);
+    }
 
     // Endpoint para obtener un producto por ID
     @GetMapping("/{proId}")
@@ -70,14 +75,7 @@ public class ProductoResource {
         return ResponseEntity.ok(productoService.get(proId));
     }
 
-    // Endpoint para crear un producto
-    @PostMapping("/")
-    public ResponseEntity<Integer> crearProducto(@RequestBody @Valid ProductRequestDTO requestDTO) {
-        Integer productoId = productoService.crearProductoConModelos(requestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productoId);
-    }
-
-    // Endpoint para actualizar un producto
+    // Endpoint para actualizar un producto 08/06
     @PutMapping("/{proId}")
     public ResponseEntity<Integer> updateProducto(
         @PathVariable(name = "proId") final Integer proId,
@@ -124,25 +122,10 @@ public class ProductoResource {
     }
 
     // Endpoint para obtener datos combinados de almacén
-    @GetMapping("/almacen-combinado")
-    public ResponseEntity<List<AlmacenCombinadoDTO>> getAlmacenCombinado() {
-        List<AlmacenCombinadoDTO> datosCombinados = productoService.getAlmacenCombinado();
+    @GetMapping("/almacen-jerarquico")
+    public ResponseEntity<List<AlmacenJerarquicoDTO>> getAlmacenJerarquico() {
+        List<AlmacenJerarquicoDTO> datosCombinados = productoService.getAlmacenJerarquico();
         return ResponseEntity.ok(datosCombinados);
-    }
-
-    @GetMapping("/{proId}/modelos")
-    public ResponseEntity<List<DetalleProductoModeloAeronaveDTO>> getModelosByProductoId(
-        @PathVariable(name = "proId") final Integer proId) {
-        List<DetalleProductoModeloAeronaveDTO> detalles = productoService.getModelosByProductoId(proId);
-        return ResponseEntity.ok(detalles);
-    }
-
-    @PutMapping("/{proId}/modelos")
-    public ResponseEntity<Void> updateModelosByProductoId(
-        @PathVariable(name = "proId") final Integer proId,
-        @RequestBody List<Integer> mreIds) {
-        productoService.updateModelosByProductoId(proId, mreIds);
-        return ResponseEntity.noContent().build();
     }
 
     // Endpoint para buscar productos filtrados
@@ -155,12 +138,7 @@ public class ProductoResource {
         return ResponseEntity.ok(products);
     }
 
-    // Endpoint para obtener unidades disponibles
-    @GetMapping("/{id}/unidades-disponibles")
-    public ResponseEntity<Integer> getUnidadesDisponibles(@PathVariable(name = "id") final Integer id) {
-        int unidadesDisponibles = productoService.getUnidadesDisponibles(id);
-        return ResponseEntity.ok(unidadesDisponibles);
-    }
+
 }
 
 

@@ -7,7 +7,7 @@ export interface ProductResponseDTO {
   proUnidades: number;
   proTipoDocumento: string;
   proTpoNombre: string;
-  proAmcNombre: string; // Aquí estará la descripción combinada del almacén
+  proAmcNombre: string;
   proPveNombre: string;
   modeloAeronaveNombres: string[];
 }

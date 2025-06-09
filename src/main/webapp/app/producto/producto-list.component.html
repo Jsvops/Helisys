@@ -6,14 +6,13 @@
 </div>
 <div class="mb-3">
     <label for="modeloAeronaveSelect" class="form-label" i18n="@@producto.filtro.modelo">Filtrar por modelo</label>
-    <select id="modeloAeronaveSelect" class="form-select" [(ngModel)]="modeloAeronaveId" (change)="loadData()">
+    <select id="modeloAeronaveSelect" class="form-select" [(ngModel)]="modeloAeronaveId" (change)="onFilterChange(modeloAeronaveId)">
         <option [ngValue]="undefined" i18n="@@producto.filtro.todos">Todos los modelos</option>
         <option *ngFor="let modelo of modelosAeronave" [ngValue]="modelo.mreId">
             {{ modelo.mreNombre }}
         </option>
     </select>
 </div>
-
 
 @if (!productos || productos.length === 0) {
 <div i18n="@@producto.list.empty">No se encontraron productos.</div>
@@ -51,7 +50,6 @@
             <td>{{ producto.proPveNombre }}</td>
             <td>{{ producto.proAmcNombre }}</td>
 
-
             <td>
                 <div class="float-end text-nowrap">
                     <a [routerLink]="['/productos/edit', producto.proId]"
@@ -69,29 +67,12 @@
     </table>
 
     <div class="d-flex justify-content-center mt-3">
-        <button
-            class="btn btn-outline-primary me-2"
-            (click)="previousPage()"
-            [disabled]="page === 0"
-            i18n="@@pagination.previous"
-        >
-            Anterior
-        </button>
-
+        <button class="btn btn-outline-primary me-2" (click)="previousPage()" [disabled]="page === 0" i18n="@@pagination.previous"> Anterior </button>
         <span class="align-self-center">
     Página {{ page + 1 }} de {{ totalPages }}
   </span>
-
-        <button
-            class="btn btn-outline-primary ms-2"
-            (click)="nextPage()"
-            [disabled]="(page + 1) >= totalPages"
-            i18n="@@pagination.next"
-        >
-            Siguiente
-        </button>
+        <button class="btn btn-outline-primary ms-2" (click)="nextPage()" [disabled]="(page + 1) >= totalPages" i18n="@@pagination.next"> Siguiente </button>
     </div>
-
 
 </div>
 }
