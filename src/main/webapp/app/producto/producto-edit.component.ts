@@ -1,100 +1,171 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
-import { InputRowComponent } from 'app/common/input-row/input-row.component';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProductoService } from 'app/producto/producto.service';
-import { ProductoDTO } from 'app/producto/producto.model';
+import { ProductRequestDTO } from 'app/producto/product-request.dto';
+import { ProductResponseDTO } from 'app/producto/product-response.dto';
+import { InputRowComponent } from 'app/common/input-row/input-row.component';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
-import { updateForm } from 'app/common/utils';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { forkJoin } from 'rxjs';
+import { RouterModule } from '@angular/router'; // <--- Asegúrate de tener esto
+
 
 @Component({
   selector: 'app-producto-edit',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
-  templateUrl: './producto-edit.component.html'
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    InputRowComponent,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
+    RouterModule
+  ],
+  templateUrl: './producto-edit.component.html',
+  styleUrls: ['./producto-edit.component.css']
 })
 export class ProductoEditComponent implements OnInit {
 
-  productoService = inject(ProductoService);
-  route = inject(ActivatedRoute);
-  router = inject(Router);
-  errorHandler = inject(ErrorHandler);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private productoService = inject(ProductoService);
+  private errorHandler = inject(ErrorHandler);
+
+  proId?: number;
+  proUnidades = 0;
 
   proTpoValues?: Map<number, string>;
   proAmcValues?: Map<number, string>;
   proPveValues?: Map<number, string>;
-  currentProId?: number;
+  modeloAeronaveValues?: Map<number, string>;
+  modeloAeronaveArray: { value: number, label: string }[] = [];
 
   editForm = new FormGroup({
-    proId: new FormControl({ value: null, disabled: true }),
-    proNumeroParte: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
-    proNombre: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
-    proNumeroParteAlterno: new FormControl(null, [Validators.maxLength(45)]),
-    proNumeroSerie: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
-    proTipoDocumento: new FormControl(null, [Validators.required, Validators.maxLength(25)]),
-    proTpo: new FormControl(null, [Validators.required]),
-    proAmc: new FormControl(null, [Validators.required]),
-    proPve: new FormControl(null, [Validators.required])
-  }, { updateOn: 'submit' });
+      proNumeroParte: new FormControl<string | null>(null, [Validators.required]),
+      proNombre: new FormControl<string | null>(null, [Validators.required]),
+      proNumeroParteAlterno: new FormControl<string | null>(null),
+      proNumeroSerie: new FormControl<string | null>(null),
+      proTipoDocumento: new FormControl<string | null>(null),
+      proTpo: new FormControl<number | null>(null),
+      proAmc: new FormControl<number | null>(null),
+      proPve: new FormControl<number | null>(null),
+      modeloAeronaveIds: new FormControl<number[] | null>(null),
+    }, { updateOn: 'submit' });
 
-  getMessage(key: string, details?: any) {
-    const messages: Record<string, string> = {
-      updated: $localize`:@@producto.update.success:Producto was updated successfully.`
-    };
-    return messages[key];
+  ngOnInit(): void {
+    const param = this.route.snapshot.paramMap.get('proId');
+    console.log('ID recibido en ruta:', param);
+
+    this.proId = Number(param);
+
+    if (!this.proId || isNaN(this.proId)) {
+      console.warn('ID inválido:', this.proId);
+      return;
+    }
+
+    this.loadAllData();
   }
 
-  ngOnInit() {
-    this.currentProId = +this.route.snapshot.params['proId'];
-    this.productoService.getProTpoValues()
-      .subscribe({
-        next: (data) => this.proTpoValues = data,
-        error: (error) => this.errorHandler.handleServerError(error.error)
-      });
-    this.productoService.getProAmcValues()
-      .subscribe({
-        next: (data) => this.proAmcValues = data,
-        error: (error) => this.errorHandler.handleServerError(error.error)
-      });
-    this.productoService.getProPveValues()
-      .subscribe({
-        next: (data) => this.proPveValues = data,
-        error: (error) => this.errorHandler.handleServerError(error.error)
-      });
-    this.productoService.getProducto(this.currentProId!)
-      .subscribe({
-        next: (data) => updateForm(this.editForm, data),
-        error: (error) => this.errorHandler.handleServerError(error.error)
-      });
+
+  private loadAllData() {
+    this.loadProTpoValues();
+    this.loadProPveValues();
+    this.loadProAmcValues();
+    this.loadModeloAeronaveValues();
+    this.loadProducto();
+  }
+
+  private loadProTpoValues() {
+    this.productoService.getProTpoValues().subscribe({
+      next: (data) => this.proTpoValues = data,
+      error: (error) => this.errorHandler.handleServerError(error.error)
+    });
+  }
+
+  private loadProPveValues() {
+    this.productoService.getProPveValues().subscribe({
+      next: (data) => this.proPveValues = data,
+      error: (error) => this.errorHandler.handleServerError(error.error)
+    });
+  }
+
+  private loadProAmcValues() {
+    this.productoService.getAlmacenJerarquico().subscribe({
+      next: (data) => {
+        this.proAmcValues = new Map(data.map(item => [item.amcId, item.descripcionJerarquica]));
+      },
+      error: (error) => this.errorHandler.handleServerError(error.error)
+    });
+  }
+
+  private loadModeloAeronaveValues() {
+    this.productoService.getModeloAeronaveValues().subscribe({
+      next: (data) => {
+        const filtered = data.filter(item => item.mreId && item.mreNombre);
+        this.modeloAeronaveValues = new Map(filtered.map(item => [item.mreId!, item.mreNombre!]));
+        this.modeloAeronaveArray = filtered.map(item => ({
+          value: item.mreId!,
+          label: item.mreNombre!
+        }));
+      },
+      error: (error) => this.errorHandler.handleServerError(error.error)
+    });
+  }
+
+  private loadProducto() {
+    console.log('loadProducto llamado con ID:', this.proId); // <-- Asegúrate de que se imprime
+
+    if (!this.proId) return;
+
+    this.productoService.getProducto(this.proId).subscribe({
+      next: (producto: ProductResponseDTO) => {
+        this.proUnidades = producto.proUnidades ?? 0;
+        this.editForm.setValue({
+          proNumeroParte: producto.proNumeroParte,
+          proNombre: producto.proNombre,
+          proNumeroParteAlterno: producto.proNumeroParteAlterno ?? null,
+          proNumeroSerie: producto.proNumeroSerie,
+          proTipoDocumento: producto.proTipoDocumento,
+          proTpo: producto.proTpoId,
+          proAmc: producto.proAmcId,
+          proPve: producto.proPveId,
+          modeloAeronaveIds: producto.modeloAeronaveIds ?? []
+        });
+      },
+      error: (error) => this.errorHandler.handleServerError(error.error)
+    });
   }
 
   handleSubmit() {
     window.scrollTo(0, 0);
     this.editForm.markAllAsTouched();
-    if (!this.editForm.valid) {
-      return;
-    }
+    if (!this.editForm.valid || !this.proId) return;
 
-    // Obtener el producto actual para mantener las unidades originales
-    this.productoService.getProducto(this.currentProId!).subscribe({
-      next: (productoActual) => {
-        const formData = this.editForm.value;
-        const data = new ProductoDTO({
-          ...formData,
-          proUnidades: productoActual.proUnidades // Mantener el valor original
-        });
+    const formData = this.editForm.value;
+    const data: ProductRequestDTO = {
+      proNumeroParte: formData.proNumeroParte!,
+      proNombre: formData.proNombre!,
+      proNumeroParteAlterno: formData.proNumeroParteAlterno || undefined,
+      proNumeroSerie: formData.proNumeroSerie!,
+      proTipoDocumento: formData.proTipoDocumento!,
+      proTpo: formData.proTpo!,
+      proAmc: formData.proAmc!,
+      proPve: formData.proPve!,
+      proUnidades: this.proUnidades,
+      modeloAeronaveIds: formData.modeloAeronaveIds || []
+    };
 
-        this.productoService.updateProducto(this.currentProId!, data)
-          .subscribe({
-            next: () => this.router.navigate(['/productos'], {
-              state: {
-                msgSuccess: this.getMessage('updated')
-              }
-            }),
-            error: (error) => this.errorHandler.handleServerError(error.error, this.editForm, this.getMessage)
-          });
-      },
-      error: (error) => this.errorHandler.handleServerError(error.error)
+    this.productoService.updateProducto(this.proId, data).subscribe({
+      next: () => this.router.navigate(['/productos'], {
+        state: { msgSuccess: $localize`:@@producto.edit.success:Producto was updated successfully.` }
+      }),
+      error: (error) => this.errorHandler.handleServerError(error.error, this.editForm)
     });
   }
+
 }

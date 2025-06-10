@@ -5,8 +5,8 @@ export interface ProductRequestDTO {
   proNumeroSerie?: string;
   proUnidades?: number;
   proTipoDocumento?: string;
-  proTpo: number; // ID de tipo producto
-  proAmc: number; // ID de almacen/contenedor
-  proPve: number; // ID de proveedor
-  modeloAeronaveIds: number[]; // o Set<number> si lo manejas así
+  proTpo: number;
+  proAmc: number;
+  proPve: number;
+  modeloAeronaveIds: number[];
 }

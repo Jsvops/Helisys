@@ -1,7 +1,7 @@
 <div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@producto.list.headline">Productos</h1>
+    <h1 class="flex-grow-1" i18n="@@producto.list.headline">Lista de piezas</h1>
     <div>
-        <a routerLink="/productos/add" class="btn btn-primary ms-2" i18n="@@producto.list.createNew">Crear nuevo Producto</a>
+        <a routerLink="/productos/add" class="btn btn-primary ms-2" i18n="@@producto.list.createNew">Añadir nueva pieza</a>
     </div>
 </div>
 <div class="mb-3">
@@ -55,10 +55,6 @@
                     <a [routerLink]="['/productos/edit', producto.proId]"
                        class="btn btn-sm btn-secondary"
                        i18n="@@producto.list.edit">Editar</a>
-                    <button type="button"
-                            (click)="confirmDelete(producto.proId!)"
-                            class="btn btn-sm btn-secondary ms-1"
-                            i18n="@@producto.list.delete">Eliminar</button>
                 </div>
             </td>
         </tr>

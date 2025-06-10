@@ -94,6 +94,7 @@ public class ModeloAeronaveService {
             modeloIds.stream().distinct().forEach(id -> {
                 ModeloAeronave modelo = modeloAeronaveRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("ModeloAeronave con ID " + id + " no encontrado"));
+
                 DetalleProductoModeloAeronave detalle = new DetalleProductoModeloAeronave();
                 detalle.setDpmaPro(producto);
                 detalle.setDpmaMre(modelo);

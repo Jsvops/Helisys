@@ -1,7 +1,7 @@
 export interface ProductResponseDTO {
   proId: number;
-  proNombre: string;
   proNumeroParte: string;
+  proNombre: string;
   proNumeroParteAlterno: string;
   proNumeroSerie: string;
   proUnidades: number;
@@ -10,4 +10,8 @@ export interface ProductResponseDTO {
   proAmcNombre: string;
   proPveNombre: string;
   modeloAeronaveNombres: string[];
+  proTpoId: number;
+  proAmcId: number;
+  proPveId: number;
+  modeloAeronaveIds: number[];
 }

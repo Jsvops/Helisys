@@ -39,17 +39,20 @@ export class ProductoService {
     );
   }
 
+  crearProducto(producto: ProductRequestDTO): Observable<number> {
+        return this.http.post<number>(this.resourcePath + '/', producto);
+      }
+
+///////////////////////////////////////////////////////////////////////////////
   getProducto(proId: number) {
-    return this.http.get<ProductoDTO>(this.resourcePath + '/' + proId);
+    return this.http.get<ProductResponseDTO>(this.resourcePath + '/' + proId);
   }
 
-   crearProducto(producto: ProductRequestDTO): Observable<number> {
-      return this.http.post<number>(this.resourcePath + '/', producto);
-    }
-
-  updateProducto(proId: number, productoDTO: ProductoDTO) {
+  updateProducto(proId: number, productoDTO: ProductRequestDTO) {
     return this.http.put<number>(this.resourcePath + '/' + proId, productoDTO);
   }
+//////////////////////////////////////////////////////////////////////////////////////
+
 
   deleteProducto(proId: number) {
     return this.http.delete(this.resourcePath + '/' + proId);

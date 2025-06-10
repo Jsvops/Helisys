@@ -70,19 +70,21 @@ public class ProductoResource {
 
     // Endpoint para obtener un producto por ID
     @GetMapping("/{proId}")
-    public ResponseEntity<ProductoDTO> getProducto(
+    public ResponseEntity<ProductResponseDTO> getProducto(
         @PathVariable(name = "proId") final Integer proId) {
         return ResponseEntity.ok(productoService.get(proId));
     }
+
 
     // Endpoint para actualizar un producto 08/06
     @PutMapping("/{proId}")
     public ResponseEntity<Integer> updateProducto(
         @PathVariable(name = "proId") final Integer proId,
-        @RequestBody @Valid final ProductoDTO productoDTO) {
-        productoService.update(proId, productoDTO);
+        @RequestBody @Valid final ProductRequestDTO productRequestDTO) {
+        productoService.update(proId, productRequestDTO);
         return ResponseEntity.ok(proId);
     }
+
 
     // Endpoint para eliminar un producto
     @DeleteMapping("/{proId}")

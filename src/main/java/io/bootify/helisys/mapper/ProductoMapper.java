@@ -7,6 +7,7 @@ import io.bootify.helisys.model.ProductRequestDTO;
 import io.bootify.helisys.model.ProductResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 import java.util.List;
@@ -20,13 +21,36 @@ public interface ProductoMapper {
     @Mapping(source = "proAmc", target = "proAmcNombre", qualifiedByName = "mapAlmacenCombinado")
     @Mapping(source = "proPve.pveNombre", target = "proPveNombre")
     @Mapping(source = "dpmaProDetalleProductoModeloAeronaves", target = "modeloAeronaveNombres", qualifiedByName = "mapModeloAeronaves")
+    @Mapping(source = "proTpo.tpoId", target = "proTpoId")
+    @Mapping(source = "proAmc.amcId", target = "proAmcId")
+    @Mapping(source = "proPve.pveId", target = "proPveId")
+    @Mapping(source = "dpmaProDetalleProductoModeloAeronaves", target = "modeloAeronaveIds", qualifiedByName = "mapModeloAeronaveIds")
     ProductResponseDTO toDto(Producto producto);
 
+    // Mapping de DTO de request a entidad
+    @Mapping(target = "proTpo", ignore = true)
+    @Mapping(target = "proAmc", ignore = true)
+    @Mapping(target = "proPve", ignore = true)
+    @Mapping(target = "dpmaProDetalleProductoModeloAeronaves", ignore = true)
+    Producto toEntity(ProductRequestDTO dto);
+
+    @Mapping(target = "proTpo", ignore = true)
+    @Mapping(target = "proAmc", ignore = true)
+    @Mapping(target = "proPve", ignore = true)
+    @Mapping(target = "dpmaProDetalleProductoModeloAeronaves", ignore = true)
+    void updateFromDto(ProductRequestDTO dto, @MappingTarget Producto producto);
 
     @Named("mapModeloAeronaves")
     default List<String> mapModeloAeronaves(Set<DetalleProductoModeloAeronave> dpmas) {
         return dpmas.stream()
             .map(dpma -> dpma.getDpmaMre().getMreNombre())
+            .toList();
+    }
+
+    @Named("mapModeloAeronaveIds")
+    default List<Integer> mapModeloAeronaveIds(Set<DetalleProductoModeloAeronave> dpmas) {
+        return dpmas.stream()
+            .map(dpma -> dpma.getDpmaMre().getMreId())
             .toList();
     }
 
@@ -41,10 +65,7 @@ public interface ProductoMapper {
         return descripcion + "-" + repisa + "-" + numero;
     }
 
-    // Mapping de DTO de request a entidad
-    @Mapping(target = "proTpo", ignore = true)
-    @Mapping(target = "proAmc", ignore = true)
-    @Mapping(target = "proPve", ignore = true)
-    @Mapping(target = "dpmaProDetalleProductoModeloAeronaves", ignore = true)
-    Producto toEntity(ProductRequestDTO dto);
+
+
+
 }

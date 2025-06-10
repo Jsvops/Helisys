@@ -24,5 +24,10 @@ public class ProductResponseDTO {
     private String proAmcNombre;
     private String proPveNombre;
     private List<String> modeloAeronaveNombres;
+    private Integer proTpoId;
+    private Integer proAmcId;
+    private Integer proPveId;
+    private List<Integer> modeloAeronaveIds;
+
 }
 

@@ -74,30 +74,46 @@ public class ProductoService {
             .collect(Collectors.toList());
     }
 
-
-    public ProductoDTO get(final Integer proId) {
-        return productoRepository.findById(proId)
-            .map(producto -> mapToDTO(producto, new ProductoDTO()))
-            .orElseThrow(NotFoundException::new);
-    }
-
-
     public Integer create(final ProductoDTO productoDTO) {
         final Producto producto = new Producto();
         mapToEntity(productoDTO, producto);
         return productoRepository.save(producto).getProId();
     }
 
-    public void update(final Integer proId, final ProductoDTO productoDTO) {
-        final Producto producto = productoRepository.findById(proId)
+   ////////////////////////////////////////////////////////////////////
+   @Transactional(readOnly = true)
+   public ProductResponseDTO get(final Integer proId) {
+       Producto producto = productoRepository.findById(proId)
+           .orElseThrow(NotFoundException::new);
+       return productoMapper.toDto(producto);
+   }
+
+    @Transactional
+    public void update(final Integer proId, final ProductRequestDTO dto) {
+        Producto producto = productoRepository.findById(proId)
             .orElseThrow(NotFoundException::new);
-        mapToEntity(productoDTO, producto);
+
+        // Usamos el mapper para copiar los campos del DTO a la entidad existente
+        productoMapper.updateFromDto(dto, producto);
+
+        // Actualizamos las relaciones
+        producto.setProTpo(tipoProductoService.getByIdOrThrow(dto.getProTpo()));
+        producto.setProAmc(almacenContenedorService.getByIdOrThrow(dto.getProAmc()));
+        producto.setProPve(proveedorService.getByIdOrThrow(dto.getProPve()));
+
+        producto.getDpmaProDetalleProductoModeloAeronaves().clear();
+
+        // Actualizamos los modelos relacionados
+        modeloAeronaveService.relacionarModelos(producto, dto.getModeloAeronaveIds());
+
         productoRepository.save(producto);
     }
 
     public void delete(final Integer proId) {
         productoRepository.deleteById(proId);
     }
+
+    ///////////////////////////////////////////////////
 
 
     public List<ProductViewDTO> findFilteredProducts(String partNumber, String name, String alterPartNumber) {

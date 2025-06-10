@@ -1,19 +1,30 @@
 <div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@producto.edit.headline">Edit Producto</h1>
+    <h1 class="flex-grow-1" i18n="@@producto.edit.headline">Editar pieza añadida</h1>
     <div>
-        <a routerLink="/productos" class="btn btn-secondary" i18n="@@producto.edit.back">Back to list</a>
+        <a routerLink="/productos" class="btn btn-secondary" i18n="@@producto.edit.back">Lista de piezas</a>
     </div>
 </div>
 <form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
-    <input type="submit" i18n-value="@@producto.edit.headline" value="Edit Producto" class="btn btn-primary mt-4 mb-4" />
-    <app-input-row [group]="editForm" field="proId" rowType="number" i18n-label="@@producto.proId.label" label="Pro Id" />
-    <app-input-row [group]="editForm" field="proNumeroParte" i18n-label="@@producto.proNumeroParte.label" label="Pro Numero Parte" />
-    <app-input-row [group]="editForm" field="proNombre" i18n-label="@@producto.proNombre.label" label="Pro Nombre" />
-    <app-input-row [group]="editForm" field="proNumeroParteAlterno" i18n-label="@@producto.proNumeroParteAlterno.label" label="Pro Numero Parte Alterno" />
-    <app-input-row [group]="editForm" field="proNumeroSerie" i18n-label="@@producto.proNumeroSerie.label" label="Pro Numero Serie" />
-    <app-input-row [group]="editForm" field="proTipoDocumento" i18n-label="@@producto.proTipoDocumento.label" label="Pro Tipo Documento" />
-    <app-input-row [group]="editForm" field="proTpo" rowType="select" [options]="proTpoValues" i18n-label="@@producto.proTpo.label" label="Pro Tpo" />
-    <app-input-row [group]="editForm" field="proAmc" rowType="select" [options]="proAmcValues" i18n-label="@@producto.proAmc.label" label="Pro Amc" />
-    <app-input-row [group]="editForm" field="proPve" rowType="select" [options]="proPveValues" i18n-label="@@producto.proPve.label" label="Pro Pve" />
-    <input type="submit" i18n-value="@@producto.edit.headline" value="Edit Producto" class="btn btn-primary mt-4" />
+    <app-input-row [group]="editForm" field="proNumeroParte" i18n-label="@@producto.proNumeroParte.label" label="Numero de Parte" />
+    <app-input-row [group]="editForm" field="proNombre" i18n-label="@@producto.proNombre.label" label="Nombre" />
+    <app-input-row [group]="editForm" field="proNumeroParteAlterno" i18n-label="@@producto.proNumeroParteAlterno.label" label="Numero Alterno" />
+    <app-input-row [group]="editForm" field="proNumeroSerie" i18n-label="@@producto.proNumeroSerie.label" label="Numero de Serie" />
+    <app-input-row [group]="editForm" field="proTipoDocumento" i18n-label="@@producto.proTipoDocumento.label" label="Tipo Documento" />
+    <app-input-row [group]="editForm" field="proTpo" rowType="select" [options]="proTpoValues" i18n-label="@@producto.proTpo.label" label="Tipo compomente" />
+    <app-input-row [group]="editForm" field="proAmc" rowType="select" [options]="proAmcValues" i18n-label="@@producto.proAmc.label" label="Ubicacion" />
+    <app-input-row [group]="editForm" field="proPve" rowType="select" [options]="proPveValues" i18n-label="@@producto.proPve.label" label="Proveedor" />
+
+    <mat-form-field appearance="fill" class="w-100 mt-3">
+        <mat-label i18n="@@producto.modeloAeronaveIds.label">Modelos de Aeronave</mat-label>
+        <mat-select formControlName="modeloAeronaveIds" multiple>
+            <mat-option *ngFor="let modelo of modeloAeronaveArray" [value]="modelo.value">
+                {{ modelo.label }}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="editForm.get('modeloAeronaveIds')?.hasError('required')" i18n="@@producto.modeloAeronaveIds.required">
+            Selecciona al menos un modelo de aeronave.
+        </mat-error>
+    </mat-form-field>
+
+    <input type="submit" i18n-value="@@producto.edit.headline" value="Guardar" class="btn btn-primary mt-4" />
 </form>

@@ -8,7 +8,7 @@
 <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
     <app-input-row [group]="addForm" field="proNumeroParte" i18n-label="@@producto.proNumeroParte.label" label="Numero de Parte" />
     <app-input-row [group]="addForm" field="proNombre" i18n-label="@@producto.proNombre.label" label="Nombre" />
-    <app-input-row [group]="addForm" field="proNumeroParteAlterno" i18n-label="@@producto.proNumeroParteAlterno.label" label="Numero Parte Alterno" />
+    <app-input-row [group]="addForm" field="proNumeroParteAlterno" i18n-label="@@producto.proNumeroParteAlterno.label" label="Numero Alterno" />
     <app-input-row [group]="addForm" field="proNumeroSerie" i18n-label="@@producto.proNumeroSerie.label" label="Numero de Serie" />
     <app-input-row [group]="addForm" field="proTipoDocumento" i18n-label="@@producto.proTipoDocumento.label" label="Tipo Documento" />
     <app-input-row [group]="addForm" field="proTpo" rowType="select" [options]="proTpoValues" i18n-label="@@producto.proTpo.label" label="Tipo de componete" />
