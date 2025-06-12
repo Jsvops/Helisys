@@ -93,17 +93,14 @@ public class ProductoService {
         Producto producto = productoRepository.findById(proId)
             .orElseThrow(NotFoundException::new);
 
-        // Usamos el mapper para copiar los campos del DTO a la entidad existente
         productoMapper.updateFromDto(dto, producto);
 
-        // Actualizamos las relaciones
         producto.setProTpo(tipoProductoService.getByIdOrThrow(dto.getProTpo()));
         producto.setProAmc(almacenContenedorService.getByIdOrThrow(dto.getProAmc()));
         producto.setProPve(proveedorService.getByIdOrThrow(dto.getProPve()));
 
         producto.getDpmaProDetalleProductoModeloAeronaves().clear();
 
-        // Actualizamos los modelos relacionados
         modeloAeronaveService.relacionarModelos(producto, dto.getModeloAeronaveIds());
 
         productoRepository.save(producto);
@@ -112,9 +109,6 @@ public class ProductoService {
     public void delete(final Integer proId) {
         productoRepository.deleteById(proId);
     }
-
-    ///////////////////////////////////////////////////
-
 
     public List<ProductViewDTO> findFilteredProducts(String partNumber, String name, String alterPartNumber) {
         return productoRepository.findProducts(partNumber, name, alterPartNumber);
@@ -244,5 +238,11 @@ public class ProductoService {
             .map(productoMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public List<ProductResponseDTO> listarTodosProductosPorModeloAeronave(Integer modeloAeronaveId) {
+        return productoRepository.findByModeloAeronaveId(modeloAeronaveId, Pageable.unpaged())
+            .map(productoMapper::toDto)
+            .getContent();
+    }
 
 }

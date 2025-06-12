@@ -1,67 +1,109 @@
-/* ESTILOS EXISTENTES DEL HEADER */
+@import '../../_custom';
+
+
 .header-container {
-    display: flex;
-    align-items: flex-start;
-    margin-top: -10px;
+  display: flex;
+  align-items: flex-start;
+  margin-top: -10px;
 }
 
 h1.mb-4 {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.header-image {
-    margin-top: -5px;
-    margin-left: 10px;
-}
-
-.larger-image {
-    width: 10%;
-    height: auto;
-}
-
-.higher-image {
-    position: relative;
-    top: -19.5px;
-}
-
-.smaller-image {
-    width: 9.5%;
-}
-
-/* NUEVOS ESTILOS PARA MENÚ E IMAGEN */
-.flex-container {
-    display: flex;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .menu-wrapper {
-    width: 360px;
-    min-width: 280px;
-}
+  width: 340px;
+  min-width: 280px;
+  background-color: $fondo-menu;
+  padding: 10px;
+  border-radius: 8px;
 
-/* CONTROL DE POSICIÓN IMAGEN */
-.img-wrapper {
-    position: relative;
-    margin-left: 20px;
+  h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    color: $texto-secundario;
+  }
 
-    img {
-        display: block;
+  .list-group-item {
+    border: 1px solid #302510;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    font-family: 'Bebas Neue', sans-serif;
+    color: $texto-principal;
+    background-color: $fondo-menu;
+
+    &:hover {
+      background-color: $fondo-hover;
+      color: $texto-principal;
     }
+  }
 }
 
-/* Posición Horizontal */
-.img-right { margin-left: 100px; } /* Derecha (default) */
-.img-left {
-    margin-left: -100px;
-    order: -1; /* Mueve a la izquierda */
+// 📦 Layout
+.flex-container {
+  display: flex;
 }
 
-/* Posición Vertical */
-.img-top { align-self: flex-start; margin-top: 13px; }
-.img-center { align-self: center; margin-top: 0; }
-.img-bottom { align-self: flex-end; margin-top: 20px; }
+// 🖼 Contenedor de imágenes (por si lo necesitas)
+.img-wrapper {
+  position: relative;
 
-/* Tamaños de Imagen */
-.img-small img { width: 100px; }
-.img-medium img { width: 400px; }
-.img-large img { width: 200px; }
+  img {
+    display: block;
+  }
+}
+
+// ✅ TAMAÑO POR IMAGEN
+.img-fab {
+  width: 100px;
+  height: auto;
+}
+
+.img-brigada {
+  width: 82px;
+  height: auto;
+}
+
+.img-diablos {
+  width: 400px;
+  height: auto;
+}
+
+// ✅ POSICIÓN POR IMAGEN
+.pos-fab {
+  margin-left: 10px;
+  margin-top: -10px;
+}
+
+.pos-brigada {
+  margin-left: 10px;
+  margin-top: -10px;
+  position: relative;
+  top: -14px;
+}
+
+.pos-diablos {
+  margin-left: 100px;
+  margin-top: 13px;
+  align-self: flex-start;
+}
+
+// ⬇ Posición del h1
+.pos-h1 {
+  margin-left: 175px;
+  margin-top: 10px;
+  position: relative;
+  top: 0;
+}
+
+// ⬇ Posición del menú
+.pos-menu {
+  margin-left: 150px;
+  margin-top: -15px;
+  position: relative;
+  top: 0;
+}
+
+
+
+

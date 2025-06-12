@@ -82,6 +82,14 @@ export class ProductoService {
     return this.http.get<AlmacenJerarquicoDTO[]>('/api/productos/almacen-jerarquico');
   }
 
+  generarReporteProductos(modeloAeronaveId: number) {
+    return this.http.get(`/generar-pdf-productos?modeloAeronaveId=${modeloAeronaveId}`, {
+      responseType: 'blob'
+    });
+  }
+
+
+
   searchByPartNumber(partNumber: string) {
     return this.http.get<ProductoDTO[]>(`/api/productos/search?partNumber=${encodeURIComponent(partNumber)}`);
   }

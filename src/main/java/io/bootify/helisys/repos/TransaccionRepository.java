@@ -21,7 +21,7 @@ public interface TransaccionRepository extends JpaRepository<Transaccion, Intege
 
     Transaccion findFirstByTceUsr(Usuario usuario);
 
-    Optional<Transaccion> findTopByOrderByTceIdDesc();  // Metodo para retornar Optional
+    Optional<Transaccion> findTopByOrderByTceIdDesc();
 
     @Query("SELECT new map(" +
         "t.tceId as tceId, " +
@@ -39,7 +39,7 @@ public interface TransaccionRepository extends JpaRepository<Transaccion, Intege
         "LEFT JOIN t.tceAnv a " +
         "LEFT JOIN t.tceTvo te " +
         "WHERE t.tceFechaTransaccion BETWEEN :fechaInicio AND :fechaFin " +
-        "ORDER BY t.tceFechaTransaccion ASC") // Ordenar por fecha ascendente
+        "ORDER BY t.tceFechaTransaccion ASC")
     List<Map<String, Object>> findTransaccionesCombinadasByFecha(
         @Param("fechaInicio") LocalDate fechaInicio,
         @Param("fechaFin") LocalDate fechaFin);

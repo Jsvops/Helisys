@@ -14,17 +14,31 @@
     <app-input-row [group]="editForm" field="proAmc" rowType="select" [options]="proAmcValues" i18n-label="@@producto.proAmc.label" label="Ubicacion" />
     <app-input-row [group]="editForm" field="proPve" rowType="select" [options]="proPveValues" i18n-label="@@producto.proPve.label" label="Proveedor" />
 
-    <mat-form-field appearance="fill" class="w-100 mt-3">
-        <mat-label i18n="@@producto.modeloAeronaveIds.label">Modelos de Aeronave</mat-label>
-        <mat-select formControlName="modeloAeronaveIds" multiple>
-            <mat-option *ngFor="let modelo of modeloAeronaveArray" [value]="modelo.value">
-                {{ modelo.label }}
-            </mat-option>
-        </mat-select>
-        <mat-error *ngIf="editForm.get('modeloAeronaveIds')?.hasError('required')" i18n="@@producto.modeloAeronaveIds.required">
-            Selecciona al menos un modelo de aeronave.
-        </mat-error>
-    </mat-form-field>
+    <div class="row mb-3 align-items-center">
+        <label class="col-md-2 col-form-label required" i18n="@@producto.modeloAeronaveIds.label">
+            Modelos de Aeronave
+        </label>
+        <div class="col-md-10">
+            <mat-form-field class="w-100 custom-mat-select" appearance="fill">
+                <mat-label>Por favor seleccione</mat-label>
+                <mat-select
+                    id="modeloAeronaveIds"
+                    [formControl]="editForm.controls.modeloAeronaveIds"
+                    multiple
+                    panelClass="custom-panel dropdown-below"
+                    disableOptionCentering
+                >
+                    <mat-option *ngFor="let modelo of modeloAeronaveArray" [value]="modelo.value">
+                        {{ modelo.label }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="editForm.get('modeloAeronaveIds')?.hasError('required')" i18n="@@producto.modeloAeronaveIds.required">
+                    Selecciona al menos un modelo de aeronave.
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+
 
     <input type="submit" i18n-value="@@producto.edit.headline" value="Guardar" class="btn btn-primary mt-4" />
 </form>

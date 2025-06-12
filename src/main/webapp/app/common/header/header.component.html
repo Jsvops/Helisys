@@ -1,6 +1,6 @@
-<header class="bg-light">
+<header>
     <div class="container">
-        <nav class="navbar navbar-light navbar-expand-md">
+        <nav class="navbar  navbar-expand-md">
             <a routerLink="/" class="navbar-brand">
                 <img ngSrc="diablos_rojos.png" i18n-alt="@@app.title" alt="Helisys" width="30" height="30" class="d-inline-block align-top">
                 <span class="ps-1" i18n="@@app.title">Helisys</span>
@@ -18,6 +18,8 @@
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarEntitiesLink" role="button"
                            aria-expanded="false" i18n="@@navigation.entities">Menú</a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarEntitiesLink">
+                            <li><a routerLink="/productos/add" class="dropdown-item" i18n="@@producto.add.headline">Piezas</a></li>
+                            <li><a routerLink="/transacciones/add" class="dropdown-item" i18n="@@transaccion.add.headline">Transacciones</a></li>
                             <li><a routerLink="/modeloAeronaves" class="dropdown-item" i18n="@@modeloAeronave.list.headline">Modelo Aeronaves</a></li>
                             <li><a routerLink="/aeronaves" class="dropdown-item" i18n="@@aeronave.list.headline">Aeronaves</a></li>
                             <li><a routerLink="/proveedores" class="dropdown-item" i18n="@@proveedor.list.headline">Proveedores</a></li>
@@ -26,7 +28,7 @@
                             <li><a routerLink="/usuarios" class="dropdown-item" i18n="@@usuario.list.headline">Usuarios</a></li>
                         </ul>
                     </li>
-                    <!-- Mostrar el nombre del usuario en la parte derecha del menú -->
+
                     <li class="navbar-item">
                         <span class="navbar-text">Usuario: {{ userName }}</span>
                     </li>

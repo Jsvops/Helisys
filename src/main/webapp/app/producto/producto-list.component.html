@@ -4,14 +4,29 @@
         <a routerLink="/productos/add" class="btn btn-primary ms-2" i18n="@@producto.list.createNew">Añadir nueva pieza</a>
     </div>
 </div>
-<div class="mb-3">
-    <label for="modeloAeronaveSelect" class="form-label" i18n="@@producto.filtro.modelo">Filtrar por modelo</label>
-    <select id="modeloAeronaveSelect" class="form-select" [(ngModel)]="modeloAeronaveId" (change)="onFilterChange(modeloAeronaveId)">
-        <option [ngValue]="undefined" i18n="@@producto.filtro.todos">Todos los modelos</option>
-        <option *ngFor="let modelo of modelosAeronave" [ngValue]="modelo.mreId">
-            {{ modelo.mreNombre }}
-        </option>
-    </select>
+<div class="d-flex align-items-end mb-3" style="gap: 1rem;">
+    <div>
+        <label for="modeloAeronaveSelect" class="form-label" i18n="@@producto.filtro.modelo">Filtrar por modelo</label>
+        <select id="modeloAeronaveSelect"
+                class="form-select"
+                style="min-width: 250px;"
+                [(ngModel)]="modeloAeronaveId"
+                (change)="onFilterChange(modeloAeronaveId)">
+            <option [ngValue]="undefined" i18n="@@producto.filtro.todos">Todos los modelos</option>
+            <option *ngFor="let modelo of modelosAeronave" [ngValue]="modelo.mreId">
+                {{ modelo.mreNombre }}
+            </option>
+        </select>
+    </div>
+
+    <div class="ms-auto">
+        <button class="btn btn-success"
+                [disabled]="!modeloAeronaveId"
+                (click)="generarReporte()"
+                i18n="@@producto.boton.generarReporte">
+            Generar PDF
+        </button>
+    </div>
 </div>
 
 @if (!productos || productos.length === 0) {

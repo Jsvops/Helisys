@@ -1,0 +1,33 @@
+@use "sass:color"; // Necesario para usar color.adjust
+
+header {
+  background-color: #d4cfb8;
+  color: #302510;
+  font-family: 'Bebas Neue', sans-serif;
+
+  .navbar-brand span,
+  .nav-link,
+  .navbar-text {
+    font-family: 'Bebas Neue', sans-serif;
+    color: #302510;
+
+    &:hover {
+      color: color.adjust(#302510, $lightness: -10%);
+    }
+  }
+
+  .dropdown-menu {
+    background-color: #d4cfb8;
+    border: none;
+  }
+
+  .dropdown-item {
+    color: #302510;
+    font-family: 'Bebas Neue', sans-serif;
+
+    &:hover {
+      background-color: color.adjust(#d4cfb8, $lightness: -10%);
+      color: #302510;
+    }
+  }
+}

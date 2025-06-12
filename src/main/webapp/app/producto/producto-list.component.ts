@@ -99,6 +99,24 @@ export class ProductoListComponent implements OnInit, OnDestroy {
       }
     }
 
+    generarReporte() {
+      if (!this.modeloAeronaveId) return;
+
+      this.productoService.generarReporteProductos(this.modeloAeronaveId).subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'reporte-productos-modelo.pdf';
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error: (error) => this.errorHandler.handleServerError(error.error)
+      });
+    }
+
+
+
   confirmDelete(proId: number) {
     if (confirm(this.getMessage('confirm'))) {
       this.productoService.deleteProducto(proId)

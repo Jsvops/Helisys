@@ -76,17 +76,17 @@ public class TransaccionService {
     public List<Map<String, Object>> getTransaccionesByFecha(LocalDate fechaInicio, LocalDate fechaFin) {
         List<Map<String, Object>> transacciones = transaccionRepository.findTransaccionesCombinadasByFecha(fechaInicio, fechaFin);
 
-        // Convertir LocalDate a Date
-        transacciones.forEach(transaccion -> {
-            LocalDate fechaLocalDate = (LocalDate) transaccion.get("tceFechaTransaccion");
-            if (fechaLocalDate != null) {
+        for (Map<String, Object> transaccion : transacciones) {
+            Object fecha = transaccion.get("tceFechaTransaccion");
+            if (fecha instanceof LocalDate fechaLocalDate) {
                 Date fechaDate = Date.from(fechaLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 transaccion.put("tceFechaTransaccion", fechaDate);
             }
-        });
+        }
 
         return transacciones;
     }
+
 
     public TransaccionDTO get(final Integer tceId) {
         return transaccionRepository.findById(tceId)
