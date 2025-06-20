@@ -43,7 +43,6 @@ import { TransaccionesProductoListComponent } from './transacciones-producto/tra
 import { TransaccionesProductoAddComponent } from './transacciones-producto/transacciones-producto-add.component';
 import { TransaccionesProductoEditComponent } from './transacciones-producto/transacciones-producto-edit.component';
 import { SearchComponent } from './search/search.component';
-import { AlmacenCombinadoAddComponent } from './almacen-contenedor/almacen-combinado-add.component';
 import { DetalleProductoModeloAeronaveAddComponent } from './detalle-producto-modelo-aeronave/detalle-producto-modelo-aeronave-add.component';
 import { DetalleProductoModeloAeronaveListComponent } from './detalle-producto-modelo-aeronave/detalle-producto-modelo-aeronave-list.component';
 import { DetalleProductoModeloAeronaveEditComponent } from './detalle-producto-modelo-aeronave/detalle-producto-modelo-aeronave-edit.component';
@@ -270,11 +269,6 @@ export const routes: Routes = [
     path: 'search',
     component: SearchComponent,
     title: `SearchProducts`
-  },
-  {
-    path: 'almacen-combinado-add',
-    component: AlmacenCombinadoAddComponent,
-    title: $localize`:@@almacenCombinado.add.headline:Add Almacen Combinado`
   },
   {
       path: 'detalle-producto-modelo-aeronave-add',
