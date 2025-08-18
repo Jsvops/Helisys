@@ -14,4 +14,9 @@ export class HomeComponent {
 
   environment = environment;
 
+ logout() {
+   fetch('/logout', { method: 'POST', credentials: 'include' })
+     .finally(() => window.location.replace('/login'));
+ }
+
 }

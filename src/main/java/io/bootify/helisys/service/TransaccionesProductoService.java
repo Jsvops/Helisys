@@ -70,7 +70,7 @@ public class TransaccionesProductoService {
                                               final TransaccionesProductoDTO transaccionesProductoDTO) {
         transaccionesProductoDTO.setTcoId(transaccionesProducto.getTcoId());
         transaccionesProductoDTO.setTcoUnidades(transaccionesProducto.getTcoUnidades());
-        // Ahora asignamos directamente el ID del producto como Integer
+
         transaccionesProductoDTO.setTcoPro(transaccionesProducto.getTcoPro() == null
             ? null
             : transaccionesProducto.getTcoPro().getProId());
