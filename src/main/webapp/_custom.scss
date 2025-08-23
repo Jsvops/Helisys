@@ -23,24 +23,18 @@ body::before {
   left: 0;
   height: 100%;
   width: 100%;
-
   background-image: url('/header-background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   z-index: -2;
 }
 
 body::after {
   content: "";
   position: fixed;
-  top: 10%;
-  left: 0;
-  height: 89%;
-  width: 100%;
-
-  background-color: rgba(0, 0, 0, 0.4); /* ← aquí ajustas la opacidad */
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4); // aquí ajustas la opacidad
   z-index: -1;
 }
 

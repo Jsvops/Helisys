@@ -29,6 +29,11 @@
                         {{ item.label }}
                     </mat-option>
                 </mat-select>
+
+                <mat-error *ngIf="addForm.get('modeloAeronaveIds')?.hasError('required')
+                        && addForm.get('modeloAeronaveIds')?.touched">
+                    Este campo es obligatorio
+                </mat-error>
             </mat-form-field>
         </div>
     </div>

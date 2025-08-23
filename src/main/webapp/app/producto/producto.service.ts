@@ -23,11 +23,13 @@ export class ProductoService {
   getAllProductos(
     page: number = 0,
     size: number = 10,
-    modeloAeronaveId?: number
+    modeloAeronaveId?: number,
+    sort: string = 'proId,desc' // <- default cliente (coincide con backend)
   ): Observable<{ content: ProductResponseDTO[]; totalElements: number }> {
     let params = new HttpParams()
       .set('page', page)
-      .set('size', size);
+      .set('size', size)
+      .set('sort', sort);
 
     if (modeloAeronaveId !== undefined) {
       params = params.set('modeloAeronaveId', modeloAeronaveId);
@@ -87,8 +89,6 @@ export class ProductoService {
       responseType: 'blob'
     });
   }
-
-
 
   searchByPartNumber(partNumber: string) {
     return this.http.get<ProductoDTO[]>(`/api/productos/search?partNumber=${encodeURIComponent(partNumber)}`);

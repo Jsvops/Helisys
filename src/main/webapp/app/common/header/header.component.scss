@@ -1,4 +1,4 @@
-@use "sass:color"; // Necesario para usar color.adjust
+@use "sass:color";
 
 header {
   background-color: #d4cfb8;
@@ -29,5 +29,11 @@ header {
       background-color: color.adjust(#d4cfb8, $lightness: -10%);
       color: #302510;
     }
+  }
+
+.logout-nudge{
+    --x: 10px;
+    --y: -0.5px;
+      transform: translate(var(--x), var(--y));
   }
 }

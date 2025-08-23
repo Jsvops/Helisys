@@ -1,5 +1,24 @@
-/* Asegura que el panel del mat-select tenga fondo blanco y buen z-index */
 ::ng-deep .custom-panel {
   background-color: white !important;  /* Fondo blanco */
   z-index: 1000 !important;
 }
+
+label.required::after {
+  content: " *";
+  color: #db3545;
+  font-weight: bold;
+}
+
+::ng-deep mat-error {
+  color: #db3545 !important;
+  font-weight: 500;
+}
+
+::ng-deep .custom-mat-select mat-label {
+  color: #a29246 !important;
+  font-weight: 500;
+}
+
+
+
+

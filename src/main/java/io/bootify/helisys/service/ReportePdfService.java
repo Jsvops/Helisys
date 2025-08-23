@@ -37,7 +37,7 @@ public class ReportePdfService {
 
         Context context = new Context();
         context.setVariable("productosPaginados", productosPaginados);
-        context.setVariable("nombreModeloAeronave", nombreModelo);  // nuevo
+        context.setVariable("nombreModeloAeronave", nombreModelo);
 
         return generarPdfDesdeTemplate("reporte-productos-modelo", context);
     }

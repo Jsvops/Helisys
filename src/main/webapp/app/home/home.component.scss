@@ -1,109 +1,75 @@
 @import '../../_custom';
 
 
-.header-container {
-  display: flex;
-  align-items: flex-start;
-  margin-top: -10px;
-}
+.header-container {          // Se encarga de los hijos de clase en HTML
+  display: flex;             // Pone a los 3 hijos en fila
+  align-items: center;       // Alinea verticalmente al centro los 3 elementos dentro del contenedor
+  justify-content: center;   // centra H1 + logos
+  gap: 12px;                 // La propiedad gap en CSS es una abreviatura de row-gapy column-gap, que especifica                             el tamaño de los márgenes, que es el espacio entre filas y columnas en diseños
+  padding-top: 0;            // Relleno para la parte arriba del container
+  min-height: 96px;          // Establece la altura mínima de un elemento
+  }
+
+.header-container img {
+  height: auto;               // mantiene proporción si cambias el width en CSS
+  display: block;             // elimina espacios de línea
+  }
+
+.nudge {
+  transform: translate(var(--x, 0px), var(--y, 0px));    // Funciona para mover las imagenes a nuestra dispocision
+  }
+
+html, body { margin: 0; }     // evita el margen por defecto del navegador
 
 h1.mb-4 {
-  margin-top: 0;
-  margin-bottom: 0;
-}
+  margin: 0;                  // Anula el margen inferior que trae Bootstrap en .mb-4.
+  line-height: 1.1;           // Se usa comúnmente para establecer la distancia entre líneas de texto.
+  }
 
 .menu-wrapper {
-  width: 340px;
-  min-width: 280px;
+  width: 340px;                     // Ancho del bloque de menu de la clase menu-wrapper del HTML
+  min-width: 280px;                 // Limite de ancho del menu
+  background-color: $fondo-menu;    // Color de fondo del menu
+  padding: 10px;                    // Espacio o relleno entre el borde del cajon y su contenido
+  border-radius: 8px;               // Esquinas redondeadas del cajon del menu
+
+.menu-wrapper h4 {
+  font-family: 'Bebas Neue', sans-serif;
+  color: $texto-secundario;
+  line-height: 1.1;
+  }
+
+.list-group-item {
+  border: 1px solid #302510;     // Dibuja un borde de 1 px alrededor de cada ítem.
+  border-radius: 4px;            // Redondea las esquinas del ítem.
+  margin-bottom: 5px;            // Agrega espacio externo inferior entre ítems.
+  font-family: 'Bebas Neue', sans-serif;
+  color: $texto-principal;
   background-color: $fondo-menu;
-  padding: 10px;
-  border-radius: 8px;
 
-  h4 {
-    font-family: 'Bebas Neue', sans-serif;
-    color: $texto-secundario;
-  }
-
-  .list-group-item {
-    border: 1px solid #302510;
-    border-radius: 4px;
-    margin-bottom: 5px;
-    font-family: 'Bebas Neue', sans-serif;
-    color: $texto-principal;
-    background-color: $fondo-menu;
-
-    &:hover {
-      background-color: $fondo-hover;
-      color: $texto-principal;
+  &:hover {                               // “&” = el selector padre (.list-group-item)
+    background-color: $fondo-hover;       // cambia el fondo cuando pasas el mouse
+    color: $texto-principal;              // y el color del texto
     }
+   }
   }
-}
 
-// 📦 Layout
 .flex-container {
-  display: flex;
-}
-
-// 🖼 Contenedor de imágenes (por si lo necesitas)
-.img-wrapper {
-  position: relative;
-
-  img {
-    display: block;
+   display: flex;
+   align-items: flex-start; /* el menú e imagen arrancan arriba */
+   gap: 24px;
   }
+
+.menu-nudge {
+  --x: 170px;
+  --y: -30px;
+  transform: translate(var(--x), var(--y));
 }
 
-// ✅ TAMAÑO POR IMAGEN
-.img-fab {
-  width: 100px;
-  height: auto;
+.diablos-nudge {
+  --x: 170px;
+  --y: -20px;
+  transform: translate(var(--x), var(--y));
 }
-
-.img-brigada {
-  width: 82px;
-  height: auto;
-}
-
-.img-diablos {
-  width: 400px;
-  height: auto;
-}
-
-// ✅ POSICIÓN POR IMAGEN
-.pos-fab {
-  margin-left: 10px;
-  margin-top: -10px;
-}
-
-.pos-brigada {
-  margin-left: 10px;
-  margin-top: -10px;
-  position: relative;
-  top: -14px;
-}
-
-.pos-diablos {
-  margin-left: 100px;
-  margin-top: 13px;
-  align-self: flex-start;
-}
-
-// ⬇ Posición del h1
-.pos-h1 {
-  margin-left: 175px;
-  margin-top: 10px;
-  position: relative;
-  top: 0;
-}
-
-// ⬇ Posición del menú
-.pos-menu {
-  margin-left: 150px;
-  margin-top: -15px;
-  position: relative;
-  top: 0;
-}
-
-
 
 

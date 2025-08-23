@@ -11,10 +11,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-producto-add',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatFormFieldModule,MatSelectModule, MatOptionModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatFormFieldModule,MatSelectModule, MatOptionModule, MatSnackBarModule],
   templateUrl: './producto-add.component.html',
   styleUrls: ['./producto-add.component.css'],
 })
@@ -23,6 +25,7 @@ export class ProductoAddComponent implements OnInit {
   productoService = inject(ProductoService);
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
+  snackBar = inject(MatSnackBar);
 
   proTpoValues?: Map<number, string>;
   proAmcValues?: Map<number, string>;
@@ -56,7 +59,7 @@ export class ProductoAddComponent implements OnInit {
     this.loadProTpoValues();
     this.loadProPveValues();
     this.loadAlmacenJerarquico();
-    this.loadModeloAeronaveValues(); // <-- Agrega esto
+    this.loadModeloAeronaveValues();
 
   }
 
@@ -118,20 +121,24 @@ export class ProductoAddComponent implements OnInit {
       proTpo: formData.proTpo!,
       proAmc: formData.proAmc!,
       proPve: formData.proPve!,
-      proUnidades: 0, // valor por defecto (puede omitirse si el backend lo asigna)
+      proUnidades: 0,
       modeloAeronaveIds: formData.modeloAeronaveIds || []
 
     };
 
     this.productoService.crearProducto(data)
-      .subscribe({
-        next: () => this.router.navigate(['/productos'], {
-          state: {
-            msgSuccess: this.getMessage('created')
-          }
-        }),
+    .subscribe({
+        next: () => {
+          this.snackBar.open('Pieza añadida correctamente ✅', '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            panelClass: ['snackbar-success', 'snackbar-offset']
+          });
+          this.router.navigate(['/productos']);
+        },
         error: (error) => this.errorHandler.handleServerError(error.error, this.addForm, this.getMessage)
       });
-  }
+    }
 
 }

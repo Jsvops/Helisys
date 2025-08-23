@@ -62,7 +62,7 @@ public interface ProductoMapper {
         String descripcion = amc.getAmcAmr().getAmrAmt().getAmtDescripcion();
         String repisa = amc.getAmcAmr().getAmrNombre();
         String numero = amc.getAmcNumero();
-        return descripcion + "-" + repisa + "-" + numero;
+        return descripcion + repisa + numero;
     }
 
 

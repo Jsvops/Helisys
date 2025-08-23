@@ -7,6 +7,7 @@ import io.bootify.helisys.repos.*;
 import io.bootify.helisys.util.NotFoundException;
 import io.bootify.helisys.util.ReferencedWarning;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -228,8 +229,15 @@ public class ProductoService {
 
     @Transactional(readOnly = true)
     public Page<ProductResponseDTO> listarProductos(Pageable pageable) {
-        return productoRepository.findAll(pageable)
-            .map(productoMapper::toDto);
+        Pageable effective = pageable;
+        if (pageable.getSort().isUnsorted()) {
+            effective = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "proId") // <- cambia a "createdAt" si lo tienes
+            );
+        }
+        return productoRepository.findAll(effective).map(productoMapper::toDto);
     }
 
     @Transactional(readOnly = true)

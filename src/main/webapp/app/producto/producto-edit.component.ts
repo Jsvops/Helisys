@@ -11,8 +11,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { forkJoin } from 'rxjs';
-import { RouterModule } from '@angular/router'; // <--- Asegúrate de tener esto
-
+import { RouterModule } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-producto-edit',
@@ -24,7 +24,8 @@ import { RouterModule } from '@angular/router'; // <--- Asegúrate de tener esto
     MatFormFieldModule,
     MatSelectModule,
     MatOptionModule,
-    RouterModule
+    RouterModule,
+    MatSnackBarModule
   ],
   templateUrl: './producto-edit.component.html',
   styleUrls: ['./producto-edit.component.css']
@@ -35,6 +36,7 @@ export class ProductoEditComponent implements OnInit {
   private router = inject(Router);
   private productoService = inject(ProductoService);
   private errorHandler = inject(ErrorHandler);
+  snackBar = inject(MatSnackBar);
 
   proId?: number;
   proUnidades = 0;
@@ -49,12 +51,12 @@ export class ProductoEditComponent implements OnInit {
       proNumeroParte: new FormControl<string | null>(null, [Validators.required]),
       proNombre: new FormControl<string | null>(null, [Validators.required]),
       proNumeroParteAlterno: new FormControl<string | null>(null),
-      proNumeroSerie: new FormControl<string | null>(null),
-      proTipoDocumento: new FormControl<string | null>(null),
-      proTpo: new FormControl<number | null>(null),
-      proAmc: new FormControl<number | null>(null),
-      proPve: new FormControl<number | null>(null),
-      modeloAeronaveIds: new FormControl<number[] | null>(null),
+      proNumeroSerie: new FormControl<string | null>(null, [Validators.required]),
+      proTipoDocumento: new FormControl<string | null>(null, [Validators.required]),
+      proTpo: new FormControl<number | null>(null, [Validators.required]),
+      proAmc: new FormControl<number | null>(null, [Validators.required]),
+      proPve: new FormControl<number | null>(null, [Validators.required]),
+      modeloAeronaveIds: new FormControl<number[] | null>(null,[Validators.required]),
     }, { updateOn: 'submit' });
 
   ngOnInit(): void {
@@ -118,7 +120,7 @@ export class ProductoEditComponent implements OnInit {
   }
 
   private loadProducto() {
-    console.log('loadProducto llamado con ID:', this.proId); // <-- Asegúrate de que se imprime
+    console.log('loadProducto llamado con ID:', this.proId);
 
     if (!this.proId) return;
 
@@ -161,9 +163,18 @@ export class ProductoEditComponent implements OnInit {
     };
 
     this.productoService.updateProducto(this.proId, data).subscribe({
-      next: () => this.router.navigate(['/productos'], {
-        state: { msgSuccess: $localize`:@@producto.edit.success:Producto was updated successfully.` }
-      }),
+      next: () => {
+        this.snackBar.open('Pieza actualizada correctamente ✅', '',
+          {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            panelClass: ['snackbar-success', 'snackbar-offset'],
+          }
+        );
+
+        this.router.navigate(['/productos']);
+      },
       error: (error) => this.errorHandler.handleServerError(error.error, this.editForm)
     });
   }

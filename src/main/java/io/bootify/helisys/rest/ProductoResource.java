@@ -76,7 +76,7 @@ public class ProductoResource {
     }
 
 
-    // Endpoint para actualizar un producto 08/06
+    // Endpoint para actualizar un producto
     @PutMapping("/{proId}")
     public ResponseEntity<Integer> updateProducto(
         @PathVariable(name = "proId") final Integer proId,

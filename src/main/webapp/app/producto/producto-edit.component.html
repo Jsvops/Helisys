@@ -16,7 +16,7 @@
 
     <div class="row mb-3 align-items-center">
         <label class="col-md-2 col-form-label required" i18n="@@producto.modeloAeronaveIds.label">
-            Modelos de Aeronave
+            Modelo de Aeronave
         </label>
         <div class="col-md-10">
             <mat-form-field class="w-100 custom-mat-select" appearance="fill">
@@ -33,7 +33,7 @@
                     </mat-option>
                 </mat-select>
                 <mat-error *ngIf="editForm.get('modeloAeronaveIds')?.hasError('required')" i18n="@@producto.modeloAeronaveIds.required">
-                    Selecciona al menos un modelo de aeronave.
+                   Este campo es obligatorio
                 </mat-error>
             </mat-form-field>
         </div>

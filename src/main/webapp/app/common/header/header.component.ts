@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { UserService } from 'app/user.service'; // Asegúrate de que la ruta es correcta
+import { UserService } from 'app/user.service';
 
 @Component({
   selector: 'app-header',
@@ -20,5 +20,13 @@ export class HeaderComponent implements OnInit {
     this.userService.currentUserName.subscribe(name => {
       this.userName = name;
     });
+
+
   }
+
+   logout() {
+     fetch('/logout', { method: 'POST', credentials: 'include' })
+       .finally(() => window.location.replace('/login'));
+   }
+
 }

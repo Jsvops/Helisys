@@ -16,7 +16,7 @@ const routeConfig: ExtraOptions = {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    importProvidersFrom(RouterModule.forRoot(routes, routeConfig), BrowserAnimationsModule), // 👈 quita HttpClientModule
+    importProvidersFrom(RouterModule.forRoot(routes, routeConfig), BrowserAnimationsModule),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideZoneChangeDetection({ eventCoalescing: true }),
     { provide: TitleStrategy, useClass: CustomTitleStrategy }

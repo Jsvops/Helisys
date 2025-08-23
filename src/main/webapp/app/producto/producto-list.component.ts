@@ -63,14 +63,15 @@ export class ProductoListComponent implements OnInit, OnDestroy {
   }
 
   loadData() {
-    this.productoService.getAllProductos(this.page, this.size, this.modeloAeronaveId)
+    this.productoService
+      .getAllProductos(this.page, this.size, this.modeloAeronaveId, 'proId,desc')
       .subscribe({
         next: (response) => {
           this.productos = response.content;
           this.totalItems = response.totalElements;
           this.totalPages = Math.ceil(this.totalItems / this.size);
         },
-        error: (error) => this.errorHandler.handleServerError(error.error)
+        error: (error) => this.errorHandler.handleServerError(error.error),
       });
   }
 
