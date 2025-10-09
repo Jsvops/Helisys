@@ -7,12 +7,18 @@ import { ModeloAeronaveService } from 'app/modelo-aeronave/modelo-aeronave.servi
 import { ModeloAeronaveDTO } from 'app/modelo-aeronave/modelo-aeronave.model';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { updateForm } from 'app/common/utils';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @Component({
   selector: 'app-modelo-aeronave-edit',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
-  templateUrl: './modelo-aeronave-edit.component.html'
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatIconModule, MatTooltipModule, MatButtonModule,  MatSnackBarModule],
+  templateUrl: './modelo-aeronave-edit.component.html',
+  styleUrls: ['./modelo-aeronave-edit.component.scss'],
 })
 export class ModeloAeronaveEditComponent implements OnInit {
 
@@ -20,6 +26,8 @@ export class ModeloAeronaveEditComponent implements OnInit {
   route = inject(ActivatedRoute);
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
+  snackBar = inject(MatSnackBar);
+
 
   currentMreId?: number;
 
@@ -30,7 +38,7 @@ export class ModeloAeronaveEditComponent implements OnInit {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      updated: $localize`:@@modeloAeronave.update.success:Modelo Aeronave was updated successfully.`
+      updated: $localize`:@@modeloAeronave.update.success:El moodelo de aeronave se actualizó correctamente ✅`
     };
     return messages[key];
   }
@@ -53,11 +61,17 @@ export class ModeloAeronaveEditComponent implements OnInit {
     const data = new ModeloAeronaveDTO(this.editForm.value);
     this.modeloAeronaveService.updateModeloAeronave(this.currentMreId!, data)
         .subscribe({
-          next: () => this.router.navigate(['/modeloAeronaves'], {
-            state: {
-              msgSuccess: this.getMessage('updated')
-            }
-          }),
+          next: () => {
+           this.snackBar.open(this.getMessage('updated'),
+           undefined,
+           {
+             duration: 3000,
+             verticalPosition: 'top',
+             horizontalPosition: 'center',
+              panelClass: ['snackbar-success']
+              });
+            this.router.navigate(['/modeloAeronaves']);
+           },
           error: (error) => this.errorHandler.handleServerError(error.error, this.editForm, this.getMessage)
         });
   }

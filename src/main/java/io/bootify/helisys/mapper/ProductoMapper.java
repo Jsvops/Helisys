@@ -16,7 +16,6 @@ import java.util.Set;
 @Mapper(componentModel = "spring")
 public interface ProductoMapper {
 
-    // Mapping de entidad a DTO de respuesta
     @Mapping(source = "proTpo.tpoNombreTipo", target = "proTpoNombre")
     @Mapping(source = "proAmc", target = "proAmcNombre", qualifiedByName = "mapAlmacenCombinado")
     @Mapping(source = "proPve.pveNombre", target = "proPveNombre")
@@ -27,7 +26,7 @@ public interface ProductoMapper {
     @Mapping(source = "dpmaProDetalleProductoModeloAeronaves", target = "modeloAeronaveIds", qualifiedByName = "mapModeloAeronaveIds")
     ProductResponseDTO toDto(Producto producto);
 
-    // Mapping de DTO de request a entidad
+
     @Mapping(target = "proTpo", ignore = true)
     @Mapping(target = "proAmc", ignore = true)
     @Mapping(target = "proPve", ignore = true)

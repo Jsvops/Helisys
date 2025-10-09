@@ -7,11 +7,15 @@ import { ProveedorService } from 'app/proveedor/proveedor.service';
 import { ProveedorDTO } from 'app/proveedor/proveedor.model';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { updateForm } from 'app/common/utils';
-
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-proveedor-edit',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatIconModule, MatTooltipModule, MatButtonModule,  MatSnackBarModule],
   templateUrl: './proveedor-edit.component.html'
 })
 export class ProveedorEditComponent implements OnInit {
@@ -20,7 +24,7 @@ export class ProveedorEditComponent implements OnInit {
   route = inject(ActivatedRoute);
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
-
+  snackBar = inject(MatSnackBar);
   currentPveId?: number;
 
   editForm = new FormGroup({
@@ -36,7 +40,7 @@ export class ProveedorEditComponent implements OnInit {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      updated: $localize`:@@proveedor.update.success:Proveedor was updated successfully.`
+      updated: $localize`:@@proveedor.update.success:El proveedor se actualizó correctamente ✅`
     };
     return messages[key];
   }
@@ -59,11 +63,17 @@ export class ProveedorEditComponent implements OnInit {
     const data = new ProveedorDTO(this.editForm.value);
     this.proveedorService.updateProveedor(this.currentPveId!, data)
         .subscribe({
-          next: () => this.router.navigate(['/proveedores'], {
-            state: {
-              msgSuccess: this.getMessage('updated')
-            }
-          }),
+          next: () => {
+           this.snackBar.open(this.getMessage('updated'),
+           undefined,
+           {
+             duration: 3000,
+             verticalPosition: 'top',
+             horizontalPosition: 'center',
+              panelClass: ['snackbar-success']
+              });
+            this.router.navigate(['/proveedor']);
+           },
           error: (error) => this.errorHandler.handleServerError(error.error, this.editForm, this.getMessage)
         });
   }

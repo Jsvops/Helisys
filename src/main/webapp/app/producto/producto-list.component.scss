@@ -1,0 +1,117 @@
+
+.filter-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: .75rem;
+  white-space: nowrap;
+}
+
+
+.filter-inline {
+  display: inline-flex;
+  align-items: center;
+}
+
+.filter-field {
+  min-width: 240px;
+  margin: 0;
+}
+
+
+.icon-filter {
+  width: 32px; height: 32px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #D4CFB8;
+  cursor: pointer;
+}
+.icon-filter:hover { color: #D4CFB8; }
+
+.select-shell{
+  display:inline-flex; align-items:center;
+  min-height:38px; padding:0 .625rem;
+  border:1px solid var(--bs-border-color, #dee2e6);
+  border-radius:.5rem; background:#fff;
+  transition:border-color .15s, box-shadow .15s;
+}
+
+.select-shell:focus-within{
+  border-color:#0d6efd;
+  box-shadow:0 0 0 .2rem rgba(13,110,253,.25);
+}
+
+.select-shell .mat-mdc-select-trigger{ min-height:1.5rem; }
+.filter-select{ min-width:190px; }
+
+.pdf-btn.mat-mdc-icon-button{
+  width: 40px;
+  height: 40px;
+  --mdc-icon-button-icon-size: 28px;
+  display:inline-flex; align-items:center; justify-content:center;
+  line-height:1; padding:0;
+}
+.pdf-btn .mat-mdc-button-touch-target{ width:40px; height:40px; }
+
+
+.pdf-btn mat-icon{
+  display:block; line-height:1; width:28px; height:28px;
+  color: #D4CFB8;
+}
+.pdf-btn mat-icon svg{
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hide-keep-space {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.pdf-btn.hide-keep-space {
+  opacity: 0;
+}
+
+.list.mat-mdc-icon-button{
+  width: 40px;
+  height: 40px;
+  --mdc-icon-button-icon-size: 28px;
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+}
+
+.list mat-icon{ width:28px; height:28px; font-size:28px; line-height:1; display:block; color: #D4CFB8; }
+
+@media (max-width: 576px){
+  .list.mat-mdc-icon-button{
+    width: 36px; height: 36px;
+    --mdc-icon-button-icon-size: 24px;
+    align-items: center;
+  }
+  .list mat-icon{
+    width: 24px; height: 24px; font-size: 24px;
+  }
+  .list mat-icon svg{ transform: translateY(1px); }
+}
+
+
+.table-scroll-x {
+  overflow-x: auto;                 // scroll horizontal interno
+  -webkit-overflow-scrolling: touch; // suave en móvil
+}
+
+.table-scroll-x .table {
+  margin-bottom: 0;     // que el scroll “pegue” a la tabla
+  min-width: 100%;      // llena contenedor; crece si hay muchas columnas
+  width: max-content;   // permite que la tabla sea más ancha si lo necesita
+}
+
+.span{
+    color:#D4CFB8;
+    }
+
+
+
+

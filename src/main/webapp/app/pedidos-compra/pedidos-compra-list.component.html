@@ -1,30 +1,40 @@
-<div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@pedidosCompra.list.headline">Pedidos Compras</h1>
+<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+    <h1  i18n="@@pedidosCompra.list.headline">Lista de pedidos de compras</h1>
+
     <div>
-        <a routerLink="/pedidosCompras/add" class="btn btn-primary ms-2" i18n="@@pedidosCompra.list.createNew">Create new Pedidos Compra</a>
+        <button
+            mat-icon-button
+            routerLink="/pedidosCompras/add"
+            matTooltip="Añadir pedido de compra"
+            matTooltipPosition="right"
+            [matTooltipClass]="'tooltip-pale'"
+            aria-label="Añadir pedido de compra"
+        >
+            <mat-icon svgIcon="add_box"></mat-icon>
+
+        </button>
     </div>
+
 </div>
 @if (!pedidosCompras || pedidosCompras.length === 0) {
-<div i18n="@@pedidosCompra.list.empty">No Pedidos Compras could be found.</div>
+<div i18n="@@pedidosCompra.list.empty">No se pudo encontrar los pedidos de compras</div>
 } @else {
 <div class="table-responsive">
-    <table class="table table-striped table-hover align-middle">
+    <table class="table table-striped table-hover align-middle table-pale">
         <thead>
             <tr>
-                <th scope="col" i18n="@@pedidosCompra.pcaId.label">Pca Id</th>
-                <th scope="col" i18n="@@pedidosCompra.pcaDescripcion.label">Pca Descripcion</th>
-                <th scope="col" i18n="@@pedidosCompra.pcaFechaPedido.label">Pca Fecha Pedido</th>
-                <th scope="col" i18n="@@pedidosCompra.pcaFechaEnvio.label">Pca Fecha Envio</th>
-                <th scope="col" i18n="@@pedidosCompra.pcaFechaEntrega.label">Pca Fecha Entrega</th>
-                <th scope="col" i18n="@@pedidosCompra.pcaFechaPrometida.label">Pca Fecha Prometida</th>
-                <th scope="col" i18n="@@pedidosCompra.pcaDireccionEnvio.label">Pca Direccion Envio</th>
-                <th><!-- --></th>
+                <th scope="col" i18n="@@pedidosCompra.pcaDescripcion.label">Descripción</th>
+                <th scope="col" i18n="@@pedidosCompra.pcaFechaPedido.label">Fecha de pedido</th>
+                <th scope="col" i18n="@@pedidosCompra.pcaFechaEnvio.label">Fecha de envio</th>
+                <th scope="col" i18n="@@pedidosCompra.pcaFechaEntrega.label">Fecha de entrega</th>
+                <th scope="col" i18n="@@pedidosCompra.pcaFechaPrometida.label">Fecha prometida</th>
+                <th scope="col" i18n="@@pedidosCompra.pcaDireccionEnvio.label">Dirección de envio</th>
+                <th scope="col" i18n="@@proveedor.list.actions">Acciones</th>
             </tr>
         </thead>
         <tbody>
             @for (pedidosCompra of pedidosCompras; track pedidosCompra.pcaId) {
             <tr>
-                <td>{{ pedidosCompra.pcaId }}</td>
                 <td>{{ pedidosCompra.pcaDescripcion }}</td>
                 <td>{{ pedidosCompra.pcaFechaPedido }}</td>
                 <td>{{ pedidosCompra.pcaFechaEnvio }}</td>
@@ -32,9 +42,9 @@
                 <td>{{ pedidosCompra.pcaFechaPrometida }}</td>
                 <td>{{ pedidosCompra.pcaDireccionEnvio }}</td>
                 <td>
-                    <div class="float-end text-nowrap">
-                        <a [routerLink]="['/pedidosCompras/edit', pedidosCompra.pcaId]" class="btn btn-sm btn-secondary" i18n="@@pedidosCompra.list.edit">Edit</a>
-                        <button type="button" (click)="confirmDelete(pedidosCompra.pcaId!)" class="btn btn-sm btn-secondary" i18n="@@pedidosCompra.list.delete">Delete</button>
+                    <div class="text-nowrap">
+                        <a [routerLink]="['/pedidosCompras/edit', pedidosCompra.pcaId]" class="btn btn-sm btn-secondary" i18n="@@pedidosCompra.list.edit">Editar</a>
+                        <button type="button" (click)="confirmDelete(pedidosCompra.pcaId!)" class="btn btn-sm btn-secondary" i18n="@@pedidosCompra.list.delete">Eliminar</button>
                     </div>
                 </td>
             </tr>

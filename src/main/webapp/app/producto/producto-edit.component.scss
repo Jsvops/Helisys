@@ -1,0 +1,7 @@
+label.required::after,
+.col-form-label.required::after {
+  content: " *";
+  color: #e53935;
+  font-weight: 600;
+}
+

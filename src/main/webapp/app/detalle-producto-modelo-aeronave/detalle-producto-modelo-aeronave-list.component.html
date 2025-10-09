@@ -22,8 +22,8 @@
         @for (detalle of detalles; track detalle.dpmaId) {
         <tr>
             <td>{{ detalle.dpmaId }}</td>
-            <td>{{ detalle.dpmaPro }}</td> <!-- Muestra el ID del Producto -->
-            <td>{{ detalle.dpmaMre }}</td> <!-- Muestra el ID del Modelo Aeronave -->
+            <td>{{ detalle.dpmaPro }}</td>
+            <td>{{ detalle.dpmaMre }}</td>
             <td>
                 <div class="float-end text-nowrap">
                     <a [routerLink]="['/detalle-producto-modelo-aeronave-edit', detalle.dpmaId]" class="btn btn-sm btn-secondary" i18n="@@detalle.list.edit">Editar</a>

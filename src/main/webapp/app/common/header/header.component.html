@@ -1,42 +1,50 @@
 <header>
     <div class="container">
-        <nav class="navbar  navbar-expand-md">
+        <nav class="navbar navbar-expand-md">
             <a routerLink="/" class="navbar-brand">
-                <img ngSrc="diablos_rojos.png" i18n-alt="@@app.title" alt="Helisys" width="30" height="30" class="d-inline-block align-top">
-                <span class="ps-1" i18n="@@app.title">Helisys</span>
+                <div class="brand-container">
+                    <h4 class="m-0" i18n="@@app.title">Helisys</h4>
+                        <div class="nav-divider" role="separator" aria-orientation="vertical" aria-hidden="true"></div>
+                        <div class="nav-logos" aria-label="logos">
+                            <img src="Diablos_rojos.png" alt="Logo 1" class="nav-logo" loading="lazy">
+                            <img src="Fuerza_aerea.png" alt="Logo 2" class="nav-logo" loading="lazy">
+                            <img src="Brigada.png" alt="Logo 3" class="nav-logo" loading="lazy">
+                        </div>
+                </div>
             </a>
+
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggle"
-                    i18n-aria-label="@@navigation.toggle" aria-label="Toggle navigation" aria-controls="navbarToggle" aria-expanded="false">
+                    aria-label="Toggle navigation" aria-controls="navbarToggle" aria-expanded="false">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarToggle">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="navbar-item">
-                        <a routerLink="/" class="nav-link" i18n="@@navigation.home">Inicio</a>
-                    </li>
-                    <li class="navbar-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarEntitiesLink" role="button"
-                           aria-expanded="false" i18n="@@navigation.entities">Menú</a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarEntitiesLink">
-                            <li><a routerLink="/productos/add" class="dropdown-item" i18n="@@producto.add.headline">Piezas</a></li>
-                            <li><a routerLink="/transacciones/add" class="dropdown-item" i18n="@@transaccion.add.headline">Transacciones</a></li>
-                            <li><a routerLink="/modeloAeronaves" class="dropdown-item" i18n="@@modeloAeronave.list.headline">Modelo Aeronaves</a></li>
-                            <li><a routerLink="/aeronaves" class="dropdown-item" i18n="@@aeronave.list.headline">Aeronaves</a></li>
-                            <li><a routerLink="/proveedores" class="dropdown-item" i18n="@@proveedor.list.headline">Proveedores</a></li>
-                            <li><a routerLink="/pedidosCompras" class="dropdown-item" i18n="@@pedidosCompra.list.headline">Pedidos Compras</a></li>
-                            <li><a routerLink="/pedidosProductos" class="dropdown-item" i18n="@@pedidosProducto.list.headline">Pedidos Productos</a></li>
-                            <li><a routerLink="/usuarios" class="dropdown-item" i18n="@@usuario.list.headline">Usuarios</a></li>
-                        </ul>
-                    </li>
 
-                    <li class="navbar-item">
-                        <span class="navbar-text">Usuario: {{ userName }}</span>
+            <div class="collapse navbar-collapse" id="navbarToggle">
+                <ul class="navbar-nav ms-auto align-items-center flex-row flex-nowrap">
+                    <li class="nav-item">
+                        <a
+                            routerLink="/"
+                            class="nav-link d-flex align-items-center"
+                            i18n-aria-label="@@navigation.home"
+                            aria-label="Inicio"
+                            routerLinkActive="active"
+                        >
+                            <mat-icon svgIcon="home" class="me-1" aria-hidden="true"></mat-icon>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <span class="navbar-text px-2 d-flex align-items-center gap-1">
+                            <mat-icon svgIcon="account_circle"
+                                      class="user-icon"
+                                      aria-hidden="true">
+                            </mat-icon>
+                        <span>Usuario: {{ userName }}</span>
+                        </span>
                     </li>
                 </ul>
-
             </div>
+
             <div class="header-actions logout-nudge">
-                <button (click)="logout()" class="btn btn-outline-danger">Cerrar sesión</button>
+                <button (click)="logout()" class="btn btn-danger">Cerrar sesión</button>
             </div>
         </nav>
     </div>

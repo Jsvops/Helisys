@@ -13,18 +13,17 @@ export class ErrorComponent implements OnInit {
 
   router = inject(Router);
 
-  status = '404';
+  status = 404;
   error = getReasonPhrase(this.status);
 
   ngOnInit() {
-    const currentNavigation = this.router.lastSuccessfulNavigation;
-    if (currentNavigation?.initialUrl.toString() !== '/error') {
-      // show not found
-      return;
-    }
-    const navigationState = currentNavigation.extras.state;
-    this.status = navigationState?.['errorStatus'] || '503';
-    this.error = navigationState?.['errorMessage'] || getReasonPhrase(this.status);
+    const nav = this.router.lastSuccessfulNavigation;
+    if (nav?.finalUrl?.toString() !== '/error') return;
+
+    const state = nav.extras.state as { errorStatus?: number | string; errorMessage?: string };
+    const status = Number(state?.errorStatus ?? 503);
+    this.status = status;
+    this.error = state?.errorMessage ?? getReasonPhrase(status);
   }
 
 }

@@ -2,6 +2,7 @@ package io.bootify.helisys.rest;
 
 import io.bootify.helisys.domain.ModeloAeronave;
 import io.bootify.helisys.model.AeronaveDTO;
+import io.bootify.helisys.model.AeronaveResponseDTO;
 import io.bootify.helisys.repos.ModeloAeronaveRepository;
 import io.bootify.helisys.service.AeronaveService;
 import io.bootify.helisys.util.CustomCollectors;
@@ -84,5 +85,10 @@ public class AeronaveResource {
         @RequestParam(name = "productoId") final Integer productoId) {
         List<AeronaveDTO> aeronaves = aeronaveService.findAeronavesByProductoId(productoId);
         return ResponseEntity.ok(aeronaves);
+    }
+
+    @GetMapping("/list")
+    public List<AeronaveResponseDTO> list() {
+        return aeronaveService.findAllForList();
     }
 }

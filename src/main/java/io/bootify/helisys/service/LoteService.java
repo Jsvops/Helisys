@@ -79,6 +79,13 @@ public class LoteService {
     }
 
     public Lote crear(LocalDate fechaVencimiento) {
+        if (fechaVencimiento == null) {
+            throw new IllegalArgumentException("ltFechaVencimiento es obligatorio para crear un lote.");
+        }
+        LocalDate hoy = LocalDate.now();
+        if (fechaVencimiento.isBefore(hoy)) {
+            throw new IllegalArgumentException("ltFechaVencimiento no puede ser anterior a hoy");
+        }
         Lote lote = new Lote();
         lote.setLtFechaVencimiento(fechaVencimiento);
         return loteRepository.save(lote);

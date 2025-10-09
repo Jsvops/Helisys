@@ -61,22 +61,18 @@ public class ProductoResource {
         }
     }
 
-    // Endpoint para crear un producto
     @PostMapping("/")
     public ResponseEntity<Integer> crearProducto(@RequestBody @Valid ProductRequestDTO requestDTO) {
         Integer productoId = productoService.crearProductoConModelos(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(productoId);
     }
 
-    // Endpoint para obtener un producto por ID
     @GetMapping("/{proId}")
     public ResponseEntity<ProductResponseDTO> getProducto(
         @PathVariable(name = "proId") final Integer proId) {
         return ResponseEntity.ok(productoService.get(proId));
     }
 
-
-    // Endpoint para actualizar un producto
     @PutMapping("/{proId}")
     public ResponseEntity<Integer> updateProducto(
         @PathVariable(name = "proId") final Integer proId,
@@ -85,8 +81,6 @@ public class ProductoResource {
         return ResponseEntity.ok(proId);
     }
 
-
-    // Endpoint para eliminar un producto
     @DeleteMapping("/{proId}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteProducto(
@@ -99,7 +93,6 @@ public class ProductoResource {
         return ResponseEntity.noContent().build();
     }
 
-    // Endpoint para obtener valores de TipoProducto
     @GetMapping("/proTpoValues")
     public ResponseEntity<Map<Integer, String>> getProTpoValues() {
         return ResponseEntity.ok(tipoProductoRepository.findAll(Sort.by("tpoId"))
@@ -107,7 +100,6 @@ public class ProductoResource {
             .collect(CustomCollectors.toSortedMap(TipoProducto::getTpoId, TipoProducto::getTpoNombreTipo)));
     }
 
-    // Endpoint para obtener valores de AlmacenContenedor
     @GetMapping("/proAmcValues")
     public ResponseEntity<Map<Integer, String>> getProAmcValues() {
         return ResponseEntity.ok(almacenContenedorRepository.findAll(Sort.by("amcId"))
@@ -115,7 +107,6 @@ public class ProductoResource {
             .collect(CustomCollectors.toSortedMap(AlmacenContenedor::getAmcId, AlmacenContenedor::getAmcNumero)));
     }
 
-    // Endpoint para obtener valores de Proveedor
     @GetMapping("/proPveValues")
     public ResponseEntity<Map<Integer, String>> getProPveValues() {
         return ResponseEntity.ok(proveedorRepository.findAll(Sort.by("pveId"))
@@ -123,14 +114,12 @@ public class ProductoResource {
             .collect(CustomCollectors.toSortedMap(Proveedor::getPveId, Proveedor::getPveNombre)));
     }
 
-    // Endpoint para obtener datos combinados de almacén
     @GetMapping("/almacen-jerarquico")
     public ResponseEntity<List<AlmacenJerarquicoDTO>> getAlmacenJerarquico() {
         List<AlmacenJerarquicoDTO> datosCombinados = productoService.getAlmacenJerarquico();
         return ResponseEntity.ok(datosCombinados);
     }
 
-    // Endpoint para buscar productos filtrados
     @GetMapping("/search")
     public ResponseEntity<List<ProductViewDTO>> findFilteredProducts(
         @RequestParam(name = "partNumber", required = false) String partNumber,

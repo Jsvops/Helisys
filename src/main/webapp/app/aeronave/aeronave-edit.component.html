@@ -1,14 +1,33 @@
-<div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@aeronave.edit.headline">Edit Aeronave</h1>
+<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+    <h1 i18n="@@aeronave.edit.headline">Editar la aeronave</h1>
     <div>
-        <a routerLink="/aeronaves" class="btn btn-secondary" i18n="@@aeronave.edit.back">Back to list</a>
+        <button
+            mat-icon-button
+            routerLink="/aeronaves"
+            matTooltip="Lista de las aeronaves"
+            matTooltipPosition="right"
+            [matTooltipClass]="'tooltip-pale'"
+            aria-label="Lista de las aeroanves"
+        >
+            <mat-icon svgIcon="list_alt"></mat-icon>
+
+        </button>
     </div>
+
+
 </div>
+<div class="form-container">
 <form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
-    <app-input-row [group]="editForm" field="anvId" rowType="number" i18n-label="@@aeronave.anvId.label" label="Anv Id" />
-    <app-input-row [group]="editForm" field="anvMatricula" i18n-label="@@aeronave.anvMatricula.label" label="Anv Matricula" />
-    <app-input-row [group]="editForm" field="anvNumeroSerie" i18n-label="@@aeronave.anvNumeroSerie.label" label="Anv Numero Serie" />
-    <app-input-row [group]="editForm" field="anvFabricacion" i18n-label="@@aeronave.anvFabricacion.label" label="Anv Fabricacion" />
+    <app-input-row [group]="editForm" field="anvMatricula" i18n-label="@@aeronave.anvMatricula.label" label="Matricula" />
+    <app-input-row [group]="editForm" field="anvNumeroSerie" i18n-label="@@aeronave.anvNumeroSerie.label" label="Numero de serie" />
+    <app-input-row [group]="editForm" field="anvFabricacion" i18n-label="@@aeronave.anvFabricacion.label" label="Fabricación" />
     <app-input-row [group]="editForm" field="anvMre" rowType="select" [options]="anvMreValues" i18n-label="@@aeronave.anvMre.label" label="Anv Mre" />
-    <input type="submit" i18n-value="@@aeronave.edit.headline" value="Edit Aeronave" class="btn btn-primary mt-4" />
+
+    <div class="text-end mt-3">
+        <input type="submit"
+               i18n-value="@@aeronave.edit.headline"
+               value="Guardar"
+               class="btn btn-primary" />
+    </div>
 </form>
+</div>

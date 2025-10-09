@@ -1,72 +1,97 @@
 import { inject, Injectable } from '@angular/core';
 import { FormGroup, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ErrorHandler {
 
   router = inject(Router);
+  snackBar = inject(MatSnackBar);
 
   /**
-   * Handle server errors and show the error page if required. If provided, write all field errors
-   * from the server response to the matching form fields. Resolves the error message from the
-   * errorMessages map if available.
+   * Maneja errores del servidor. Si hay fieldErrors, los mapea al form.
+   * Si es un caso de negocio (p.ej., 409 stock insuficiente), muestra snackbar y NO navega a /error.
+   * 5xx -> /error. Otros 4xx -> snackbar.
    */
-  handleServerError(error: ErrorResponse, group?: FormGroup, getMessage?: (key: string) => string) {
-    // show general error page
-    if (!error || !error.fieldErrors) {
-      this.router.navigate(['/error'], {
-            state: {
-              errorStatus: error.status ? '' + error.status : '503'
-            }
-          });
+  handleServerError(err: HttpErrorResponse | ErrorResponse, group?: FormGroup, getMessage?: (key: string) => string) {
+
+    const http = err as HttpErrorResponse;
+    const status: number | undefined =
+      typeof http?.status === 'number' ? http.status : (err as ErrorResponse)?.status;
+
+    const body: any = (http && http.error !== undefined) ? http.error : (err as ErrorResponse);
+    const code: string | undefined = body?.code;
+    const detail: string =
+      body?.detail || body?.message || http?.message || 'Ocurrió un error';
+
+
+    const isInsufficient =
+      status === 409 ||
+      code === 'INSUFFICIENT_STOCK' ||
+      /stock insuficiente/i.test(detail);
+
+    if (isInsufficient) {
+      this.snackBar.open(
+        'No se puede completar la transacción: stock insuficiente en los lotes disponibles ℹ️',
+        '',
+        { duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-success']
+        }
+      );
       return;
     }
 
-    // collect errors for each field
-    const errorsMap: Record<string, ValidationErrors> = {};
-    for (const fieldError of error.fieldErrors) {
-      const fieldName = fieldError.property;
-      if (!errorsMap[fieldName]) {
-        errorsMap[fieldName] = {};
+
+    const fieldErrors: FieldError[] | undefined = body?.fieldErrors;
+    if (fieldErrors?.length) {
+      const errorsMap: Record<string, ValidationErrors> = {};
+      for (const fe of fieldErrors) {
+        const fieldName = fe.property;
+        if (!errorsMap[fieldName]) errorsMap[fieldName] = {};
+        let errorMessage = getGlobalErrorMessage(fe.code) || fe.code;
+        if (getMessage) {
+          errorMessage =
+            getMessage(`${fe.property}.${fe.code}`) ||
+            getMessage(fe.code) ||
+            errorMessage;
+        }
+        errorsMap[fieldName][fe.code] = errorMessage;
       }
-      // look for message under key <fieldName>.<code> or <code>
-      // use global error message or error code as fallback
-      let errorMessage = getGlobalErrorMessage(fieldError.code) || fieldError.code;
-      if (getMessage) {
-        errorMessage = getMessage(fieldError.property + '.' + fieldError.code) ||
-            getMessage(fieldError.code) || errorMessage;
+      for (const [key, value] of Object.entries(errorsMap)) {
+        group?.get(key)?.setErrors(value);
       }
-      errorsMap[fieldName][fieldError.code] = errorMessage;
+      return;
     }
-    // write errors to fields
-    for (const [key, value] of Object.entries(errorsMap)) {
-      group?.get(key)?.setErrors(value);
+
+    if (typeof status === 'number' && status >= 500) {
+      this.router.navigate(['/error'], {
+        state: { errorStatus: '' + status, errorMessage: detail || 'Internal Server Error' }
+      });
+      return;
     }
+
+
+    this.snackBar.open(detail || 'Ocurrió un error', '', {
+      duration: 3000, verticalPosition: 'top', horizontalPosition: 'center'
+    });
   }
 
-  /**
-   * Update all controls of the provided form group with the given data.
-   */
+
   updateForm(group: FormGroup, data: any) {
     for (const field in group.controls) {
       const control = group.get(field)!;
-      const value = data[field] || null;
+      const value = data[field] ?? null;
       control.setValue(value);
     }
   }
-
 }
 
-/**
- * Get an error message for a set of defined keys. Optional parameters can be used within
- * each message (for example with ${value}).
- */
 export function getGlobalErrorMessage(key: string, details?: any) {
-  let globalErrorMessages: Record<string, string> = {
+  const globalErrorMessages: Record<string, string> = {
     required: $localize`:@@required:Please provide a value.`,
     maxlength: $localize`:@@maxlength:Your value must have a length of less then ${details?.requiredLength} characters.`,
     REQUIRED_NOT_NULL: $localize`:@@required:Please provide a value.`
@@ -75,20 +100,16 @@ export function getGlobalErrorMessage(key: string, details?: any) {
 }
 
 interface FieldError {
-
   code: string;
   property: string;
   message: string;
   rejectedValue: any|null;
   path: string|null;
-
 }
 
 interface ErrorResponse {
-
   status: number;
   code: string;
   message: string;
   fieldErrors?: FieldError[];
-
 }

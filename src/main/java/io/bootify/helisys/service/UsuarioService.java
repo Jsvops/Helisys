@@ -32,7 +32,7 @@ public class UsuarioService {
         this.gradoRepository = gradoRepository;
         this.transaccionRepository = transaccionRepository;
     }
-    //nueva logica de negocio
+
     public Integer findIdByUsername(String username) {
         return usuarioRepository.findByUsrNombre(username)
             .map(Usuario::getUsrId)
@@ -135,7 +135,6 @@ public class UsuarioService {
         return null;
     }
 
-    //Metodo que esta siendo llamado en el TransaccionService.java para la obtencion de la entidad
     public Usuario getUsuario(Integer usuarioId) {
         return usuarioRepository.findById(usuarioId)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));

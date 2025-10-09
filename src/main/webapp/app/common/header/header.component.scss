@@ -1,39 +1,124 @@
 @use "sass:color";
+@use '../../../_custom' as custom;
 
 header {
-  background-color: #d4cfb8;
-  color: #302510;
-  font-family: 'Bebas Neue', sans-serif;
+  background-color: custom.$texto-secundario;
+  color: custom.$texto-principal;
 
-  .navbar-brand span,
+  .navbar {
+    --bs-navbar-color: #{custom.$texto-principal};
+    --bs-nav-link-color: #{custom.$texto-principal};
+    --bs-nav-link-hover-color: #{custom.$texto-principal};
+    --bs-navbar-brand-color: #{custom.$texto-principal};
+    --bs-navbar-brand-hover-color: #{custom.$texto-principal};
+    --brand-divider-color: #{custom.$texto-principal};
+
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    margin-right: 0;
+    text-decoration: none;
+  }
+
+  .brand-container {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  .navbar-brand h4 {
+    @include custom.font-roboto-flex(500);
+    margin: 0;
+    line-height: 1;
+    color: inherit;
+    text-shadow: 0 0 0 rgba(0,0,0,0);
+    transition: text-shadow 200ms ease, transform 200ms ease;
+
+    &:hover {
+      text-shadow: 0 1px 0 rgba(0,0,0,.15), 0 2px 6px rgba(0,0,0,.25);
+      transform: translateY(-1px);
+    }
+  }
+
   .nav-link,
+  .nav-link:visited,
   .navbar-text {
-    font-family: 'Bebas Neue', sans-serif;
-    color: #302510;
-
-    &:hover {
-      color: color.adjust(#302510, $lightness: -10%);
-    }
+    color: var(--bs-nav-link-color);
   }
 
-  .dropdown-menu {
-    background-color: #d4cfb8;
-    border: none;
+  .nav-link:hover,
+  .navbar-text:hover {
+    color: var(--bs-nav-link-hover-color);
   }
 
-  .dropdown-item {
-    color: #302510;
-    font-family: 'Bebas Neue', sans-serif;
-
-    &:hover {
-      background-color: color.adjust(#d4cfb8, $lightness: -10%);
-      color: #302510;
-    }
+  .nav-divider {
+    align-self: stretch;
+    width: 2px;
+    background: custom.$texto-principal;
+    margin-inline-start: .55rem;
+    pointer-events: none;
+    user-select: none;
   }
 
-.logout-nudge{
-    --x: 10px;
-    --y: -0.5px;
-      transform: translate(var(--x), var(--y));
+  .nav-logos {
+    display: flex;
+    align-items: center;
   }
+
+  .nav-logo {
+    width: 60px;
+    height: 40px;
+    object-fit: contain;
+    display: block;
+  }
+
+  @media (max-width: 767.98px) {
+    .navbar { gap: .5rem; }
+    .nav-logo { height: 30px; width: auto; }
+    .navbar .nav-divider { margin-inline: 0; }
+    .navbar .nav-logos { gap: .25rem; }
+  }
+
+  .navbar .nav-link mat-icon {
+    font-size: 30px;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    color: #191713;
+  }
+
+  .navbar .nav-link mat-icon svg {
+    display: block;
+  }
+
+  .navbar .navbar-text .user-icon {
+    font-size: 30px;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    color: #191713;
+  }
+  .navbar .navbar-text .user-icon svg {
+    display: block;
+  }
+
+  .navbar-toggler{
+      background: #c8c2a5;
+      }
 }
+
+
+
+
+

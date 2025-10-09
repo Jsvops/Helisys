@@ -7,17 +7,46 @@ import { ProductoService } from 'app/producto/producto.service';
 import { ProductResponseDTO } from 'app/producto/product-response.dto';
 import { ModeloAeronaveDTO } from 'app/modelo-aeronave/modelo-aeronave.model';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { trigger, transition, style, animate } from '@angular/animations';
+import { MatButtonModule } from '@angular/material/button';
+import { ElementRef, ViewChild } from '@angular/core';
+
+
+
 
 @Component({
   selector: 'app-producto-list',
-  imports: [CommonModule, RouterLink, FormsModule],
-  templateUrl: './producto-list.component.html'
-})
+  imports: [CommonModule, RouterLink, FormsModule, MatIconModule, MatTooltipModule, MatSelectModule, MatOptionModule, MatButtonModule],
+  templateUrl: './producto-list.component.html',
+  styleUrls: ['./producto-list.component.scss'],
+  animations: [
+      trigger('fadeSlide', [
+        transition(':enter', [
+          style({ opacity: 0, transform: 'translateY(-6px) scale(0.98)' }),
+          animate('150ms ease-out', style({ opacity: 1, transform: 'translateY(0) scale(1)' }))
+        ]),
+        transition(':leave', [
+          animate('120ms ease-in', style({ opacity: 0, transform: 'translateY(-6px) scale(0.98)' }))
+        ])
+      ])
+    ]
+  })
+
 export class ProductoListComponent implements OnInit, OnDestroy {
+
+
+  @ViewChild('scrollRegion') scrollRegion!: ElementRef<HTMLDivElement>;
 
   productoService = inject(ProductoService);
   errorHandler = inject(ErrorHandler);
   router = inject(Router);
+  iconRegistry = inject(MatIconRegistry);
+  sanitizer = inject(DomSanitizer);
 
   productos: ProductResponseDTO[] = [];
   totalItems = 0;
@@ -28,18 +57,9 @@ export class ProductoListComponent implements OnInit, OnDestroy {
   Math = Math;
   totalPages = 0;
 
+  isFilterVisible: boolean = false;
 
   navigationSubscription?: Subscription;
-
-  getMessage(key: string, details?: any) {
-    const messages: Record<string, string> = {
-      confirm: $localize`:@@delete.confirm:Do you really want to delete this element? This cannot be undone.`,
-      deleted: $localize`:@@producto.delete.success:Producto was removed successfully.`,
-      'producto.pedidosProducto.pptPro.referenced': $localize`:@@producto.pedidosProducto.pptPro.referenced:This entity is still referenced by Pedidos Producto ${details?.id} via field Ppt Pro.`,
-      'producto.transaccionesProducto.tcoPro.referenced': $localize`:@@producto.transaccionesProducto.tcoPro.referenced:This entity is still referenced by Transacciones Producto ${details?.id} via field Tco Pro.`
-    };
-    return messages[key];
-  }
 
   ngOnInit() {
     this.loadModelos();
@@ -75,48 +95,64 @@ export class ProductoListComponent implements OnInit, OnDestroy {
       });
   }
 
-    onFilterChange(newModeloAeronaveId: number | undefined) {
-      this.modeloAeronaveId = newModeloAeronaveId;
-      this.page = 0;
+
+  toggleFilter() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
+
+  onFilterChange(newModeloAeronaveId: number | undefined) {
+    this.modeloAeronaveId = newModeloAeronaveId;
+    this.page = 0;
+    this.loadData();
+  }
+
+  goToPage(page: number) {
+    this.page = page;
+    this.loadData();
+  }
+
+  nextPage(): void {
+    if ((this.page + 1) < this.totalPages) {
+      this.page++;
       this.loadData();
     }
+  }
 
-    goToPage(page: number) {
-      this.page = page;
+  previousPage(): void {
+    if (this.page > 0) {
+      this.page--;
       this.loadData();
     }
+  }
 
-    nextPage(): void {
-      if ((this.page + 1) < this.totalPages) {
-        this.page++;
-        this.loadData();
+  generarReporte() {
+    if (!this.modeloAeronaveId) return;
+
+    this.productoService.generarReporteProductos(this.modeloAeronaveId).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'reporte-productos-modelo.pdf';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => this.errorHandler.handleServerError(error.error)
+    });
+  }
+
+    onWheelX(ev: WheelEvent) {
+      const el = this.scrollRegion?.nativeElement;
+      if (!el) return;
+
+      const canScrollX = el.scrollWidth > el.clientWidth;
+      if (!canScrollX) return;
+
+      if (Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) {
+        ev.preventDefault();
+        el.scrollLeft += ev.deltaY;
       }
     }
-
-    previousPage(): void {
-      if (this.page > 0) {
-        this.page--;
-        this.loadData();
-      }
-    }
-
-    generarReporte() {
-      if (!this.modeloAeronaveId) return;
-
-      this.productoService.generarReporteProductos(this.modeloAeronaveId).subscribe({
-        next: (blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'reporte-productos-modelo.pdf';
-          a.click();
-          window.URL.revokeObjectURL(url);
-        },
-        error: (error) => this.errorHandler.handleServerError(error.error)
-      });
-    }
-
-
 
   confirmDelete(proId: number) {
     if (confirm(this.getMessage('confirm'))) {
@@ -141,5 +177,19 @@ export class ProductoListComponent implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  getMessage(key: string, details?: any): string {
+    const messages: Record<string, string> = {
+      confirm: $localize`:@@delete.confirm:Do you really want to delete this element? This cannot be undone.`,
+      deleted: $localize`:@@producto.delete.success:Producto was removed successfully.`,
+      'producto.pedidosProducto.pptPro.referenced': $localize`:@@producto.pedidosProducto.pptPro.referenced:This entity is still referenced by Pedidos Producto ${details?.id} via field Ppt Pro.`,
+      'producto.transaccionesProducto.tcoPro.referenced': $localize`:@@producto.transaccionesProducto.tcoPro.referenced:This entity is still referenced by Transacciones Producto ${details?.id} via field Tco Pro.`
+    };
+    return messages[key];
+  }
+
+  trackByProducto(index: number, producto: ProductResponseDTO): number {
+    return producto.proId;
   }
 }

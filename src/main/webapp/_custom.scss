@@ -1,151 +1,26 @@
-// override built-in custom variables
-$body-color: #343d42;
+$body-color: #191713;
 $link-color: $body-color;
 $input-btn-focus-width: 0.1rem;
-$texto-principal: #302510;
-$texto-secundario: #a29246;
+$texto-principal: #191713;
+$texto-secundario: #D4CFB8;
 $fondo-menu: #D4CFB8;
-$fondo-hover: #a29246;
+$fondo-footer: #191713;
+$font-family-sans-serif: "Roboto Flex", system-ui, -apple-system, "Segoe UI",
+  Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+$font-family-base: $font-family-sans-serif;
 
-body {
-  position: relative;
-  margin: 0;
-  min-height: 100vh;
-  background: none;
-  color: #302510;
-  font-family: 'Bebas Neue', sans-serif;
+$fw-regular: 400;
+$fw-medium: 530;
+$fw-semibold: 600;
+$fw-bold: 700;
+
+$font-weight-base: $fw-medium;
+
+
+@mixin font-roboto-flex($weight: 400) {
+  font-weight: $weight;
+  font-style: normal;
 }
-
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-image: url('/header-background.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -2;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.4); // aquí ajustas la opacidad
-  z-index: -1;
-}
-
-label,
-.col-form-label {
-  font-family: 'Bebas Neue', sans-serif;
-  color: #a29246;
-  font-size: 1.2rem; /* puedes ajustar el tamaño si lo deseas */
-  letter-spacing: 0.5px;
-}
-
-h1, .h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  color: $texto-secundario;
-  font-size: 2rem;
-  letter-spacing: 1px;
-  margin-bottom: 1.5rem;
-}
-// Estilo general para campos de entrada
-input,
-select,
-textarea {
-  border: 1px solid $texto-secundario;
-  color: $texto-secundario;
-  font-family: 'Bebas Neue', sans-serif;
-  background-color: transparent;
-  padding: 0.5rem;
-  border-radius: 4px;
-}
-
-// Estilo cuando el campo está en foco (seleccionado)
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: darken($texto-secundario, 10%);
-  box-shadow: 0 0 0 0.15rem rgba(162, 146, 70, 0.25);
-}
-
-// Estilo específico para los campos de formularios Bootstrap
-.form-control {
-  border-color: $texto-secundario;
-  color: $texto-secundario;
-  font-family: 'Bebas Neue', sans-serif;
-  background-color: $fondo-menu;
-
-  &:focus {
-    border-color: darken($texto-secundario, 10%);
-    box-shadow: 0 0 0 0.15rem rgba(162, 146, 70, 0.25);
-  }
-}
-
-// Selects de Bootstrap también pueden requerir este extra
-select.form-select {
-  border-color: $texto-secundario;
-  color: $texto-secundario;
-  font-family: 'Bebas Neue', sans-serif;
-    background-color: $fondo-menu;
-
-}
-
-.table {
-   --bs-table-color: $texto-secundario;
-   --bs-table-border-color: darken($texto-secundario, 20%);
-   --bs-table-striped-color: $texto-secundario;
-   --bs-table-hover-color: $texto-secundario;
-
-   th, td {
-     font-family: 'Bebas Neue', sans-serif !important;
-     color: $texto-principal !important;
-     background-color: $fondo-menu !important;
-
-   }
-
-   // Opcional: estilos para ul/li dentro de td
-   td ul {
-     padding-left: 1rem;
-     margin-bottom: 0;
-     list-style-type: disc;
-
-     li {
-       font-family: 'Bebas Neue', sans-serif;
-       color: $texto-secundario;
-     }
-   }
- }
-
-
-.table-responsive {
-  // Scrollbar track
-  &::-webkit-scrollbar-track {
-    background: $fondo-menu;  // o el color que quieras para el fondo del track
-  }
-
-  // Scrollbar thumb (la parte que se mueve)
-  &::-webkit-scrollbar-thumb {
-    background-color: $texto-secundario; // el color secundario que usas
-    border-radius: 10px;
-    border: 2px solid $fondo-menu;  // para que se vea separado del track
-  }
-
-  // Tamaño del scrollbar horizontal
-  &::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  // Para Firefox
-  scrollbar-color: $texto-secundario $fondo-menu;
-  scrollbar-width: thin;
-}
-
 
 
 

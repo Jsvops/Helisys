@@ -18,7 +18,7 @@ public class ProductoExpiradoDTO {
     private Integer proUnidades;
     private LocalDate proFechaVencimiento;
     private String proTipoDocumento;
-    private Long daysUntilExpiry; // Negativo para vencidos
+    private Long daysUntilExpiry;
 
     public ProductoExpiradoDTO(Integer proId, String proNumeroParte, String proNombre,
                                Integer proUnidades, LocalDate proFechaVencimiento,

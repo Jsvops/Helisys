@@ -6,11 +6,15 @@ import { InputRowComponent } from 'app/common/input-row/input-row.component';
 import { PedidosCompraService } from 'app/pedidos-compra/pedidos-compra.service';
 import { PedidosCompraDTO } from 'app/pedidos-compra/pedidos-compra.model';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
-
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-pedidos-compra-add',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatIconModule, MatTooltipModule, MatButtonModule, MatSnackBarModule],
   templateUrl: './pedidos-compra-add.component.html'
 })
 export class PedidosCompraAddComponent {
@@ -18,7 +22,7 @@ export class PedidosCompraAddComponent {
   pedidosCompraService = inject(PedidosCompraService);
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
-
+  snackBar = inject(MatSnackBar);
   addForm = new FormGroup({
     pcaDescripcion: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
     pcaFechaPedido: new FormControl(null, [Validators.required]),
@@ -30,7 +34,7 @@ export class PedidosCompraAddComponent {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      created: $localize`:@@pedidosCompra.create.success:Pedidos Compra was created successfully.`
+      created: $localize`:@@pedidosCompra.create.success:El pedido de compra fue creado con éxito ✅`
     };
     return messages[key];
   }
@@ -44,11 +48,17 @@ export class PedidosCompraAddComponent {
     const data = new PedidosCompraDTO(this.addForm.value);
     this.pedidosCompraService.createPedidosCompra(data)
         .subscribe({
-          next: () => this.router.navigate(['/pedidosCompras'], {
-            state: {
-              msgSuccess: this.getMessage('created')
-            }
-          }),
+          next: () => {
+            this.snackBar.open(this.getMessage('created'),
+            undefined,
+            {
+              duration: 3000,
+              verticalPosition: 'top',
+              horizontalPosition: 'center',
+              panelClass: ['snackbar-success']
+            });
+            this.router.navigate(['/pedidosCompras']);
+          },
           error: (error) => this.errorHandler.handleServerError(error.error, this.addForm, this.getMessage)
         });
   }

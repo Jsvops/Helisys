@@ -1,0 +1,41 @@
+.search-form {
+  .filters__title {
+    color: #D4CFB8;
+    font-weight: 600;
+  }
+
+  .form-label {
+    color: #D4CFB8;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .input-220 {
+    width: 220px;
+    max-width: 100%;
+  }
+  @media (max-width: 576px) {
+    .input-220 { width: 100%; }
+  }
+
+}
+
+.search-form {
+  .error-slot {
+    min-height: 1.25rem;
+    margin-top: 4px;
+  }
+    .invisible { visibility: hidden; }
+}
+
+.header-bar.d-flex {
+    align-items: baseline;
+}
+
+mat-icon {
+  color: #D4CFB8;
+}
+
+.span_color{
+    color: #D4CFB8;
+    }

@@ -85,7 +85,6 @@ public class TransaccionesProductoService {
         final TransaccionesProducto transaccionesProducto) {
         transaccionesProducto.setTcoUnidades(transaccionesProductoDTO.getTcoUnidades());
 
-        // Ahora tcoPro en el DTO es Integer, no necesita conversión
         if (transaccionesProductoDTO.getTcoPro() != null) {
             Producto tcoPro = productoRepository.findById(transaccionesProductoDTO.getTcoPro())
                 .orElseThrow(() -> new NotFoundException("Producto not found with id " + transaccionesProductoDTO.getTcoPro()));
@@ -106,19 +105,17 @@ public class TransaccionesProductoService {
     @Transactional
     public TransaccionesProductoDTO createProductTransaction(TransaccionesProductoDTO dto) {
 
-        // Obtener las entidades a partir de los IDs del DTO
+
         Producto producto = productoRepository.findById(dto.getTcoPro())
             .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
         Transaccion transaccion = transaccionRepository.findById(dto.getTcoTce())
             .orElseThrow(() -> new EntityNotFoundException("Transacción no encontrada"));
 
-        // Crear la entidad y setear los valores
         TransaccionesProducto tp = new TransaccionesProducto();
         tp.setTcoPro(producto);
         tp.setTcoTce(transaccion);
         tp.setTcoUnidades(dto.getTcoUnidades());
 
-        // Guardar y devolver como DTO
         return transaccionesProductoMapper.toDto(transaccionesProductoRepository.save(tp));
     }
 

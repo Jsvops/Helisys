@@ -6,11 +6,15 @@ import { InputRowComponent } from 'app/common/input-row/input-row.component';
 import { UsuarioService } from 'app/usuario/usuario.service';
 import { UsuarioDTO } from 'app/usuario/usuario.model';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
-
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-usuario-add',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatIconModule, MatTooltipModule, MatButtonModule, MatSnackBarModule],
   templateUrl: './usuario-add.component.html'
 })
 export class UsuarioAddComponent implements OnInit {
@@ -18,6 +22,7 @@ export class UsuarioAddComponent implements OnInit {
   usuarioService = inject(UsuarioService);
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
+  snackBar = inject(MatSnackBar);
 
   usrEdnValues?: Map<number,string>;
   usrGdoValues?: Map<number,string>;
@@ -39,7 +44,7 @@ export class UsuarioAddComponent implements OnInit {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      created: $localize`:@@usuario.create.success:Usuario was created successfully.`,
+      created: $localize`:@@usuario.create.success:El usuario fue creado con éxito ✅`,
       USUARIO_USR_CT_IDENTIDAD_UNIQUE: $localize`:@@Exists.usuario.usrCtIdentidad:This Usr Ct Identidad is already taken.`,
       USUARIO_USR_CT_MILITAR_UNIQUE: $localize`:@@Exists.usuario.usrCtMilitar:This Usr Ct Militar is already taken.`,
       USUARIO_USR_LOGIN_UNIQUE: $localize`:@@Exists.usuario.usrLogin:This Usr Login is already taken.`,
@@ -70,11 +75,17 @@ export class UsuarioAddComponent implements OnInit {
     const data = new UsuarioDTO(this.addForm.value);
     this.usuarioService.createUsuario(data)
         .subscribe({
-          next: () => this.router.navigate(['/usuarios'], {
-            state: {
-              msgSuccess: this.getMessage('created')
-            }
-          }),
+          next: () => {
+            this.snackBar.open(this.getMessage('created'),
+            undefined,
+            {
+              duration: 3000,
+              verticalPosition: 'top',
+              horizontalPosition: 'center',
+              panelClass: ['snackbar-success']
+            });
+            this.router.navigate(['/usuarios']);
+          },
           error: (error) => this.errorHandler.handleServerError(error.error, this.addForm, this.getMessage)
         });
   }

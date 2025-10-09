@@ -1,0 +1,58 @@
+.d-flex {
+    align-items: baseline;
+}
+
+
+@media (min-width: 768px) {
+  button[mat-icon-button]:nth-child(2) {
+    margin-left: 100px;
+  }
+}
+
+mat-icon {
+  color: #D4CFB8;
+}
+
+.req-asterisk { color: #dc3545; }
+
+
+@media (min-width: 577px) {
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .field-row .form-label {
+    flex: 0 0 175px;
+    margin: 0;
+  }
+
+  .field-row .input-wrap {
+    flex: 1 1 auto;
+    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .field-row .input-wrap .invalid-feedback {
+    margin-top: 4px;
+    display: block;
+  }
+}
+
+
+@media (max-width: 576px) {
+  .field-row {
+    flex-direction: column;
+    align-items: stretch;
+
+    .form-label {
+      flex: none;
+      margin-bottom: 0.25rem;
+    }
+  }
+}
+
+

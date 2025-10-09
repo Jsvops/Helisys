@@ -7,12 +7,17 @@ import { AeronaveService } from 'app/aeronave/aeronave.service';
 import { AeronaveDTO } from 'app/aeronave/aeronave.model';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { updateForm } from 'app/common/utils';
-
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-aeronave-edit',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
-  templateUrl: './aeronave-edit.component.html'
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatIconModule, MatTooltipModule, MatButtonModule,  MatSnackBarModule],
+  templateUrl: './aeronave-edit.component.html',
+  styleUrls: ['./aeronave-edit.component.scss']
 })
 export class AeronaveEditComponent implements OnInit {
 
@@ -20,6 +25,7 @@ export class AeronaveEditComponent implements OnInit {
   route = inject(ActivatedRoute);
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
+  snackBar = inject(MatSnackBar);
 
   anvMreValues?: Map<number,string>;
   currentAnvId?: number;
@@ -34,7 +40,7 @@ export class AeronaveEditComponent implements OnInit {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      updated: $localize`:@@aeronave.update.success:Aeronave was updated successfully.`,
+      updated: $localize`:@@aeronave.update.success:La aeronave se actualizó correctamente ✅`,
       AERONAVE_ANV_MATRICULA_UNIQUE: $localize`:@@Exists.aeronave.anvMatricula:This Anv Matricula is already taken.`
     };
     return messages[key];
@@ -63,11 +69,17 @@ export class AeronaveEditComponent implements OnInit {
     const data = new AeronaveDTO(this.editForm.value);
     this.aeronaveService.updateAeronave(this.currentAnvId!, data)
         .subscribe({
-          next: () => this.router.navigate(['/aeronaves'], {
-            state: {
-              msgSuccess: this.getMessage('updated')
-            }
-          }),
+          next: () => {
+           this.snackBar.open(this.getMessage('updated'),
+           undefined,
+           {
+             duration: 3000,
+             verticalPosition: 'top',
+             horizontalPosition: 'center',
+              panelClass: ['snackbar-success']
+              });
+            this.router.navigate(['/aeronaves']);
+           },
           error: (error) => this.errorHandler.handleServerError(error.error, this.editForm, this.getMessage)
         });
   }

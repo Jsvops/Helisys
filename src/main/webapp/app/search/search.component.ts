@@ -4,13 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { ProductoService } from 'app/producto/producto.service';
 import { ProductViewDTO } from 'app/producto/product-view.dto';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-search',
   standalone: true,
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.css'],
-  imports: [CommonModule, FormsModule]
+  styleUrls: ['./search.component.scss'],
+  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule]
 })
 export class SearchComponent implements OnInit {
   partNumber!: string;
@@ -40,29 +43,27 @@ export class SearchComponent implements OnInit {
   groupProducts(): void {
     const groupedMap = new Map<string, ProductViewDTO[]>();
 
-    // Agrupar productos por número de parte
     this.products.forEach(product => {
-      const key = product.proNumeroParte; // Usar proNumeroParte en lugar de partNumber
+      const key = product.proNumeroParte;
       if (!groupedMap.has(key)) {
         groupedMap.set(key, []);
       }
       groupedMap.get(key)?.push(product);
     });
 
-    // Crear array de productos agrupados
+
     this.groupedProducts = Array.from(groupedMap.entries()).map(([proNumeroParte, products]) => {
-      // Combinar modelos de aeronave
+
       const modelosAeronave = products
         .map(p => p.modeloAeronave)
         .filter(model => model && model.trim() !== '')
         .join(' / ');
 
-      // Tomar los datos del primer producto
       const firstProduct = products[0];
 
       return {
         ...firstProduct,
-        modeloAeronave: modelosAeronave || 'N/A' // Si no hay modelos, mostrar 'N/A'
+        modeloAeronave: modelosAeronave || 'N/A'
       };
     });
   }

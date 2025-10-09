@@ -1,59 +1,103 @@
-<div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@producto.list.headline">Lista de piezas</h1>
+<div class="d-flex flex-wrap mb-4 gap-2">
+    <h1 class="mb-0" i18n="@@producto.list.headline">Lista de piezas</h1>
     <div>
-        <a routerLink="/productos/add" class="btn btn-primary ms-2" i18n="@@producto.list.createNew">Añadir nueva pieza</a>
-    </div>
-</div>
-<div class="d-flex align-items-end mb-3" style="gap: 1rem;">
-    <div>
-        <label for="modeloAeronaveSelect" class="form-label" i18n="@@producto.filtro.modelo">Filtrar por modelo</label>
-        <select id="modeloAeronaveSelect"
-                class="form-select"
-                style="min-width: 250px;"
-                [(ngModel)]="modeloAeronaveId"
-                (change)="onFilterChange(modeloAeronaveId)">
-            <option [ngValue]="undefined" i18n="@@producto.filtro.todos">Todos los modelos</option>
-            <option *ngFor="let modelo of modelosAeronave" [ngValue]="modelo.mreId">
-                {{ modelo.mreNombre }}
-            </option>
-        </select>
-    </div>
+        <button
+            mat-icon-button
+            color="primary"
+            class="list"
+            [routerLink]="['/productos/add']"
+            matTooltip="Añadir pieza"
+            matTooltipPosition="right"
+            [matTooltipClass]="'tip-add-piece tooltip-right tooltip-pale'"
+            aria-label="Añadir nueva pieza"
+            i18n-matTooltip="@@producto.list.createNew"
+            i18n-aria-label="@@producto.list.createNew"
+        >
+            <mat-icon svgIcon="add_box"></mat-icon>
 
-    <div class="ms-auto">
-        <button class="btn btn-success"
-                [disabled]="!modeloAeronaveId"
-                (click)="generarReporte()"
-                i18n="@@producto.boton.generarReporte">
-            Generar PDF
         </button>
     </div>
+
+</div>
+<div class="d-flex align-items-end mb-3" style="gap: 1rem;">
+    <div class="filter-controls">
+        <mat-icon
+            svgIcon="filter_alt"
+            class="icon-filter"
+            matTooltipPosition="right"
+            matTooltip="Filtrar por modelo de aeronave"
+            [matTooltipClass]="'tooltip-left tooltip-pale'"
+            [matTooltipDisabled]="isFilterVisible"
+            #tt="matTooltip"
+            (click)="toggleFilter(); tt.hide()">
+        </mat-icon>
+
+        <div *ngIf="isFilterVisible" @fadeSlide class="filter-inline">
+            <div class="select-shell">
+                <mat-select
+                    class="filter-select"
+                    [(ngModel)]="modeloAeronaveId"
+                    (selectionChange)="onFilterChange(modeloAeronaveId)"
+                    placeholder="Selecciona un modelo"
+                    [panelClass]="'custom-panel'"
+                >
+                    <mat-option [value]="undefined">Todos los modelos</mat-option>
+                    <mat-option *ngFor="let modelo of modelosAeronave" [value]="modelo.mreId">
+                        {{ modelo.mreNombre }}
+                    </mat-option>
+                </mat-select>
+            </div>
+        </div>
+    </div>
+
+
+    <div>
+        <button
+            mat-icon-button
+            color="primary"
+            class="pdf-btn"
+            [class.hide-keep-space]="!modeloAeronaveId"
+        [disabled]="!modeloAeronaveId"
+        (click)="generarReporte()"
+        matTooltip="Generar reporte"
+        matTooltipPosition="right"
+        [matTooltipClass]="'tooltip-right tooltip-pale'"
+        [matTooltipDisabled]="!modeloAeronaveId"
+        aria-label="Generar PDF"
+        [attr.aria-hidden]="!modeloAeronaveId ? 'true' : null"
+        [attr.tabindex]="!modeloAeronaveId ? -1 : 0"
+        >
+        <mat-icon svgIcon="assignment"></mat-icon>
+        </button>
+    </div>
+
 </div>
 
-@if (!productos || productos.length === 0) {
-<div i18n="@@producto.list.empty">No se encontraron productos.</div>
-} @else {
-<div class="table-responsive">
-    <table class="table table-striped table-hover align-middle">
+<div *ngIf="!productos || productos.length === 0" i18n="@@producto.list.empty">No se encontraron productos.</div>
+
+<div *ngIf="productos && productos.length > 0" class="table-responsive table-scroll-x" role="region"
+     aria-label="Lista de piezas" tabindex="0" #scrollRegion
+     (wheel)="onWheelX($event)">
+    <table class="table table-striped table-hover align-middle table-pale">
         <thead>
         <tr>
-            <th scope="col" i18n="@@producto.proNumeroParte.label">Número de Parte</th>
+            <th scope="col" i18n="@@producto.proNumeroParte.label">Número de parte</th>
             <th scope="col" i18n="@@producto.proNombre.label">Nombre</th>
-            <th scope="col" i18n="@@producto.proNumeroParteAlterno.label">Número Alterno</th>
-            <th scope="col" i18n="@@producto.proNumeroSerie.label">Número de Serie</th>
+            <th scope="col" i18n="@@producto.proNumeroParteAlterno.label">Número alterno</th>
+            <th scope="col" i18n="@@producto.proNumeroSerie.label">Número de serie</th>
             <th scope="col" i18n="@@producto.proUnidades.label">Unidades</th>
-            <th scope="col" i18n="@@producto.proTpoNombre.label">Tipo Producto</th>
-            <th scope="col" i18n="@@producto.modeloAeronaveNombres.label">Modelos Aeronave</th>
+            <th scope="col" i18n="@@producto.proTpoNombre.label">Tipo de producto</th>
+            <th scope="col" i18n="@@producto.modeloAeronaveNombres.label">Modelos de aeronave</th>
             <th scope="col" i18n="@@producto.proPveNombre.label">Proveedor</th>
             <th scope="col" i18n="@@producto.proAmcNombre.label">Almacén</th>
             <th scope="col" i18n="@@producto.list.actions">Acciones</th>
         </tr>
         </thead>
         <tbody>
-        @for (producto of productos; track producto.proId) {
-        <tr>
+        <tr *ngFor="let producto of productos; trackBy: trackByProducto">
             <td>{{ producto.proNumeroParte }}</td>
             <td>{{ producto.proNombre }}</td>
-            <td>{{ producto.proNumeroParteAlterno}}</td>
+            <td>{{ producto.proNumeroParteAlterno }}</td>
             <td>{{ producto.proNumeroSerie }}</td>
             <td>{{ producto.proUnidades }}</td>
             <td>{{ producto.proTpoNombre }}</td>
@@ -64,7 +108,6 @@
             </td>
             <td>{{ producto.proPveNombre }}</td>
             <td>{{ producto.proAmcNombre }}</td>
-
             <td>
                 <div class="float-end text-nowrap">
                     <a [routerLink]="['/productos/edit', producto.proId]"
@@ -73,17 +116,14 @@
                 </div>
             </td>
         </tr>
-        }
         </tbody>
     </table>
-
-    <div class="d-flex justify-content-center mt-3">
-        <button class="btn btn-outline-primary me-2" (click)="previousPage()" [disabled]="page === 0" i18n="@@pagination.previous"> Anterior </button>
-        <span class="align-self-center">
-    Página {{ page + 1 }} de {{ totalPages }}
-  </span>
-        <button class="btn btn-outline-primary ms-2" (click)="nextPage()" [disabled]="(page + 1) >= totalPages" i18n="@@pagination.next"> Siguiente </button>
-    </div>
-
 </div>
-}
+
+<div class="d-flex justify-content-center mt-3">
+    <button class="btn btn-secondary me-2" (click)="previousPage()" [disabled]="page === 0" i18n="@@pagination.previous"> Anterior </button>
+    <span class="align-self-center span">
+            Página {{ page + 1 }} de {{ totalPages }}
+        </span>
+    <button class="btn btn-secondary ms-2" (click)="nextPage()" [disabled]="(page + 1) >= totalPages" i18n="@@pagination.next"> Siguiente </button>
+</div>

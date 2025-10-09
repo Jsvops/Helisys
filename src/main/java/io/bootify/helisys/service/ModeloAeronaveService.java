@@ -17,12 +17,12 @@ public class ModeloAeronaveService {
 
     private final ModeloAeronaveRepository modeloAeronaveRepository;
     private final AeronaveRepository aeronaveRepository;
-    private final DetalleProductoModeloAeronaveRepository detalleProductoModeloAeronaveRepository; // Nuevo repositorio
+    private final DetalleProductoModeloAeronaveRepository detalleProductoModeloAeronaveRepository;
 
     public ModeloAeronaveService(
         final ModeloAeronaveRepository modeloAeronaveRepository,
         final AeronaveRepository aeronaveRepository,
-        final DetalleProductoModeloAeronaveRepository detalleProductoModeloAeronaveRepository) { // Inyectamos el nuevo repositorio
+        final DetalleProductoModeloAeronaveRepository detalleProductoModeloAeronaveRepository) {
         this.modeloAeronaveRepository = modeloAeronaveRepository;
         this.aeronaveRepository = aeronaveRepository;
         this.detalleProductoModeloAeronaveRepository = detalleProductoModeloAeronaveRepository;

@@ -7,16 +7,16 @@ import { UserService } from './user.service'; // Importa UserService
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = '/api/usuarios/current-user-info'; // Ajusta la URL según tu backend
+  private apiUrl = '/api/usuarios/current-user-info';
 
-  constructor(private http: HttpClient, private userService: UserService) {} // Inyecta UserService
+  constructor(private http: HttpClient, private userService: UserService) {}
 
-  // Método para obtener la información del usuario autenticado
+
   getCurrentUserInfo(): Observable<{ usrId: number, usrNombre: string }> {
     return this.http.get<{ usrId: number, usrNombre: string }>(this.apiUrl);
   }
 
-  // Método para establecer la información del usuario en el UserService
+
   initializeUser() {
     this.getCurrentUserInfo().subscribe(userInfo => {
       this.userService.setUserName(userInfo.usrNombre);

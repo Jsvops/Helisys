@@ -18,26 +18,21 @@ public class DetalleProductoModeloAeronaveResource {
 
     private final DetalleProductoModeloAeronaveService detalleProductoModeloAeronaveService;
 
-    // Inyectamos el servicio en el constructor
     public DetalleProductoModeloAeronaveResource(
         final DetalleProductoModeloAeronaveService detalleProductoModeloAeronaveService) {
         this.detalleProductoModeloAeronaveService = detalleProductoModeloAeronaveService;
     }
-
-    // Endpoint para obtener todos los detalles
     @GetMapping
     public ResponseEntity<List<DetalleProductoModeloAeronaveDTO>> getAllDetalleProductoModeloAeronaves() {
         return ResponseEntity.ok(detalleProductoModeloAeronaveService.findAll());
     }
 
-    // Endpoint para obtener un detalle por ID
     @GetMapping("/{dpmaId}")
     public ResponseEntity<DetalleProductoModeloAeronaveDTO> getDetalleProductoModeloAeronave(
         @PathVariable(name = "dpmaId") final Integer dpmaId) {
         return ResponseEntity.ok(detalleProductoModeloAeronaveService.get(dpmaId));
     }
 
-    // Endpoint para crear un nuevo detalle
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createDetalleProductoModeloAeronave(
@@ -46,7 +41,6 @@ public class DetalleProductoModeloAeronaveResource {
         return new ResponseEntity<>(createdDpmaId, HttpStatus.CREATED);
     }
 
-    // Endpoint para actualizar un detalle existente
     @PutMapping("/{dpmaId}")
     public ResponseEntity<Integer> updateDetalleProductoModeloAeronave(
         @PathVariable(name = "dpmaId") final Integer dpmaId,
@@ -55,12 +49,10 @@ public class DetalleProductoModeloAeronaveResource {
         return ResponseEntity.ok(dpmaId);
     }
 
-    // Endpoint para eliminar un detalle
     @DeleteMapping("/{dpmaId}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteDetalleProductoModeloAeronave(
         @PathVariable(name = "dpmaId") final Integer dpmaId) {
-        // Verificamos si el detalle está siendo referenciado en otras entidades
         final ReferencedWarning referencedWarning = detalleProductoModeloAeronaveService.getReferencedWarning(dpmaId);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);

@@ -1,1 +1,65 @@
+@use '../_custom' as custom;
+
+:host { display: block; }
+
+.app-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  gap: 1rem;
+}
+
+.app-main {
+  flex: 1 1 auto;
+  background: transparent;
+  padding-block: clamp(12px, 2.5vh, 28px);
+  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+
+.site-footer {
+  margin-top: auto;
+  padding: .75rem 0;
+  background-color: custom.$fondo-footer;
+  color: custom.$texto-secundario;
+  border-top: 1px solid rgba(0,0,0,.08);
+}
+
+.footer-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.footer-item + .footer-item::before {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  background: custom.$texto-secundario;
+  opacity: .6;
+  margin-inline: .5rem;
+  vertical-align: middle;
+}
+
+
+@media (max-width: 576px) {
+  .footer-line { flex-direction: column; }
+
+  .footer-item + .footer-item::before {
+    display: block;
+    width: min(260px, 60vw);
+    height: 1px;
+    margin: .35rem auto;
+    opacity: .35;
+  }
+}
+
+main, .container { background: transparent; }
+
 

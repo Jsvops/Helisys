@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -7,15 +7,19 @@ import { TransaccionService } from 'app/transaccion/transaccion.service';
 import { TransactionResponseDTO } from './transaction-response.dto';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-
-
-
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-transaccion-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
-  templateUrl: './transaccion-list.component.html'
+  imports: [CommonModule, RouterLink, FormsModule, MatIconModule, MatTooltipModule, MatButtonModule],
+  templateUrl: './transaccion-list.component.html',
+  styleUrls: ['./transaccion-list.component.scss'],
+
 })
 export class TransaccionListComponent implements OnInit, OnDestroy {
 
@@ -26,6 +30,7 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
 
 
   transacciones: TransactionResponseDTO[] = [];
+  filtroActivo = false;
   navigationSubscription?: Subscription;
   page = 0;
   size = 10;
@@ -33,6 +38,7 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
   totalPages = 0;
   fechaInicio: string | null = null;
   fechaFin: string | null = null;
+
 
 
   getMessage(key: string, details?: any) {
@@ -70,8 +76,24 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
       });
   }
 
+  onClickFiltro(form: NgForm) {
+    if (!this.filtroActivo) {
+
+      if (form.invalid) {
+        form.form.markAllAsTouched();
+        return;
+      }
+      this.filtrarPorFechas();
+    } else {
+
+      this.limpiarFiltro();
+      form.resetForm({ fechaInicio: null, fechaFin: null }); //
+    }
+  }
+
   filtrarPorFechas() {
     this.page = 0;
+    this.filtroActivo = true;
     this.loadData();
   }
 
@@ -79,9 +101,9 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
     this.fechaInicio = null;
     this.fechaFin = null;
     this.page = 0;
+    this.filtroActivo = false;
     this.loadData();
   }
-
 
   nextPage() {
     if ((this.page + 1) < this.totalPages) {

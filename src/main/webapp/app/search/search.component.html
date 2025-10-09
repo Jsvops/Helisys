@@ -1,8 +1,9 @@
 <div class="search-container">
-    <h1>Buscar pieza</h1>
+    <h2>Ingresar datos de la pieza</h2>
 
-    <!-- Formulario de búsqueda -->
+
     <form class="search-form" (ngSubmit)="searchProducts()">
+
         <div class="form-group">
             <label for="partNumber">Número de parte:</label>
             <input type="text" id="partNumber" [(ngModel)]="partNumber" name="partNumber" class="form-input" />
@@ -18,10 +19,18 @@
             <input type="text" id="alterPartNumber" [(ngModel)]="alterPartNumber" name="alterPartNumber" class="form-input" />
         </div>
 
-        <button type="submit" class="search-button">Buscar</button>
+        <button
+            mat-icon-button
+            type="submit"
+            arial-label="Buscar"
+            class="search-icon-btn"
+        >
+            <mat-icon svgIcon="search"></mat-icon>
+        </button>
+
     </form>
 
-    <!-- Tabla de resultados -->
+
     <div *ngIf="groupedProducts?.length" class="results-container">
         <table class="results-table">
             <thead>
@@ -55,7 +64,7 @@
         </table>
     </div>
 
-    <!-- Mensaje de no resultados -->
+
     <div *ngIf="searchPerformed && (!groupedProducts || groupedProducts.length === 0)">
         <p class="no-results">No se encontraron resultados.</p>
     </div>

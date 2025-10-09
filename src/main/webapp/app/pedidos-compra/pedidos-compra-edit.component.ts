@@ -7,11 +7,15 @@ import { PedidosCompraService } from 'app/pedidos-compra/pedidos-compra.service'
 import { PedidosCompraDTO } from 'app/pedidos-compra/pedidos-compra.model';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { updateForm } from 'app/common/utils';
-
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-pedidos-compra-edit',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatIconModule, MatTooltipModule, MatButtonModule,  MatSnackBarModule],
   templateUrl: './pedidos-compra-edit.component.html'
 })
 export class PedidosCompraEditComponent implements OnInit {
@@ -20,6 +24,7 @@ export class PedidosCompraEditComponent implements OnInit {
   route = inject(ActivatedRoute);
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
+  snackBar = inject(MatSnackBar);
 
   currentPcaId?: number;
 
@@ -35,7 +40,7 @@ export class PedidosCompraEditComponent implements OnInit {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      updated: $localize`:@@pedidosCompra.update.success:Pedidos Compra was updated successfully.`
+      updated: $localize`:@@pedidosCompra.update.success:El pedido de compra se actualizó correctamente ✅`
     };
     return messages[key];
   }
@@ -58,11 +63,17 @@ export class PedidosCompraEditComponent implements OnInit {
     const data = new PedidosCompraDTO(this.editForm.value);
     this.pedidosCompraService.updatePedidosCompra(this.currentPcaId!, data)
         .subscribe({
-          next: () => this.router.navigate(['/pedidosCompras'], {
-            state: {
-              msgSuccess: this.getMessage('updated')
-            }
-          }),
+          next: () => {
+             this.snackBar.open(this.getMessage('updated'),
+             undefined,
+             {
+               duration: 3000,
+               verticalPosition: 'top',
+               horizontalPosition: 'center',
+                panelClass: ['snackbar-success']
+                });
+              this.router.navigate(['/pedidosCompras']);
+             },
           error: (error) => this.errorHandler.handleServerError(error.error, this.editForm, this.getMessage)
         });
   }

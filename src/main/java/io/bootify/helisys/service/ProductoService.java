@@ -4,6 +4,7 @@ import io.bootify.helisys.domain.*;
 import io.bootify.helisys.mapper.ProductoMapper;
 import io.bootify.helisys.model.*;
 import io.bootify.helisys.repos.*;
+import io.bootify.helisys.util.InsufficientStockException;
 import io.bootify.helisys.util.NotFoundException;
 import io.bootify.helisys.util.ReferencedWarning;
 import org.springframework.data.domain.Page;
@@ -81,7 +82,6 @@ public class ProductoService {
         return productoRepository.save(producto).getProId();
     }
 
-   ////////////////////////////////////////////////////////////////////
    @Transactional(readOnly = true)
    public ProductResponseDTO get(final Integer proId) {
        Producto producto = productoRepository.findById(proId)
@@ -119,7 +119,6 @@ public class ProductoService {
         return almacenContenedorRepository.findAllAlmacenJerarquico();
     }
 
-    // Método para mapear un Producto a un DTO
     private ProductoDTO mapToDTO(final Producto producto, final ProductoDTO productoDTO) {
         productoDTO.setProId(producto.getProId());
         productoDTO.setProNumeroParte(producto.getProNumeroParte());
@@ -135,7 +134,6 @@ public class ProductoService {
         return productoDTO;
     }
 
-    // Método para mapear un DTO a un Producto
     private Producto mapToEntity(final ProductoDTO productoDTO, final Producto producto) {
         producto.setProNumeroParte(productoDTO.getProNumeroParte());
         producto.setProNombre(productoDTO.getProNombre());
@@ -190,12 +188,12 @@ public class ProductoService {
             .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
     }
 
-    public void StockDisponible(Integer productoId, Integer cantidad) {
+    public void stockDisponible(Integer productoId, Integer solicitado) {
         Producto producto = getProducto(productoId);
-        if (producto.getProUnidades() < cantidad) {
-            throw new RuntimeException(String.format(
-                "No hay suficiente stock para realizar la baja. Disponible: %d, Solicitado: %d",
-                producto.getProUnidades(), cantidad));
+        int disponible = producto.getProUnidades() == null ? 0 : producto.getProUnidades();
+
+        if (disponible < solicitado) {
+            throw new InsufficientStockException(disponible, solicitado);
         }
     }
 
@@ -234,7 +232,7 @@ public class ProductoService {
             effective = PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
-                Sort.by(Sort.Direction.DESC, "proId") // <- cambia a "createdAt" si lo tienes
+                Sort.by(Sort.Direction.DESC, "proId")
             );
         }
         return productoRepository.findAll(effective).map(productoMapper::toDto);

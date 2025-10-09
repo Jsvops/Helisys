@@ -1,21 +1,41 @@
-<div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@usuario.add.headline">Add Usuario</h1>
+<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+    <h1 i18n="@@usuario.add.headline">Añadir Usuario</h1>
+
     <div>
-        <a routerLink="/usuarios" class="btn btn-secondary" i18n="@@usuario.add.back">Back to list</a>
+        <button
+            mat-icon-button
+            routerLink="/usuarios"
+            matTooltip="Lista de usuarios"
+            matTooltipPosition="right"
+            [matTooltipClass]="'tooltip-pale'"
+            aria-label="Lista de usuarios"
+        >
+            <mat-icon svgIcon="list_alt"></mat-icon>
+
+        </button>
     </div>
+
 </div>
+<div class="form-container">
 <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
-    <app-input-row [group]="addForm" field="usrCtIdentidad" rowType="number" i18n-label="@@usuario.usrCtIdentidad.label" label="Usr Ct Identidad" />
-    <app-input-row [group]="addForm" field="usrCtMilitar" rowType="number" i18n-label="@@usuario.usrCtMilitar.label" label="Usr Ct Militar" />
-    <app-input-row [group]="addForm" field="usrNombre" i18n-label="@@usuario.usrNombre.label" label="Usr Nombre" />
-    <app-input-row [group]="addForm" field="usrApellido" i18n-label="@@usuario.usrApellido.label" label="Usr Apellido" />
-    <app-input-row [group]="addForm" field="usrDireccion" i18n-label="@@usuario.usrDireccion.label" label="Usr Direccion" />
-    <app-input-row [group]="addForm" field="usrTelefono" i18n-label="@@usuario.usrTelefono.label" label="Usr Telefono" />
-    <app-input-row [group]="addForm" field="usrCargo" i18n-label="@@usuario.usrCargo.label" label="Usr Cargo" />
-    <app-input-row [group]="addForm" field="usrFoto" i18n-label="@@usuario.usrFoto.label" label="Usr Foto" />
-    <app-input-row [group]="addForm" field="usrLogin" i18n-label="@@usuario.usrLogin.label" label="Usr Login" />
-    <app-input-row [group]="addForm" field="usrPassword" i18n-label="@@usuario.usrPassword.label" label="Usr Password" />
-    <app-input-row [group]="addForm" field="usrEdn" rowType="select" [options]="usrEdnValues" i18n-label="@@usuario.usrEdn.label" label="Usr Edn" />
-    <app-input-row [group]="addForm" field="usrGdo" rowType="select" [options]="usrGdoValues" i18n-label="@@usuario.usrGdo.label" label="Usr Gdo" />
-    <input type="submit" i18n-value="@@usuario.add.headline" value="Add Usuario" class="btn btn-primary mt-4" />
+    <app-input-row [group]="addForm" field="usrCtIdentidad" rowType="number" i18n-label="@@usuario.usrCtIdentidad.label" label="Carnet de identidad" />
+    <app-input-row [group]="addForm" field="usrCtMilitar" rowType="number" i18n-label="@@usuario.usrCtMilitar.label" label="Carnet militar" />
+    <app-input-row [group]="addForm" field="usrNombre" i18n-label="@@usuario.usrNombre.label" label="Nombre" />
+    <app-input-row [group]="addForm" field="usrApellido" i18n-label="@@usuario.usrApellido.label" label="Apellido" />
+    <app-input-row [group]="addForm" field="usrDireccion" i18n-label="@@usuario.usrDireccion.label" label="Dirección" />
+    <app-input-row [group]="addForm" field="usrTelefono" i18n-label="@@usuario.usrTelefono.label" label="Teléfono" />
+    <app-input-row [group]="addForm" field="usrCargo" i18n-label="@@usuario.usrCargo.label" label="Cargo" />
+    <app-input-row [group]="addForm" field="usrFoto" i18n-label="@@usuario.usrFoto.label" label="Foto" />
+    <app-input-row [group]="addForm" field="usrLogin" i18n-label="@@usuario.usrLogin.label" label="Login" />
+    <app-input-row [group]="addForm" field="usrPassword" i18n-label="@@usuario.usrPassword.label" label="Password" />
+    <app-input-row [group]="addForm" field="usrEdn" rowType="select" [options]="usrEdnValues" i18n-label="@@usuario.usrEdn.label" label="Escuadron" />
+    <app-input-row [group]="addForm" field="usrGdo" rowType="select" [options]="usrGdoValues" i18n-label="@@usuario.usrGdo.label" label="Grado" />
+
+    <div class="text-end mt-3">
+        <input type="submit"
+               i18n-value="@@usuario.add.headline"
+               value="Guardar"
+               class="btn btn-primary" />
+    </div>
 </form>
+</div>

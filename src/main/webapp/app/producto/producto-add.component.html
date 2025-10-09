@@ -1,42 +1,67 @@
-<div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@producto.add.headline">Añadir nueva pieza</h1>
+<div class="d-flex flex-wrap mb-4 page-header">
+    <h1 i18n="@@producto.add.headline">Añadir pieza</h1>
     <div>
-        <a routerLink="/productos" class="btn btn-secondary" i18n="@@producto.add.back">Lista de piezas</a>
+        <mat-icon
+            svgIcon="list_alt"
+            class="interactive-icon"
+            matTooltip="Lista de piezas"
+            matTooltipPosition="right"
+            [matTooltipClass]="'tooltip-pale'"
+            (click)="navigateToProductos()"
+            role="button"
+            aria-label="Ir a lista de piezas"
+            tabindex="0"
+            (keydown.enter)="navigateToProductos()"
+            (keydown.space)="navigateToProductos()">
+        </mat-icon>
+
     </div>
 </div>
 
+
+<div class="form-container">
 <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
-    <app-input-row [group]="addForm" field="proNumeroParte" i18n-label="@@producto.proNumeroParte.label" label="Numero de Parte" />
+    <app-input-row [group]="addForm" field="proNumeroParte" i18n-label="@@producto.proNumeroParte.label" label="Número de Parte" />
     <app-input-row [group]="addForm" field="proNombre" i18n-label="@@producto.proNombre.label" label="Nombre" />
-    <app-input-row [group]="addForm" field="proNumeroParteAlterno" i18n-label="@@producto.proNumeroParteAlterno.label" label="Numero Alterno" />
-    <app-input-row [group]="addForm" field="proNumeroSerie" i18n-label="@@producto.proNumeroSerie.label" label="Numero de Serie" />
-    <app-input-row [group]="addForm" field="proTipoDocumento" i18n-label="@@producto.proTipoDocumento.label" label="Tipo Documento" />
+    <app-input-row [group]="addForm" field="proNumeroParteAlterno" i18n-label="@@producto.proNumeroParteAlterno.label" label="Número alterno" />
+    <app-input-row [group]="addForm" field="proNumeroSerie" i18n-label="@@producto.proNumeroSerie.label" label="Número de serie" />
+    <app-input-row [group]="addForm" field="proTipoDocumento" i18n-label="@@producto.proTipoDocumento.label" label="Tipo de documento" />
     <app-input-row [group]="addForm" field="proTpo" rowType="select" [options]="proTpoValues" i18n-label="@@producto.proTpo.label" label="Tipo de componete" />
-    <app-input-row [group]="addForm" field="proAmc" rowType="select" [options]="proAmcValues" i18n-label="@@producto.proAmc.label" label="Ubicacion" />
+    <app-input-row [group]="addForm" field="proAmc" rowType="select" [options]="proAmcValues" i18n-label="@@producto.proAmc.label" label="Almacen" />
     <app-input-row [group]="addForm" field="proPve" rowType="select" [options]="proPveValues" i18n-label="@@producto.proPve.label" label="Proveedor" />
 
-    <div class="row mb-3 align-items-center">
-        <label class="col-md-2 col-form-label required">Modelo Aeronave</label>
-        <div class="col-md-10">
-            <mat-form-field class="w-100 custom-mat-select" appearance="fill">
-                <mat-label>Por favor seleccione</mat-label>
-                <mat-select id="modeloAeronaveIds"
-                            [formControl]="addForm.controls.modeloAeronaveIds"
-                            multiple
-                            panelClass="custom-panel dropdown-below"
-                            disableOptionCentering>
-                    <mat-option *ngFor="let item of modeloAeronaveArray" [value]="item.value">
-                        {{ item.label }}
-                    </mat-option>
-                </mat-select>
+    <div class="form-line form-line--modelo">
+        <div class="label-col">
+            <span class="col-form-label required">Modelo de aeronave</span>
+        </div>
 
-                <mat-error *ngIf="addForm.get('modeloAeronaveIds')?.hasError('required')
-                        && addForm.get('modeloAeronaveIds')?.touched">
-                    Este campo es obligatorio
-                </mat-error>
-            </mat-form-field>
+        <div class="field-col">
+            <div class="field-wrap field-wrap--fluid">
+                <mat-form-field class="custom-mat-select" appearance="fill" [hideRequiredMarker]="true">
+                    <mat-label>Por favor seleccione</mat-label>
+                    <mat-select id="modeloAeronaveIds" formControlName="modeloAeronaveIds" multiple panelClass="custom-panel">
+                        <mat-option *ngFor="let item of modeloAeronaveArray; trackBy: trackByValue" [value]="item.value">
+                            {{ item.label }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="addForm.get('modeloAeronaveIds')?.hasError('required') && addForm.get('modeloAeronaveIds')?.touched">
+                        Este campo es obligatorio
+                    </mat-error>
+                </mat-form-field>
+            </div>
         </div>
     </div>
 
-    <input type="submit" i18n-value="@@producto.add.headline" value="Guardar" class="btn btn-primary mt-4" />
+
+
+    <div class="text-end mt-3">
+        <input type="submit"
+               i18n-value="@@producto.add.headline"
+               value="Guardar"
+               class="btn btn-primary" />
+    </div>
+
+
 </form>
+
+</div>

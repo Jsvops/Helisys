@@ -1,11 +1,28 @@
-<div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@modeloAeronave.edit.headline">Edit Modelo Aeronave</h1>
+<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+    <h1 i18n="@@modeloAeronave.edit.headline">Editar el modelo aeronave</h1>
     <div>
-        <a routerLink="/modeloAeronaves" class="btn btn-secondary" i18n="@@modeloAeronave.edit.back">Back to list</a>
+        <button
+            mat-icon-button
+            routerLink="/modeloAeronaves"
+            matTooltip="Lista de los modelos de aeroanves"
+            matTooltipPosition="right"
+            [matTooltipClass]="'tooltip-pale'"
+            aria-label="Lista de los modelos de aeroanves"
+        >
+            <mat-icon svgIcon="list_alt"></mat-icon>
+
+        </button>
     </div>
 </div>
+<div class="form-container">
 <form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
-    <app-input-row [group]="editForm" field="mreId" rowType="number" i18n-label="@@modeloAeronave.mreId.label" label="Mre Id" />
-    <app-input-row [group]="editForm" field="mreNombre" i18n-label="@@modeloAeronave.mreNombre.label" label="Mre Nombre" />
-    <input type="submit" i18n-value="@@modeloAeronave.edit.headline" value="Edit Modelo Aeronave" class="btn btn-primary mt-4" />
+    <app-input-row [group]="editForm" field="mreNombre" i18n-label="@@modeloAeronave.mreNombre.label" label="Nombre" />
+
+    <div class="text-end mt-3">
+        <input type="submit"
+               i18n-value="@@modeloAeronave.edit.headline"
+               value="Guardar"
+               class="btn btn-primary" />
+    </div>
 </form>
+</div>

@@ -1,10 +1,9 @@
 .required-asterisk {
-    color: #dc3545; /* Rojo de Bootstrap */
+    color: #dc3545;
     margin-left: 4px;
     font-weight: bold;
 }
 
-/* Estilo para inputs inválidos */
 .is-invalid {
     border-color: #dc3545;
     padding-right: calc(1.5em + 0.75rem);

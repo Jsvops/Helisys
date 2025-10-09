@@ -1,4 +1,3 @@
-// PdfResource.java
 package io.bootify.helisys.rest;
 
 import io.bootify.helisys.model.ProductResponseDTO;

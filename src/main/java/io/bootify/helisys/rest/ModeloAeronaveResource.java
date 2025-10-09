@@ -22,20 +22,17 @@ public class ModeloAeronaveResource {
         this.modeloAeronaveService = modeloAeronaveService;
     }
 
-    // Endpoint para obtener todos los modelos de aeronave (sin cambios)
     @GetMapping
     public ResponseEntity<List<ModeloAeronaveDTO>> getAllModeloAeronaves() {
         return ResponseEntity.ok(modeloAeronaveService.findAll());
     }
 
-    // Endpoint para obtener un modelo de aeronave por ID (sin cambios)
     @GetMapping("/{mreId}")
     public ResponseEntity<ModeloAeronaveDTO> getModeloAeronave(
         @PathVariable(name = "mreId") final Integer mreId) {
         return ResponseEntity.ok(modeloAeronaveService.get(mreId));
     }
 
-    // Endpoint para crear un modelo de aeronave (sin cambios)
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Integer> createModeloAeronave(
@@ -44,7 +41,6 @@ public class ModeloAeronaveResource {
         return new ResponseEntity<>(createdMreId, HttpStatus.CREATED);
     }
 
-    // Endpoint para actualizar un modelo de aeronave (sin cambios)
     @PutMapping("/{mreId}")
     public ResponseEntity<Integer> updateModeloAeronave(
         @PathVariable(name = "mreId") final Integer mreId,
@@ -53,7 +49,6 @@ public class ModeloAeronaveResource {
         return ResponseEntity.ok(mreId);
     }
 
-    // Endpoint para eliminar un modelo de aeronave (sin cambios)
     @DeleteMapping("/{mreId}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteModeloAeronave(

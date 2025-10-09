@@ -9,5 +9,7 @@ export class AeronaveDTO {
   anvNumeroSerie?: string|null;
   anvFabricacion?: string|null;
   anvMre?: number|null;
+  modeloNombre?: string | null;
+
 
 }

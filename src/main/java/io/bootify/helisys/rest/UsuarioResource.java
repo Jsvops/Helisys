@@ -99,18 +99,14 @@ public class UsuarioResource {
             .collect(CustomCollectors.toSortedMap(Grado::getGdoId, Grado::getGdoNombre)));
     }
 
-    // Nuevo endpoint para obtener el nombre e ID del usuario autenticado
     @GetMapping("/current-user-info")
     public ResponseEntity<Map<String, Object>> getCurrentUserInfo() {
-        // Obtiene el nombre de usuario autenticado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        // Busca el usuario en la base de datos utilizando la instancia del repositorio
         Usuario usuario = usuarioRepository.findByUsrNombre(username)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Crea un mapa para devolver el nombre y el ID del usuario
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("usrId", usuario.getUsrId());
         userInfo.put("usrNombre", usuario.getUsrNombre());

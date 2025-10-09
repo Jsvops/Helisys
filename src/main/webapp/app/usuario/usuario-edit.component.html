@@ -1,23 +1,41 @@
-<div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@usuario.edit.headline">Edit Usuario</h1>
+<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+    <h1 i18n="@@usuario.edit.headline">Editar usuario</h1>
+
     <div>
-        <a routerLink="/usuarios" class="btn btn-secondary" i18n="@@usuario.edit.back">Back to list</a>
+        <button
+            mat-icon-button
+            routerLink="/usuarios"
+            matTooltip="Lista de las usuarios"
+            matTooltipPosition="right"
+            [matTooltipClass]="'tooltip-pale'"
+            aria-label="Lista de las usuarios"
+        >
+            <mat-icon svgIcon="list_alt"></mat-icon>
+
+        </button>
     </div>
+
 </div>
+<div class="form-container">
 <form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
-    <input type="submit" i18n-value="@@usuario.edit.headline" value="Edit Usuario" class="btn btn-primary mt-4 mb-4" />
-    <app-input-row [group]="editForm" field="usrId" rowType="number" i18n-label="@@usuario.usrId.label" label="Usr Id" />
-    <app-input-row [group]="editForm" field="usrCtIdentidad" rowType="number" i18n-label="@@usuario.usrCtIdentidad.label" label="Usr Ct Identidad" />
-    <app-input-row [group]="editForm" field="usrCtMilitar" rowType="number" i18n-label="@@usuario.usrCtMilitar.label" label="Usr Ct Militar" />
-    <app-input-row [group]="editForm" field="usrNombre" i18n-label="@@usuario.usrNombre.label" label="Usr Nombre" />
-    <app-input-row [group]="editForm" field="usrApellido" i18n-label="@@usuario.usrApellido.label" label="Usr Apellido" />
-    <app-input-row [group]="editForm" field="usrDireccion" i18n-label="@@usuario.usrDireccion.label" label="Usr Direccion" />
-    <app-input-row [group]="editForm" field="usrTelefono" i18n-label="@@usuario.usrTelefono.label" label="Usr Telefono" />
-    <app-input-row [group]="editForm" field="usrCargo" i18n-label="@@usuario.usrCargo.label" label="Usr Cargo" />
-    <app-input-row [group]="editForm" field="usrFoto" i18n-label="@@usuario.usrFoto.label" label="Usr Foto" />
-    <app-input-row [group]="editForm" field="usrLogin" i18n-label="@@usuario.usrLogin.label" label="Usr Login" />
-    <app-input-row [group]="editForm" field="usrPassword" i18n-label="@@usuario.usrPassword.label" label="Usr Password" />
-    <app-input-row [group]="editForm" field="usrEdn" rowType="select" [options]="usrEdnValues" i18n-label="@@usuario.usrEdn.label" label="Usr Edn" />
-    <app-input-row [group]="editForm" field="usrGdo" rowType="select" [options]="usrGdoValues" i18n-label="@@usuario.usrGdo.label" label="Usr Gdo" />
-    <input type="submit" i18n-value="@@usuario.edit.headline" value="Edit Usuario" class="btn btn-primary mt-4" />
+    <app-input-row [group]="editForm" field="usrCtIdentidad" rowType="number" i18n-label="@@usuario.usrCtIdentidad.label" label="Carnet de identidad" />
+    <app-input-row [group]="editForm" field="usrCtMilitar" rowType="number" i18n-label="@@usuario.usrCtMilitar.label" label="Carnet militar" />
+    <app-input-row [group]="editForm" field="usrNombre" i18n-label="@@usuario.usrNombre.label" label="Nombre" />
+    <app-input-row [group]="editForm" field="usrApellido" i18n-label="@@usuario.usrApellido.label" label="Apellido" />
+    <app-input-row [group]="editForm" field="usrDireccion" i18n-label="@@usuario.usrDireccion.label" label="Dirección" />
+    <app-input-row [group]="editForm" field="usrTelefono" i18n-label="@@usuario.usrTelefono.label" label="Teléfono" />
+    <app-input-row [group]="editForm" field="usrCargo" i18n-label="@@usuario.usrCargo.label" label="Cargo" />
+    <app-input-row [group]="editForm" field="usrFoto" i18n-label="@@usuario.usrFoto.label" label="Foto" />
+    <app-input-row [group]="editForm" field="usrLogin" i18n-label="@@usuario.usrLogin.label" label="Login" />
+    <app-input-row [group]="editForm" field="usrPassword" i18n-label="@@usuario.usrPassword.label" label="Password" />
+    <app-input-row [group]="editForm" field="usrEdn" rowType="select" [options]="usrEdnValues" i18n-label="@@usuario.usrEdn.label" label="Escuadron" />
+    <app-input-row [group]="editForm" field="usrGdo" rowType="select" [options]="usrGdoValues" i18n-label="@@usuario.usrGdo.label" label="Grado" />
+
+    <div class="text-end mt-3">
+        <input type="submit"
+               i18n-value="@@usuario.edit.headline"
+               value="Guardar"
+               class="btn btn-primary" />
+    </div>
 </form>
+</div>

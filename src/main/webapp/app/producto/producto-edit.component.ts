@@ -28,7 +28,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatSnackBarModule
   ],
   templateUrl: './producto-edit.component.html',
-  styleUrls: ['./producto-edit.component.css']
+  styleUrls: ['./producto-edit.component.scss']
 })
 export class ProductoEditComponent implements OnInit {
 

@@ -13,10 +13,9 @@ export class InputErrorsComponent {
   @Input({ required: true })
   control?: AbstractControl;
 
-  // Mapeo de mensajes personalizados
+
   private customErrorMessages: Record<string, string> = {
-    required: 'Este campo es obligatorio',  // Mensaje personalizado para validación required
-    // Puedes agregar más mensajes personalizados aquí
+    required: 'Este campo es obligatorio',
     email: 'Por favor ingresa un correo electrónico válido',
     minlength: 'El campo debe tener al menos ${requiredLength} caracteres'
   };
@@ -26,12 +25,10 @@ export class InputErrorsComponent {
   }
 
   getMessage(key: string, details?: any): string {
-    // Primero verifica si hay un mensaje personalizado
     if (this.customErrorMessages[key]) {
       return this.replacePlaceholders(this.customErrorMessages[key], details);
     }
 
-    // Si no, usa el mensaje global
     const globalErrorMessage = getGlobalErrorMessage(key, details);
     return globalErrorMessage || key;
   }

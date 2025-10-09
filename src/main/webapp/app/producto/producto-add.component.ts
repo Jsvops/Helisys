@@ -12,13 +12,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @Component({
   selector: 'app-producto-add',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatFormFieldModule,MatSelectModule, MatOptionModule, MatSnackBarModule],
+  imports: [CommonModule, ReactiveFormsModule, InputRowComponent, MatFormFieldModule,MatSelectModule, MatOptionModule, MatSnackBarModule, MatIconModule,MatTooltipModule],
   templateUrl: './producto-add.component.html',
-  styleUrls: ['./producto-add.component.css'],
+  styleUrls: ['./producto-add.component.scss'],
 })
 export class ProductoAddComponent implements OnInit {
 
@@ -32,7 +35,6 @@ export class ProductoAddComponent implements OnInit {
   proPveValues?: Map<number, string>;
   modeloAeronaveValues?: Map<number, string>;
   modeloAeronaveArray: { value: number, label: string }[] = [];
-
 
 
   addForm = new FormGroup({
@@ -104,6 +106,12 @@ export class ProductoAddComponent implements OnInit {
       });
   }
 
+  navigateToProductos(): void {
+      this.router.navigate(['/productos']);
+    }
+
+  trackByValue = (_: number, item: { value: number }) => item.value;
+
   handleSubmit() {
     window.scrollTo(0, 0);
     this.addForm.markAllAsTouched();
@@ -126,19 +134,29 @@ export class ProductoAddComponent implements OnInit {
 
     };
 
-    this.productoService.crearProducto(data)
-    .subscribe({
-        next: () => {
-          this.snackBar.open('Pieza añadida correctamente ✅', '', {
-            duration: 3000,
+    this.productoService.crearProducto(data).subscribe({
+      next: () => {
+        this.snackBar.open('Pieza añadida correctamente ✅', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-success', 'snackbar-offset']
+        });
+        this.router.navigate(['/productos']);
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err?.status === 409) {
+          this.snackBar.open('Ya existe una pieza con ese número de parte ℹ️', '', {
+            duration: 4000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
-            panelClass: ['snackbar-success', 'snackbar-offset']
+            panelClass: ['snackbar-error', 'snackbar-offset']
           });
-          this.router.navigate(['/productos']);
-        },
-        error: (error) => this.errorHandler.handleServerError(error.error, this.addForm, this.getMessage)
-      });
+          return;
+        }
+        this.errorHandler.handleServerError(err.error, this.addForm, this.getMessage);
+      }
+    });
     }
 
 }

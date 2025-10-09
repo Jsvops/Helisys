@@ -1,75 +1,58 @@
-@import '../../_custom';
-
-
-.header-container {          // Se encarga de los hijos de clase en HTML
-  display: flex;             // Pone a los 3 hijos en fila
-  align-items: center;       // Alinea verticalmente al centro los 3 elementos dentro del contenedor
-  justify-content: center;   // centra H1 + logos
-  gap: 12px;                 // La propiedad gap en CSS es una abreviatura de row-gapy column-gap, que especifica                             el tamaño de los márgenes, que es el espacio entre filas y columnas en diseños
-  padding-top: 0;            // Relleno para la parte arriba del container
-  min-height: 96px;          // Establece la altura mínima de un elemento
-  }
-
-.header-container img {
-  height: auto;               // mantiene proporción si cambias el width en CSS
-  display: block;             // elimina espacios de línea
-  }
-
-.nudge {
-  transform: translate(var(--x, 0px), var(--y, 0px));    // Funciona para mover las imagenes a nuestra dispocision
-  }
-
-html, body { margin: 0; }     // evita el margen por defecto del navegador
-
-h1.mb-4 {
-  margin: 0;                  // Anula el margen inferior que trae Bootstrap en .mb-4.
-  line-height: 1.1;           // Se usa comúnmente para establecer la distancia entre líneas de texto.
-  }
+@use 'sass:color';
+@use '../../_custom' as custom;
 
 .menu-wrapper {
-  width: 340px;                     // Ancho del bloque de menu de la clase menu-wrapper del HTML
-  min-width: 280px;                 // Limite de ancho del menu
-  background-color: $fondo-menu;    // Color de fondo del menu
-  padding: 10px;                    // Espacio o relleno entre el borde del cajon y su contenido
-  border-radius: 8px;               // Esquinas redondeadas del cajon del menu
+  width: clamp(240px, 24vw, 300px);
+  background-color: custom.$fondo-menu;
 
-.menu-wrapper h4 {
-  font-family: 'Bebas Neue', sans-serif;
-  color: $texto-secundario;
-  line-height: 1.1;
+  $pad: 10px;
+  padding: $pad;
+  border-radius: 8px;
+  margin-top: 37px;
+  overflow: hidden;
+
+  h4 {
+    @include custom.font-roboto-flex(500);
+    color: custom.$texto-principal;
+    margin: (-$pad) (-$pad) $pad;
+    padding: 10px 12px;
+    background-color: color.adjust(custom.$fondo-menu, $lightness: -6%);
+    border-bottom: 1px solid rgba(custom.$texto-principal, .12);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
   }
 
-.list-group-item {
-  border: 1px solid #302510;     // Dibuja un borde de 1 px alrededor de cada ítem.
-  border-radius: 4px;            // Redondea las esquinas del ítem.
-  margin-bottom: 5px;            // Agrega espacio externo inferior entre ítems.
-  font-family: 'Bebas Neue', sans-serif;
-  color: $texto-principal;
-  background-color: $fondo-menu;
+  .list-group-item {
+    border: 1px solid custom.$texto-principal;
+    margin-bottom: 7px;
+    color: custom.$texto-principal;
+    background-color: custom.$fondo-menu;
+    transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+    will-change: transform;
 
-  &:hover {                               // “&” = el selector padre (.list-group-item)
-    background-color: $fondo-hover;       // cambia el fondo cuando pasas el mouse
-    color: $texto-principal;              // y el color del texto
+    &:hover {
+      background-color: custom.$fondo-menu;
+      border-color: color.adjust(custom.$texto-principal, $lightness: -10%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, .15);
+      text-decoration: none;
     }
-   }
-  }
 
-.flex-container {
-   display: flex;
-   align-items: flex-start; /* el menú e imagen arrancan arriba */
-   gap: 24px;
-  }
+    &:focus-visible {
+      outline: 2px solid rgba(custom.$texto-secundario, .6);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 4px rgba(custom.$texto-secundario, .25);
+    }
 
-.menu-nudge {
-  --x: 170px;
-  --y: -30px;
-  transform: translate(var(--x), var(--y));
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .12);
+    }
+
+    &:last-child { margin-bottom: 0; }
+  }
 }
 
-.diablos-nudge {
-  --x: 170px;
-  --y: -20px;
-  transform: translate(var(--x), var(--y));
+@media (max-width: 576px) {
+  .menu-wrapper { margin-inline: auto; }
 }
-
-

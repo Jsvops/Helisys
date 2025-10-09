@@ -6,11 +6,15 @@ import { InputRowComponent } from 'app/common/input-row/input-row.component';
 import { ProveedorService } from 'app/proveedor/proveedor.service';
 import { ProveedorDTO } from 'app/proveedor/proveedor.model';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
-
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-proveedor-add',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatIconModule, MatTooltipModule, MatButtonModule, MatSnackBarModule],
   templateUrl: './proveedor-add.component.html'
 })
 export class ProveedorAddComponent {
@@ -18,6 +22,7 @@ export class ProveedorAddComponent {
   proveedorService = inject(ProveedorService);
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
+  snackBar = inject(MatSnackBar);
 
   addForm = new FormGroup({
     pveNombre: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
@@ -31,7 +36,7 @@ export class ProveedorAddComponent {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      created: $localize`:@@proveedor.create.success:Proveedor was created successfully.`
+      created: $localize`:@@proveedor.create.success:El proveedor fue creado con éxito ✅`
     };
     return messages[key];
   }
@@ -45,11 +50,17 @@ export class ProveedorAddComponent {
     const data = new ProveedorDTO(this.addForm.value);
     this.proveedorService.createProveedor(data)
         .subscribe({
-          next: () => this.router.navigate(['/proveedores'], {
-            state: {
-              msgSuccess: this.getMessage('created')
-            }
-          }),
+          next: () => {
+            this.snackBar.open(this.getMessage('created'),
+            undefined,
+            {
+              duration: 3000,
+              verticalPosition: 'top',
+              horizontalPosition: 'center',
+              panelClass: ['snackbar-success']
+            });
+            this.router.navigate(['/proveedores']);
+          },
           error: (error) => this.errorHandler.handleServerError(error.error, this.addForm, this.getMessage)
         });
   }

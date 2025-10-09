@@ -7,6 +7,7 @@ import io.bootify.helisys.model.LoteTransaccionProductoDetalleDTO;
 import io.bootify.helisys.repos.LoteRepository;
 import io.bootify.helisys.repos.LoteTransaccionProductoDetalleRepository;
 import io.bootify.helisys.repos.TransaccionesProductoRepository;
+import io.bootify.helisys.util.InsufficientStockException;
 import io.bootify.helisys.util.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,7 +66,6 @@ public class LoteTransaccionProductoDetalleService {
     }
 
     public ReferencedWarning getReferencedWarning(final Integer ltpdId) {
-        // No hay referencias directas para esta entidad
         return null;
     }
 
@@ -105,6 +105,10 @@ public class LoteTransaccionProductoDetalleService {
         List<LoteDisponible> lotesDisponibles = obtenerLotesDisponibles(productoId);
         Integer cantidadRestante = cantidadRequerida;
 
+        int totalDisponible = lotesDisponibles.stream()
+            .mapToInt(LoteDisponible::getCantidadDisponible)
+            .sum();
+
         for (LoteDisponible lote : lotesDisponibles) {
             if (cantidadRestante <= 0) break;
 
@@ -114,7 +118,7 @@ public class LoteTransaccionProductoDetalleService {
         }
 
         if (cantidadRestante > 0) {
-            throw new RuntimeException("Error al completar la baja: stock insuficiente en lotes disponibles");
+            throw new InsufficientStockException(totalDisponible, cantidadRequerida);
         }
     }
 

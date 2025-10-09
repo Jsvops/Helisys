@@ -1,0 +1,52 @@
+@use '../../_custom' as custom;
+
+span.required::after {
+  content: ' *';
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 2rem;
+}
+
+.page-header h1 {
+    margin: 0;
+    }
+
+.page-header > div {
+  display: flex;
+  align-items: flex-end;
+  overflow: visible;
+}
+
+.page-header .interactive-icon {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  line-height: 1;
+  cursor: pointer;
+  margin-bottom: 2px;
+  transition: transform .2s ease, color .2s ease;
+  color: #D4CFB8;
+}
+
+@media (min-width: 992px) {
+  .page-header .interactive-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    line-height: 1;
+    align-self: center;
+    margin-bottom: 0;
+    transform: translateY(-8px);
+    transition: transform .2s ease, color .2s ease;
+  }
+
+  .page-header .interactive-icon:hover {
+    transform: translateY(-8px) scale(1.06);
+  }
+}
+

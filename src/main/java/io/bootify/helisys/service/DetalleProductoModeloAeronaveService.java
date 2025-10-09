@@ -19,13 +19,14 @@ import java.util.stream.Collectors;
 public class DetalleProductoModeloAeronaveService {
 
     private final DetalleProductoModeloAeronaveRepository detalleProductoModeloAeronaveRepository;
-    private final ProductoRepository productoRepository; // Nuevo repositorio
-    private final ModeloAeronaveRepository modeloAeronaveRepository; // Nuevo repositorio
+    private final ProductoRepository productoRepository;
+    private final ModeloAeronaveRepository modeloAeronaveRepository;
 
     public DetalleProductoModeloAeronaveService(
         final DetalleProductoModeloAeronaveRepository detalleProductoModeloAeronaveRepository,
-        final ProductoRepository productoRepository, // Inyectamos ProductoRepository
-        final ModeloAeronaveRepository modeloAeronaveRepository) { // Inyectamos ModeloAeronaveRepository
+        final ProductoRepository productoRepository,
+        final ModeloAeronaveRepository modeloAeronaveRepository) {
+
         this.detalleProductoModeloAeronaveRepository = detalleProductoModeloAeronaveRepository;
         this.productoRepository = productoRepository;
         this.modeloAeronaveRepository = modeloAeronaveRepository;
@@ -71,12 +72,10 @@ public class DetalleProductoModeloAeronaveService {
 
     private DetalleProductoModeloAeronave mapToEntity(
         final DetalleProductoModeloAeronaveDTO detalleDTO, final DetalleProductoModeloAeronave detalle) {
-        // Buscar y asignar el Producto
         final Producto dpmaPro = detalleDTO.getDpmaPro() == null ? null : productoRepository.findById(detalleDTO.getDpmaPro())
             .orElseThrow(() -> new NotFoundException("dpmaPro not found"));
         detalle.setDpmaPro(dpmaPro);
 
-        // Buscar y asignar el ModeloAeronave
         final ModeloAeronave dpmaMre = detalleDTO.getDpmaMre() == null ? null : modeloAeronaveRepository.findById(detalleDTO.getDpmaMre())
             .orElseThrow(() -> new NotFoundException("dpmaMre not found"));
         detalle.setDpmaMre(dpmaMre);
@@ -88,7 +87,6 @@ public class DetalleProductoModeloAeronaveService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final DetalleProductoModeloAeronave detalle = detalleProductoModeloAeronaveRepository.findById(dpmaId)
             .orElseThrow(NotFoundException::new);
-        // Aquí puedes agregar validaciones si esta entidad es referenciada por otras
         return referencedWarning;
     }
 }

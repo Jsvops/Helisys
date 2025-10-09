@@ -1,15 +1,34 @@
-<div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@pedidosCompra.add.headline">Add Pedidos Compra</h1>
+<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+    <h1 i18n="@@pedidosCompra.add.headline">Añadir pedidos de compra</h1>
+
     <div>
-        <a routerLink="/pedidosCompras" class="btn btn-secondary" i18n="@@pedidosCompra.add.back">Back to list</a>
+        <button
+            mat-icon-button
+            routerLink="/pedidosCompras"
+            matTooltip="Lista de pedidos de compras"
+            matTooltipPosition="right"
+            [matTooltipClass]="'tooltip-pale'"
+            aria-label="Lista de pedidos de compras"
+        >
+            <mat-icon svgIcon="list_alt"></mat-icon>
+
+        </button>
     </div>
 </div>
+<div class="form-container">
 <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
-    <app-input-row [group]="addForm" field="pcaDescripcion" i18n-label="@@pedidosCompra.pcaDescripcion.label" label="Pca Descripcion" />
-    <app-input-row [group]="addForm" field="pcaFechaPedido" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaPedido.label" label="Pca Fecha Pedido" />
-    <app-input-row [group]="addForm" field="pcaFechaEnvio" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaEnvio.label" label="Pca Fecha Envio" />
-    <app-input-row [group]="addForm" field="pcaFechaEntrega" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaEntrega.label" label="Pca Fecha Entrega" />
-    <app-input-row [group]="addForm" field="pcaFechaPrometida" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaPrometida.label" label="Pca Fecha Prometida" />
-    <app-input-row [group]="addForm" field="pcaDireccionEnvio" i18n-label="@@pedidosCompra.pcaDireccionEnvio.label" label="Pca Direccion Envio" />
-    <input type="submit" i18n-value="@@pedidosCompra.add.headline" value="Add Pedidos Compra" class="btn btn-primary mt-4" />
+    <app-input-row [group]="addForm" field="pcaDescripcion" i18n-label="@@pedidosCompra.pcaDescripcion.label" label="Descripción" />
+    <app-input-row [group]="addForm" field="pcaFechaPedido" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaPedido.label" label="Fecha de pedido" />
+    <app-input-row [group]="addForm" field="pcaFechaEnvio" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaEnvio.label" label="Fecha de envio" />
+    <app-input-row [group]="addForm" field="pcaFechaEntrega" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaEntrega.label" label="Fecha de entrega" />
+    <app-input-row [group]="addForm" field="pcaFechaPrometida" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaPrometida.label" label="Fecha prometida" />
+    <app-input-row [group]="addForm" field="pcaDireccionEnvio" i18n-label="@@pedidosCompra.pcaDireccionEnvio.label" label="Direccion de envio" />
+
+    <div class="text-end mt-3">
+        <input type="submit"
+               i18n-value="@@pedidosCompra.add.headline"
+               value="Guardar"
+               class="btn btn-primary" />
+    </div>
 </form>
+</div>

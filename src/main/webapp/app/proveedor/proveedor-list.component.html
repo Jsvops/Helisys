@@ -1,31 +1,40 @@
-<div class="d-flex flex-wrap mb-4">
-    <h1 class="flex-grow-1" i18n="@@proveedor.list.headline">Proveedores</h1>
+<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+    <h1 i18n="@@proveedor.list.headline">Lista de proveedores</h1>
     <div>
-        <a routerLink="/proveedores/add" class="btn btn-primary ms-2" i18n="@@proveedor.list.createNew">Create new Proveedor</a>
+        <button
+            mat-icon-button
+            routerLink="/proveedores/add"
+            matTooltip="Añadir proveedor"
+            matTooltipPosition="right"
+            [matTooltipClass]="'tooltip-pale'"
+            aria-label="Añadir proveedor"
+        >
+            <mat-icon svgIcon="add_box"></mat-icon>
+
+        </button>
     </div>
+
 </div>
 @if (!proveedores || proveedores.length === 0) {
 <div i18n="@@proveedor.list.empty">No Proveedores could be found.</div>
 } @else {
 <div class="table-responsive">
-    <table class="table table-striped table-hover align-middle">
+    <table class="table table-striped table-hover align-middle table-pale">
         <thead>
             <tr>
-                <th scope="col" i18n="@@proveedor.pveId.label">Pve Id</th>
-                <th scope="col" i18n="@@proveedor.pveNombre.label">Pve Nombre</th>
-                <th scope="col" i18n="@@proveedor.pveTelefono.label">Pve Telefono</th>
-                <th scope="col" i18n="@@proveedor.pveFax.label">Pve Fax</th>
-                <th scope="col" i18n="@@proveedor.pveEmail.label">Pve Email</th>
-                <th scope="col" i18n="@@proveedor.pveDireccion.label">Pve Direccion</th>
-                <th scope="col" i18n="@@proveedor.pveCiudad.label">Pve Ciudad</th>
-                <th scope="col" i18n="@@proveedor.pvePais.label">Pve Pais</th>
-                <th><!-- --></th>
+                <th scope="col" i18n="@@proveedor.pveNombre.label">Nombre</th>
+                <th scope="col" i18n="@@proveedor.pveTelefono.label">Teléfono</th>
+                <th scope="col" i18n="@@proveedor.pveFax.label">Fax</th>
+                <th scope="col" i18n="@@proveedor.pveEmail.label">Email</th>
+                <th scope="col" i18n="@@proveedor.pveDireccion.label">Dirección</th>
+                <th scope="col" i18n="@@proveedor.pveCiudad.label">Ciudad</th>
+                <th scope="col" i18n="@@proveedor.pvePais.label">País</th>
+                <th scope="col" i18n="@@proveedor.list.actions">Acciones</th>
             </tr>
         </thead>
         <tbody>
             @for (proveedor of proveedores; track proveedor.pveId) {
             <tr>
-                <td>{{ proveedor.pveId }}</td>
                 <td>{{ proveedor.pveNombre }}</td>
                 <td>{{ proveedor.pveTelefono }}</td>
                 <td>{{ proveedor.pveFax }}</td>
@@ -34,9 +43,9 @@
                 <td>{{ proveedor.pveCiudad }}</td>
                 <td>{{ proveedor.pvePais }}</td>
                 <td>
-                    <div class="float-end text-nowrap">
-                        <a [routerLink]="['/proveedores/edit', proveedor.pveId]" class="btn btn-sm btn-secondary" i18n="@@proveedor.list.edit">Edit</a>
-                        <button type="button" (click)="confirmDelete(proveedor.pveId!)" class="btn btn-sm btn-secondary" i18n="@@proveedor.list.delete">Delete</button>
+                    <div class="text-nowrap">
+                        <a [routerLink]="['/proveedores/edit', proveedor.pveId]" class="btn btn-sm btn-secondary" i18n="@@proveedor.list.edit">Editar</a>
+                        <button type="button" (click)="confirmDelete(proveedor.pveId!)" class="btn btn-sm btn-secondary" i18n="@@proveedor.list.delete">Eliminar</button>
                     </div>
                 </td>
             </tr>

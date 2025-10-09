@@ -6,12 +6,10 @@
 </div>
 
 <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
-    <!-- Campo: Producto -->
+
     <app-input-row [group]="addForm" field="dpmaPro" i18n-label="@@detalle.dpmaPro.label" label="Producto" />
 
-    <!-- Campo: Modelo Aeronave -->
     <app-input-row [group]="addForm" field="dpmaMre" i18n-label="@@detalle.dpmaMre.label" label="Modelo Aeronave" />
 
-    <!-- Botón de envío -->
     <input type="submit" i18n-value="@@detalle.add.headline" value="Agregar Detalle" class="btn btn-primary mt-4" />
 </form>

@@ -180,7 +180,7 @@ export const routes: Routes = [
   {
     path: 'productos/add',
     component: ProductoAddComponent,
-    title: $localize`:@@producto.add.headline:Add Producto`
+    title: $localize`:@@producto.add.headline:Añadir pieza`
   },
   {
     path: 'productos/edit/:proId',

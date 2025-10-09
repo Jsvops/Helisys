@@ -172,34 +172,44 @@ public class TransaccionService {
         return null;
     }
 
+    private void validarFechaVencimiento(LocalDate fecha) {
+        if (fecha == null) return;
+        LocalDate hoy = LocalDate.now();
+        if (fecha.isBefore(hoy)) {
+            throw new IllegalArgumentException("ltFechaVencimiento no puede ser anterior a hoy");
+        }
+    }
+
     @Transactional
     public Integer executeTransaction(@Valid TransactionRequestDTO dto, Integer usuarioId) {
 
-        // Obtener entidades relacionadas
         TransaccionEvento evento = transaccionEventoService.getEvento(dto.getTceTvo());
         Producto producto = productoService.getProducto(dto.getTcoPro());
-        Usuario usuario = usuarioService.getUsuario(usuarioId);/*duda: como se obtuvo el id del "usuarioId" para pasarlo como metodo*/
+        Usuario usuario = usuarioService.getUsuario(usuarioId);
         Aeronave aeronave = dto.getTceAnv() != null ? aeronaveService.getAeronave(dto.getTceAnv()) : null;
-        // != "no igual a" o "distinto de"
 
-        //Metodo que devuelve true si el tipo de evento es bajaA
         if (transaccionEventoService.isStockOut(dto.getTceTvo())) {
-            //Metodo que valida si hay suficiente stock
-            productoService.StockDisponible(producto.getProId(), dto.getUnidades());
+            productoService.stockDisponible(producto.getProId(), dto.getUnidades());
         }
 
-        // Crear y guardar la transacción principal
+        boolean isStockIn = transaccionEventoService.isStockIn(dto.getTceTvo());
+        if (isStockIn && dto.getLtFechaVencimiento() == null) {
+            throw new IllegalArgumentException(
+                "Para eventos de STOCK IN (1,2,3) ltFechaVencimiento es obligatorio."
+            );
+        }
+
+        validarFechaVencimiento(dto.getLtFechaVencimiento());
+
         Transaccion transaccion = Transaccion.builder()
             .tceFechaTransaccion(LocalDate.now())
             .tceObservaciones(dto.getTceObservaciones())
             .tceTvo(evento)
             .tceUsr(usuario)
             .tceAnv(aeronave)
-            .build(); //construye y devuelve la instancia Transaccion.
-        Transaccion savedTransaccion = transaccionRepository.save(transaccion); //método de spring data JPA que persiste la entidad y devuelve la version "gestionada (con IDs y campos generados por la BD)
+            .build();
+        Transaccion savedTransaccion = transaccionRepository.save(transaccion);
 
-
-        // Crear relación transacción-producto
         TransaccionesProductoDTO transaccionesProductoDTO = new TransaccionesProductoDTO();
         transaccionesProductoDTO.setTcoTce(savedTransaccion.getTceId());
         transaccionesProductoDTO.setTcoPro(producto.getProId());
@@ -208,15 +218,16 @@ public class TransaccionService {
         TransaccionesProductoDTO savedDto =
             transaccionesProductoService.createProductTransaction(transaccionesProductoDTO);
 
-
-        // Procesar la lógica adicional según el tipo de transacción
         procesarTransaccion(
             transaccionEventoService.isStockIn(dto.getTceTvo()),
             dto,
-            savedDto.getTcoId() // ID recién creado de la transacción-producto
+            savedDto.getTcoId()
         );
 
         return savedTransaccion.getTceId();
+
+
+
     }
 
     private void procesarTransaccion(boolean isStockIn, TransactionRequestDTO transactionRequestDTO, Integer transaccionesProductoId) {
@@ -226,7 +237,6 @@ public class TransaccionService {
         if (isStockIn) {
             if (transactionRequestDTO.getLtFechaVencimiento() != null) {
                 Lote lote = loteService.crear(transactionRequestDTO.getLtFechaVencimiento());
-                //Vincula el lote con la transaccion-producto
                 loteTransaccionProductoDetalleService.crearDetalle(
                     lote,
                     transProdEntity,
