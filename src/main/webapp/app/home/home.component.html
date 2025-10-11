@@ -1,6 +1,7 @@
 <div class="container mt-3">
+    <div class="d-flex flex-column flex-md-row">
         <div class="menu-wrapper">
-            <h4  class="mb-3" i18n="@@home.index.exploreEntities">Operaciones</h4>
+            <h4 class="mb-3" i18n="@@home.index.exploreEntities">Operaciones</h4>
             <div class="list-group">
                 <a routerLink="/productos/add" class="list-group-item list-group-item-action" i18n="@@producto.add.headline">Piezas</a>
                 <a routerLink="/transacciones/add" class="list-group-item list-group-item-action" i18n="@@transaccion.add.headline">Transacciones</a>
@@ -11,4 +12,9 @@
                 <a routerLink="/usuarios/add" class="list-group-item list-group-item-action" i18n="@@usuario.list.headline">Usuarios</a>
             </div>
         </div>
+
+        <div class="flex-grow-1 ml-md-4 widget">
+            <app-product-expiring-widget></app-product-expiring-widget>
+        </div>
+    </div>
 </div>

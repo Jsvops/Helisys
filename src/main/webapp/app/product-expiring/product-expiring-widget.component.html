@@ -1,0 +1,44 @@
+<section class="card narrow">
+    <header class="card__header">
+        <h4 class="title">Piezas con fechas de caducidad</h4>
+    </header>
+
+    <div class="card__body">
+        <div *ngIf="loading" class="state">Cargando…</div>
+        <div *ngIf="error" class="state state--error">{{ error }}</div>
+
+        <div class="tbl-wrap" *ngIf="!loading && !error">
+            <table class="tbl" *ngIf="data.length; else emptyTpl">
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Número de parte</th>
+                    <th class="units">Unidades</th>
+                    <th>Fecha de vencimiento</th>
+                    <th>Días al vencimiento</th>
+                    <th>Estado de vencimiento</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let r of data"
+                    [ngClass]="'row--' + estadoColor(dias(r))">
+                    <td class="name">{{ r.nombre }}</td>
+                    <td class="pn">{{ r.numeroParte }}</td>
+                    <td class="qty">{{ r.saldoTotalFecha }}</td>
+                    <td class="date">{{ r.fechaVencimiento | date:'yyyy-MM-dd' }}</td>
+                    <td class="days" [ngClass]="'pill pill--' + estadoColor(dias(r))">
+                        {{ dias(r) }}
+                    </td>
+                    <td class="status" [ngClass]="'status--' + estadoColor(dias(r))">
+                        {{ estadoTexto(dias(r)) }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <ng-template #emptyTpl>
+                <div class="empty">Sin próximos vencimientos.</div>
+            </ng-template>
+        </div>
+    </div>
+</section>

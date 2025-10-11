@@ -2,12 +2,12 @@
 @use '../../_custom' as custom;
 
 .menu-wrapper {
-  width: clamp(240px, 24vw, 300px);
+  width: clamp(250px, 24vw, 250px);
   background-color: custom.$fondo-menu;
 
   $pad: 10px;
   padding: $pad;
-  border-radius: 8px;
+  margin-right:80px;
   margin-top: 37px;
   overflow: hidden;
 
@@ -55,4 +55,18 @@
 
 @media (max-width: 576px) {
   .menu-wrapper { margin-inline: auto; }
+}
+
+.widget { min-width: 0; }
+
+
+@media (max-width: 767.98px) {
+  .menu-wrapper {
+    width: 100%;
+    margin: 12px 0 16px 0;
+  }
+  .widget {
+    width: 100%;
+    margin-left: 0 !important;
+  }
 }

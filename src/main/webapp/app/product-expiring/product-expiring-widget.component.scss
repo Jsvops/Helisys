@@ -1,0 +1,201 @@
+:host {
+  --card-width: 750px;
+  --table-height: 378px;
+  --fs-base: 11px;
+  --fs-small: 11px;
+  --fs-title: 12px;
+
+  --cell-pad-y: 6px;
+  --cell-pad-x: 8px;
+
+  --table-min-width: 520px;
+
+  --scrollbar-w: 8px;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.28);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.42);
+  --scrollbar-track: transparent;
+}
+
+.narrow {
+  width: var(--card-width);
+  max-width: 100%;
+  margin-top: 37px;
+
+}
+
+.card {
+  border: 1px solid #2a2a2a;
+  overflow: hidden;
+  background: #191713;
+  color: #D4CFB8;
+  font-size: var(--fs-base);
+  line-height: 1.25;
+  text-align: center;
+}
+
+.card__header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #222;
+}
+
+.title { margin: 0; font-size: var(--fs-title); font-weight: 700; }
+.state { color: #cfcfcf; }
+.state--error { color: #ffb4b4; }
+.empty { color: #aaa; padding: 6px 0; }
+
+.tbl-wrap {
+  height: var(--table-height);
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 0 auto;
+  width: 100%;
+  padding-right: var(--scrollbar-w);
+  scrollbar-gutter: stable both-edges;
+}
+
+.tbl {
+  width: 100%;
+  min-width: var(--table-min-width);
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-right: calc(var(--scrollbar-w) * -1);
+}
+
+.tbl thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #191713;
+  color: #D4CFB8;
+  font-weight: 700;
+}
+
+.tbl th,
+.tbl td {
+  padding: var(--cell-pad-y) var(--cell-pad-x);
+  border-bottom: 1px solid #222;
+  text-align: center;
+  white-space: nowrap;
+}
+
+:host { --units-col-w: 80px; }
+
+.tbl th.units,
+.tbl td.qty {
+  width: var(--units-col-w);
+  min-width: var(--units-col-w);
+  max-width: var(--units-col-w);
+}
+
+.name {
+  color: #D4CFB8;
+  font-size: var(--fs-base);
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pn,
+.date,
+.qty {
+  color: #D4CFB8;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-small);
+}
+.days { font-size: var(--fs-small); }
+.status { font-size: var(--fs-small); font-weight: 700; }
+
+.pill {
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 700;
+  display: inline-block;
+}
+.pill--rojo     { background: #b71c1c; color: #ffd6d6; }
+.pill--amarillo { background: #f59e0b; color: #1b1b1b; }
+.pill--verde    { background: #1b5e20; color: #d0ffd0; }
+
+.status--rojo     { color: #ff6b6b; }
+.status--amarillo { color: #ffd166; }
+.status--verde    { color: #98e699; }
+
+.row--rojo     { background: rgba(183, 28, 28, 0.04); }
+.row--amarillo { background: rgba(245, 158, 11, 0.04); }
+.row--verde    { background: rgba(27, 94, 32, 0.04); }
+
+
+.tbl-wrap {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.tbl-wrap::-webkit-scrollbar {
+  width: var(--scrollbar-w);
+  height: 0;
+}
+.tbl-wrap::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+.tbl-wrap::-webkit-scrollbar-thumb {
+  background-clip: padding-box;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-color: var(--scrollbar-thumb);
+}
+.tbl-wrap:hover::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-hover);
+}
+.tbl-wrap::-webkit-scrollbar-corner { background: transparent; }
+
+@media (max-width: 640px) {
+  .tbl { min-width: 0; }
+  .name { max-width: 140px; }
+}
+
+@media (max-width: 640px) {
+  .tbl th,
+  .tbl td {
+    padding: 10px 14px;
+  }
+
+  .tbl {
+    min-width: 680px;
+    margin-right: 0;
+  }
+
+  .tbl-wrap {
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    cursor: grab;
+    padding-right: 0;
+  }
+  .tbl-wrap:active { cursor: grabbing; }
+
+}
+
+@media (max-width: 640px) {
+  .tbl th,
+  .tbl td {
+    padding: 10px 14px;
+  }
+
+  .tbl {
+    min-width: 680px;
+    margin-right: 0;
+  }
+
+  .tbl-wrap {
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    cursor: grab;
+    padding-right: 0;
+  }
+  .tbl-wrap:active { cursor: grabbing; }
+
+}
+

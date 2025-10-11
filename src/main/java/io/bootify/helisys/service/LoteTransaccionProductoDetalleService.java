@@ -4,17 +4,23 @@ import io.bootify.helisys.domain.Lote;
 import io.bootify.helisys.domain.LoteTransaccionProductoDetalle;
 import io.bootify.helisys.domain.TransaccionesProducto;
 import io.bootify.helisys.model.LoteTransaccionProductoDetalleDTO;
+import io.bootify.helisys.model.ProductExpiredResponseDTO;
 import io.bootify.helisys.repos.LoteRepository;
 import io.bootify.helisys.repos.LoteTransaccionProductoDetalleRepository;
 import io.bootify.helisys.repos.TransaccionesProductoRepository;
 import io.bootify.helisys.util.InsufficientStockException;
 import io.bootify.helisys.util.NotFoundException;
+
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import io.bootify.helisys.util.ReferencedWarning;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,14 +31,18 @@ public class LoteTransaccionProductoDetalleService {
     private final LoteTransaccionProductoDetalleRepository loteTransaccionProductoDetalleRepository;
     private final LoteRepository loteRepository;
     private final TransaccionesProductoRepository transaccionesProductoRepository;
+    private final Clock boliviaClock;
+
 
     public LoteTransaccionProductoDetalleService(
             final LoteTransaccionProductoDetalleRepository loteTransaccionProductoDetalleRepository,
             final LoteRepository loteRepository,
-            final TransaccionesProductoRepository transaccionesProductoRepository) {
+            final TransaccionesProductoRepository transaccionesProductoRepository,
+            final Clock boliviaclock) {
         this.loteTransaccionProductoDetalleRepository = loteTransaccionProductoDetalleRepository;
         this.loteRepository = loteRepository;
         this.transaccionesProductoRepository = transaccionesProductoRepository;
+        this.boliviaClock = boliviaclock;
     }
 
     public List<LoteTransaccionProductoDetalleDTO> findAll() {
@@ -147,5 +157,17 @@ public class LoteTransaccionProductoDetalleService {
         private final Lote lote;
         private final Integer cantidadDisponible;
     }
+
+    public List<ProductExpiredResponseDTO> ListProductsExpiringInTwoYears() {
+        var hoy = LocalDate.now(boliviaClock);
+        var maxDate = hoy.plusYears(2);
+        var list = loteTransaccionProductoDetalleRepository.findExpiringProducts(maxDate);
+        list.forEach(dto -> dto.setDiasParaVencer(
+            (int) ChronoUnit.DAYS.between(hoy, dto.getFechaVencimiento())
+        ));
+        return list;
+    }
+
+
 }
 
