@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Iniciar sesión</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,300..800&display=swap" rel="stylesheet"/>
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; }
+        input, button { font: inherit; }
+
+        :root{
+          --bg: #191713;
+          --card: #D4CFB8;
+          --text: #191713;
+          --primary: #2563eb;
+          --primary-contrast: #ffffff;
+          --radius: 16px;
+
+          --space-1: 8px;
+          --space-2: 12px;
+          --space-3: 16px;
+          --space-4: 20px;
+          --space-5: 24px;
+
+          --font-sans: "Roboto Flex", system-ui, -apple-system, "Segoe UI",
+            Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+        }
+
+        html, body { height: 100%; }
+        body{
+          margin: 0;
+          background: var(--bg);
+          color: var(--text);
+          font-family: var(--font-sans);
+          font-weight: 400;
+          line-height: 1.35;
+          display: grid;
+          place-items: center;
+          padding: var(--space-4);
+          padding-left: max(var(--space-4), env(safe-area-inset-left));
+          padding-right: max(var(--space-4), env(safe-area-inset-right));
+          padding-top: max(var(--space-4), env(safe-area-inset-top));
+          padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
+        }
+
+        .card{
+          width: 100%;
+          max-width: 440px;
+          background: var(--card);
+          color: var(--text);
+          border: 1px solid rgba(0,0,0,0.10);
+          box-shadow: 0 8px 26px rgba(0,0,0,0.28);
+          padding: var(--space-5);
+        }
+
+        h1{
+          font-size: 22px;
+          line-height: 1.25;
+          margin: 0 0 var(--space-1);
+          letter-spacing: .2px;
+          font-weight: 600;
+        }
+        .sub{
+          margin: 0 0 var(--space-4);
+          font-size: 14px;
+          opacity: .9;
+        }
+
+
+        .alert{
+          display: block;
+          border-radius: 10px;
+          padding: var(--space-2) var(--space-3);
+          font-size: 14px;
+          margin-bottom: var(--space-3);
+          line-height: 1.35;
+          background: rgba(211, 0, 32, 0.70);
+          color: #fff;
+        }
+
+
+        form{
+          display: grid;
+          gap: var(--space-3);
+        }
+        label{
+          display: block;
+          font-size: 14px;
+          margin-bottom: 6px;
+        }
+        .field{
+          display: grid;
+          gap: 6px;
+        }
+        input[type="text"],
+        input[type="password"]{
+          width: 100%;
+          height: 48px;
+          padding: 0 14px;
+          font-size: 16px;
+          background: #EFECE3;
+          color: var(--text);
+          border: 1px solid #b8b19a;
+          border-radius: 12px;
+          outline: none;
+          transition: border-color .15s ease, box-shadow .15s ease;
+        }
+        input::placeholder{ color: rgba(25,23,19,.55); }
+        input:focus{
+          border-color: #8a816d;
+          box-shadow: 0 0 0 3px rgba(137,129,109,0.28);
+        }
+
+        button{
+          width: 100%;
+          height: 48px;
+          padding: 0 16px;
+          border: none;
+          border-radius: 12px;
+          font-weight: 600;
+          font-size: 16px;
+          background: linear-gradient(180deg, #3b82f6, var(--primary));
+          color: var(--primary-contrast);
+          cursor: pointer;
+          touch-action: manipulation;
+          transition: transform .03s ease-in-out, filter .15s ease;
+        }
+        button:active{ transform: translateY(1px); }
+
+        .foot{
+          margin-top: var(--space-3);
+          font-size: 12px;
+          text-align: center;
+          opacity: .85;
+        }
+
+        @media (max-width: 480px){
+          :root{
+            --radius: 14px;
+          }
+          .card{
+            padding: var(--space-4);
+            border-radius: var(--radius);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.24);
+          }
+          h1{ font-size: 20px; }
+          .sub{ font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+<main class="card">
+    <header>
+        <h1>Iniciar sesión</h1>
+        <p class="sub">Accede con tu usuario y contraseña</p>
+    </header>
+
+    <div th:if="${param.error}"   class="alert" role="alert">Usuario o contraseña incorrectos.</div>
+    <div th:if="${param.logout}"  class="alert" role="alert">Has cerrado sesión correctamente.</div>
+    <div th:if="${param.timeout}" class="alert" role="alert">Tu sesión expiró o es inválida. Por favor, vuelve a ingresar.</div>
+
+    <form th:action="@{/login}" method="post" autocomplete="off">
+        <div class="field">
+            <label for="username">Usuario</label>
+            <input id="username" name="username" type="text" required autofocus
+                   placeholder="Tu usuario" autocomplete="username" />
+        </div>
+
+        <div class="field">
+            <label for="password">Contraseña</label>
+            <input id="password" name="password" type="password" required
+                   placeholder="••••••••" autocomplete="current-password" />
+        </div>
+
+        <button type="submit">Ingresar</button>
+
+    </form>
+</main>
+</body>
+</html>

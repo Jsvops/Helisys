@@ -25,7 +25,7 @@
                     <td class="name">{{ r.nombre }}</td>
                     <td class="pn">{{ r.numeroParte }}</td>
                     <td class="qty">{{ r.saldoTotalFecha }}</td>
-                    <td class="date">{{ r.fechaVencimiento | date:'yyyy-MM-dd' }}</td>
+                    <td class="date">{{ r.fechaVencimiento | date:'dd-MM-yyyy' }}</td>
                     <td class="days" [ngClass]="'pill pill--' + estadoColor(dias(r))">
                         {{ dias(r) }}
                     </td>

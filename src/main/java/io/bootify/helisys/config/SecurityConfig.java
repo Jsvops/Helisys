@@ -2,6 +2,7 @@ package io.bootify.helisys.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -12,14 +13,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.security.web.session.InvalidSessionStrategy;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -31,19 +31,23 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                        "/login", "/logout", "/error",
-                        "/css/**", "/js/**", "/images/**", "/webjars/**"
+                    "/login", "/logout", "/error",
+                    "/css/**", "/js/**", "/images/**", "/webjars/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                 .permitAll()
-                 .defaultSuccessUrl("/", true)
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/login?error")
+                .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID" , "remember-me")
+                .deleteCookies("SESSION", "remember-me")
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -53,11 +57,13 @@ public class SecurityConfig {
                 .maxSessionsPreventsLogin(false)
                 .expiredSessionStrategy(expiredStrategy())
             );
-            httpSecurity.exceptionHandling(ex -> ex
-                .defaultAuthenticationEntryPointFor(
+
+        httpSecurity.exceptionHandling(ex -> ex
+            .defaultAuthenticationEntryPointFor(
                 new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
                 new RequestMatcher() {
-                    @Override public boolean matches(jakarta.servlet.http.HttpServletRequest request) {
+                    @Override
+                    public boolean matches(HttpServletRequest request) {
                         String uri = request.getRequestURI();
                         String accept = String.valueOf(request.getHeader("Accept"));
                         String xhr = String.valueOf(request.getHeader("X-Requested-With"));
@@ -67,8 +73,7 @@ public class SecurityConfig {
                     }
                 }
             )
-            );
-
+        );
 
         return httpSecurity.build();
     }
@@ -77,7 +82,6 @@ public class SecurityConfig {
     public org.springframework.security.web.session.HttpSessionEventPublisher httpSessionEventPublisher() {
         return new org.springframework.security.web.session.HttpSessionEventPublisher();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -101,22 +105,11 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(admin, user);
     }
 
-    @Bean
-    public SessionInformationExpiredStrategy expiredStrategy() {
-        return event -> {
-            HttpServletRequest req = event.getRequest();
-            HttpServletResponse res = event.getResponse();
-            String uri = req.getRequestURI();
-            String accept = String.valueOf(req.getHeader("Accept"));
-            boolean isApi = uri.startsWith("/api") || accept.contains("application/json");
-            if (isApi) {
-                res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            } else {
-                res.sendRedirect("/login?error");
-            }
-        };
-    }
-
+    /**
+     * Cuando la sesión es inválida (cookie huérfana/caducada), crea una nueva sesión
+     * y redirige a /login?timeout para evitar bucles de redirección.
+     * Para API/JSON, responde 401.
+     */
     @Bean
     public InvalidSessionStrategy invalidSessionStrategy() {
         return (request, response) -> {
@@ -130,7 +123,31 @@ public class SecurityConfig {
             if (isApi) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             } else {
-                response.sendRedirect("/login?error");
+                request.getSession(true);
+                response.sendRedirect("/login?timeout");
+            }
+        };
+    }
+
+    /**
+     * Cuando una sesión expira por concurrencia o tiempo, trata igual que inválida:
+     * 401 para API, y redirección con nueva sesión para navegador.
+     */
+    @Bean
+    public SessionInformationExpiredStrategy expiredStrategy() {
+        return event -> {
+            HttpServletRequest req = event.getRequest();
+            HttpServletResponse res = event.getResponse();
+
+            String uri = req.getRequestURI();
+            String accept = String.valueOf(req.getHeader("Accept"));
+            boolean isApi = uri.startsWith("/api") || accept.contains("application/json");
+
+            if (isApi) {
+                res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            } else {
+                req.getSession(true);
+                res.sendRedirect("/login?timeout");
             }
         };
     }

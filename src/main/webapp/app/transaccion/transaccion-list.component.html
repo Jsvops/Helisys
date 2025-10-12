@@ -106,7 +106,7 @@
             <td>{{ transaccion.eventoNombre }}</td>
             <td>{{ transaccion.unidades }}</td>
             <td>{{ transaccion.aeronaveMatricula }}</td>
-            <td>{{ transaccion.tceFechaTransaccion }}</td>
+            <td>{{ transaccion.tceFechaTransaccion | date:'dd/MM/yyyy' }}</td>
             <td>{{ transaccion.usuarioNombre }}</td>
             <td>{{ transaccion.tceObservaciones }}</td>
 
