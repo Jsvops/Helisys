@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,8 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,8 +34,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/login", "/logout", "/error",
-                    "/css/**", "/js/**", "/images/**", "/webjars/**"
+                    "/", "/index.html", "/favicon.ico", "/robots.txt",
+                    "/assets/**", "/icons/**", "/image/**", "/images/**", "/public/**",
+                    "/*.js", "/*.css", "/*.map", "/*.json", "/*.png", "/*.jpg", "/*.svg", "/*.webp",
+                    "/login", "/logout", "/error", "/webjars/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
@@ -76,6 +81,13 @@ public class SecurityConfig {
         );
 
         return httpSecurity.build();
+    }
+
+    @Bean
+    WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers(
+            PathRequest.toStaticResources().atCommonLocations()
+        );
     }
 
     @Bean
