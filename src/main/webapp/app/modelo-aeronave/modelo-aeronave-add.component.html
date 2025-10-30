@@ -1,31 +1,40 @@
-<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+<div class="d-flex flex-wrap mb-2">
     <h1 i18n="@@modeloAeronave.add.headline">Añadir modelo de aeronave</h1>
-    <div>
-
-    </div>
-
-    <button
-        mat-icon-button
-        routerLink="/modeloAeronaves"
-        matTooltip="Lista de los modelos de aeronaves"
-        matTooltipPosition="right"
-        [matTooltipClass]="'tooltip-pale'"
-        aria-label="Lista de los modelos"
-    >
-        <mat-icon svgIcon="list_alt"></mat-icon>
-
-    </button>
 </div>
-<div class="form-container">
-<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
-    <app-input-row [group]="addForm" field="mreNombre" i18n-label="@@modeloAeronave.mreNombre.label" label="Nombre" />
 
-    <div class="text-end mt-3">
-        <input type="submit"
-               i18n-value="@@modeloAeronave.add.headline"
-               value="Guardar"
-               class="btn btn-primary" />
+<div class="form-containers">
+    <div class="form-header">
+
+        <div class="icon-container">
+
+            <div class="icon d-flex align-items-center ms-auto">
+                <button
+                    type="button"
+                    mat-icon-button
+                    class="list-btn"
+                    routerLink="/modeloAeronaves"
+                    aria-label="Lista de los modelos"
+                >
+                    <mat-icon svgIcon="list_alt"></mat-icon>
+
+                </button>
+                <span id="labelList" class="action-text">Lista de los modelos de aeronaves</span>
+            </div>
+        </div>
     </div>
 
-</form>
+    <div class="form-body">
+
+        <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+        <app-input-row [group]="addForm" field="mreNombre" i18n-label="@@modeloAeronave.mreNombre.label" label="Nombre" />
+
+            <div class="text-end mt-3">
+                <input type="submit"
+                       i18n-value="@@modeloAeronave.add.headline"
+                       value="Guardar"
+                       class="btn btn-primary" />
+            </div>
+
+        </form>
+    </div>
 </div>

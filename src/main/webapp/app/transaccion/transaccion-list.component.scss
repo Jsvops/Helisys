@@ -1,41 +1,121 @@
 .search-form {
-  .filters__title {
-    color: #D4CFB8;
+  background-color:#c8c2a5;
+  border-bottom: 4px solid rgba(51,47,39,.12);
+  padding-top: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+  .filters-title {
+    color: #332F27;
     font-weight: 600;
   }
 
-  .form-label {
-    color: #D4CFB8;
+ .form-label {
+    font-weight: 600;
+    color: #332F27;
     font-weight: 600;
     margin-bottom: 4px;
   }
 
-  .input-220 {
+  .inputs {
     width: 220px;
     max-width: 100%;
   }
-  @media (max-width: 576px) {
-    .input-220 { width: 100%; }
-  }
 
-}
-
-.search-form {
-  .error-slot {
+.error-slot {
     min-height: 1.25rem;
-    margin-top: 4px;
   }
-    .invisible { visibility: hidden; }
+
+.icon-action {
+  display: inline-flex;
+  align-items: center;
 }
 
-.header-bar.d-flex {
-    align-items: baseline;
+.action-label {
+  font-size: 16px;
+  color: #332F27;
+  font-weight: 600;
+  line-height: 1;
+  user-select:none;
 }
 
-mat-icon {
-  color: #D4CFB8;
+.filter-btn.mat-mdc-icon-button,
+.pdf-btn.mat-mdc-icon-button,
+.add-transaction-btn.mat-mdc-icon-button{
+  --mdc-icon-button-icon-size: 32px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+  padding:0;
 }
 
-.span_color{
+.filter-btn mat-icon,
+.pdf-btn   mat-icon,
+.add-transaction-btn mat-icon{
+  width:32px;
+  height:32px;
+  line-height:1;
+  color:#332F27;
+}
+
+.table-scroll {
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: rgba(159,159,159,1) #2C2C2C;
+  scrollbar-width: thin;
+}
+
+.table-scroll .table {
+  margin-bottom: 0;
+  min-width: 100%;
+  width: max-content;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--bs-table-bg, #fff);
+  box-shadow: 0 1px 0 rgba(0,0,0,.06);
+}
+
+.span-color{
     color: #D4CFB8;
     }
+
+@media (max-width: 576px) {
+  .inputs {
+    width: 100%;
+    max-width: 100%;
+  }
+
+
+  .d-flex {
+    gap: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .icon-action {
+    width: 100%;
+    margin-bottom: 1rem;
+    display: flex;
+  }
+
+  .icon-action .action-label {
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+}
+
+
+
+
+
+

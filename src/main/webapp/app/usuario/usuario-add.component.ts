@@ -15,7 +15,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-usuario-add',
   imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatIconModule, MatTooltipModule, MatButtonModule, MatSnackBarModule],
-  templateUrl: './usuario-add.component.html'
+  templateUrl: './usuario-add.component.html',
+  styleUrls: ['./usuario-add.component.scss']
 })
 export class UsuarioAddComponent implements OnInit {
 

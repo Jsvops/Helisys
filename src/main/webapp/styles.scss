@@ -3,26 +3,38 @@
 @import 'bootstrap/scss/bootstrap.scss';
 @import 'flatpickr/dist/flatpickr.css';
 
-:root {
-  --icon-color: #D4CFB8;
-}
-
 html, body {
   margin: 0;
   min-height: 100%;
 }
-html {
-  overflow-y: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-html::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
+
 body {
   font-optical-sizing: auto;
 }
+
+//Estos valores quitan todo tipo de border-radios y registra colores a los bordes de tipo boostrap-5
+:root,
+[data-bs-theme="light"],
+[data-bs-theme="dark"] {
+  --bs-border-radius: 0;
+  --bs-border-radius-sm: 0;
+  --bs-border-radius-lg: 0;
+  --bs-border-radius-xl: 0;
+  --bs-border-radius-xxl: 0;
+  --bs-border-radius-2xl: 0;
+  --bs-border-radius-pill: 0;
+  --bs-border-color: #b8b19a;
+}
+// color global para los iconos svg
+:root {
+  --icon-color: #D4CFB8;
+}
+
+.mat-icon {
+  color: var(--icon-color);
+}
+
+//color global para todos los h1
 
 :root {
   --h1-color: #D4CFB8;
@@ -45,13 +57,11 @@ h1,
     align-items: baseline;
 }
 
-.mat-icon {
-  color: var(--icon-color);
-}
+//color global para todas las tablas
 
 .table-pale {
   --bs-table-bg: #D4CFB8;
-  color: #191713;
+  color: #332F27;
 }
 
 
@@ -63,13 +73,19 @@ h1,
 .table-pale th,
 .table-pale td,
 .table-pale tr {
-  color: #191713;
+  color: #332F27;
 }
 
 .table-pale ul,
 .table-pale li {
-  color: #191713;
+  color: #332F27;
 }
+
+.table.table-pale > :not(caption) > * > * {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 
 .cdk-global-overlay-wrapper .cdk-overlay-pane .mat-mdc-snack-bar-container {
   margin-top: 100px !important;
@@ -84,7 +100,6 @@ h1,
   box-shadow: 0 8px 24px rgba(0,0,0,.25);
 }
 
-
 .cdk-global-overlay-wrapper .cdk-overlay-pane
   .mat-mdc-snack-bar-container .mdc-snackbar__label,
 .cdk-global-overlay-wrapper .cdk-overlay-pane
@@ -98,6 +113,7 @@ h1,
   text-align: center;
   justify-content: center;
   max-width: 400px;
+  border: 1px solid #b8b19a;
 }
 
 input.form-control,
@@ -112,14 +128,14 @@ input[type="number"],
 input[type="tel"],
 input[type="email"],
 input[type="password"] {
-  color: #191713 !important;
+  color: #332F27 !important;
 }
 
 .cdk-overlay-container .custom-panel { background-color: #fff; }
-.cdk-overlay-container .custom-panel .mdc-list-item__primary-text { color: #191713 !important; }
+.cdk-overlay-container .custom-panel .mdc-list-item__primary-text { color: #332F27 !important; }
 .cdk-overlay-container .custom-panel .mat-pseudo-checkbox {
-  color: #191713 !important;
-  border-color: #191713 !important;
+  color: #332F27 !important;
+  border-color: #332F27 !important;
   background: transparent !important;
 }
 .cdk-overlay-container .custom-panel .mat-pseudo-checkbox-checked,
@@ -128,16 +144,22 @@ input[type="password"] {
 }
 .cdk-overlay-container .custom-panel .mat-pseudo-checkbox-checked::after,
 .cdk-overlay-container .custom-panel .mat-pseudo-checkbox-indeterminate::after {
-  border-color: #191713 !important;
+  border-color: #332F27 !important;
 }
 
 .form-container {
   background-color: #D4CFB8;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
   padding: 1rem;
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
+}
+
+.form-containers {
+  background-color: #D4CFB8;
   max-width: 500px;
   @media (max-width: 768px) {
-    padding: 1rem;
     max-width: 100%;
   }
 }
@@ -191,11 +213,8 @@ input[type="password"] {
 
   --error-font-size: 13.5px;
     --error-margin-top: 4px;
-
-   --field-border-radius: 8px;
     --field-border-width: 1px;
-    --field-border-color: rgba(0,0,0,.15);
-    --field-border-color-focus: rgba(0,0,0,.35);
+    --field-border-color: #b8b19a;
     --error-color: #db4753;
 }
 
@@ -342,7 +361,7 @@ input[type="password"] {
 
 .confirm-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface {
   background: #D4CFB8;
-  color: #191713;
+  color: #332F27;
   padding: 10px 6px;
 }
 
@@ -350,6 +369,6 @@ input[type="password"] {
   font-size: 1.5rem;
   font-weight: 800;
   line-height: 1.2;
-  color: #191713;
+  color: #332F27;
   letter-spacing: .2px;
 }

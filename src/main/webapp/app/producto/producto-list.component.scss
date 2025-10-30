@@ -1,116 +1,163 @@
+.icon-action{
+  display:inline-flex;
+  align-items:center;
+  gap:.375rem;
+  white-space:nowrap;
+}
+.actions-bar{
+    gap: 0.5rem;
+    background-color:#c8c2a5;
+    border-bottom: 2px solid rgba(51,47,39,.12);
+    padding-top: 5px;
+    }
 
-.filter-controls {
-  display: inline-flex;
-  align-items: center;
-  gap: .75rem;
-  white-space: nowrap;
+.icon-action .action-text{
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 600;
+  color: #332F27;
+  user-select:none;
 }
 
-
-.filter-inline {
-  display: inline-flex;
-  align-items: center;
+.icon-action.is-disabled .action-text{
+  opacity:.5;
 }
 
-.filter-field {
-  min-width: 240px;
-  margin: 0;
+.filter-controls
+.filter-btn.mat-mdc-icon-button,
+.pdf-btn.mat-mdc-icon-button,
+.add-piece-btn.mat-mdc-icon-button{
+  --mdc-icon-button-icon-size: 32px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+  padding:0;
 }
 
-
-.icon-filter {
-  width: 32px; height: 32px;
-  display: inline-flex; align-items: center; justify-content: center;
-  color: #D4CFB8;
-  cursor: pointer;
+.filter-btn mat-icon,
+.pdf-btn   mat-icon,
+.add-piece-btn mat-icon{
+  width:32px;
+  height:32px;
+  line-height:1;
+  color:#332F27;
 }
-.icon-filter:hover { color: #D4CFB8; }
+
+.filter-controls{
+  display:inline-flex;
+  align-items:center;
+  gap:.75rem;
+}
+
+.filter-inline{
+    display:inline-flex;
+    align-items:center; }
 
 .select-shell{
   display:inline-flex; align-items:center;
-  min-height:38px; padding:0 .625rem;
-  border:1px solid var(--bs-border-color, #dee2e6);
-  border-radius:.5rem; background:#fff;
-  transition:border-color .15s, box-shadow .15s;
+  min-height:30px; padding:0 .625rem;
+  border:1px solid var(--bs-border-color);
+  background:#fff;
 }
 
-.select-shell:focus-within{
-  border-color:#0d6efd;
-  box-shadow:0 0 0 .2rem rgba(13,110,253,.25);
+.filter-select{
+    min-width:190px;
 }
 
-.select-shell .mat-mdc-select-trigger{ min-height:1.5rem; }
-.filter-select{ min-width:190px; }
-
-.pdf-btn.mat-mdc-icon-button{
-  width: 40px;
-  height: 40px;
-  --mdc-icon-button-icon-size: 28px;
-  display:inline-flex; align-items:center; justify-content:center;
-  line-height:1; padding:0;
+.hide-keep-space{
+    visibility:hidden;
+    pointer-events:none;
 }
-.pdf-btn .mat-mdc-button-touch-target{ width:40px; height:40px; }
-
-
-.pdf-btn mat-icon{
-  display:block; line-height:1; width:28px; height:28px;
-  color: #D4CFB8;
-}
-.pdf-btn mat-icon svg{
-  width: 100%;
-  height: 100%;
-  display: block;
+.pdf-btn.hide-keep-space{
+    opacity:0;
 }
 
-.hide-keep-space {
-  visibility: hidden;
-  pointer-events: none;
+.table-scroll {
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: rgba(159,159,159,1) #2C2C2C;
+  scrollbar-width: thin;
 }
 
-.pdf-btn.hide-keep-space {
-  opacity: 0;
+.table-scroll .table {
+  margin-bottom: 0;
+  min-width: 100%;
+  width: max-content;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-.list.mat-mdc-icon-button{
-  width: 40px;
-  height: 40px;
-  --mdc-icon-button-icon-size: 28px;
-  display: inline-flex;
-  align-items: flex-end;
-  justify-content: center;
-  line-height: 1;
-  padding: 0;
-}
-
-.list mat-icon{ width:28px; height:28px; font-size:28px; line-height:1; display:block; color: #D4CFB8; }
-
-@media (max-width: 576px){
-  .list.mat-mdc-icon-button{
-    width: 36px; height: 36px;
-    --mdc-icon-button-icon-size: 24px;
-    align-items: center;
-  }
-  .list mat-icon{
-    width: 24px; height: 24px; font-size: 24px;
-  }
-  .list mat-icon svg{ transform: translateY(1px); }
-}
-
-
-.table-scroll-x {
-  overflow-x: auto;                 // scroll horizontal interno
-  -webkit-overflow-scrolling: touch; // suave en móvil
-}
-
-.table-scroll-x .table {
-  margin-bottom: 0;     // que el scroll “pegue” a la tabla
-  min-width: 100%;      // llena contenedor; crece si hay muchas columnas
-  width: max-content;   // permite que la tabla sea más ancha si lo necesita
+.table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--bs-table-bg, #fff);
+  box-shadow: 0 1px 0 rgba(0,0,0,.06);
 }
 
 .span{
     color:#D4CFB8;
     }
+
+@media (min-width: 577px){
+  .actions-bar{
+    padding-inline-end: 1rem;
+  }
+  .add-action{
+    margin-inline-start: auto;
+  }
+}
+
+@media (max-width: 576px){
+
+  .actions-bar{
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+  }
+
+  .filter-controls{ order: 1; }
+  .pdf-action     { order: 2; }
+  .add-action     { order: 3; }
+
+  .actions-bar.no-extra .add-action{ order: 2; }
+  .actions-bar.no-extra .pdf-action{ order: 3; }
+
+  .icon-action{
+    display:flex;
+    align-items:center;
+    width:100%;
+    gap:.5rem;
+  }
+
+  .filter-controls{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:.375rem;
+  }
+  .filter-inline{
+       padding-inline: .75rem;
+  }
+  .select-shell{
+      width:100%;
+  }
+  .filter-select{
+      width:100%;
+      min-width:0;
+  }
+
+  .hide-keep-space{
+    visibility:hidden;
+    pointer-events:none;
+    display:none;
+  }
+}
+
+
 
 
 

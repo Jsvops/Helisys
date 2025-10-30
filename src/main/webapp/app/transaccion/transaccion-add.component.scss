@@ -1,6 +1,49 @@
-.d-flex {
-    align-items: baseline;
+.form-header {
+  background-color: #c8c2a5;
+  border-bottom: 1px solid rgba(51,47,39,.12);
 }
+
+.form-header .icons-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.icons {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.icons-container .mat-mdc-icon-button {
+  --mdc-icon-button-icon-size: 32px;
+  --mdc-icon-button-state-layer-size: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+}
+
+.icons-container mat-icon {
+  width: 32px;
+  height: 32px;
+  line-height: 1;
+  color: #332F27;
+}
+
+.icons-container .action-text {
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 600;
+  color: #332F27;
+  user-select: none;
+}
+
+.form-body { padding: 1rem; }
+
+.req-asterisk { color: #dc3545; }
 
 
 @media (min-width: 768px) {
@@ -9,19 +52,18 @@
   }
 }
 
-mat-icon {
-  color: #D4CFB8;
-}
-
-.req-asterisk { color: #dc3545; }
-
-
 @media (min-width: 577px) {
   .field-row {
     display: flex;
     align-items: center;
     gap: 12px;
+
   }
+
+  .icons-container{
+      padding-right: 0.75rem;
+      padding-left: 0.2rem;
+    }
 
   .field-row .form-label {
     flex: 0 0 175px;
@@ -53,6 +95,11 @@ mat-icon {
       margin-bottom: 0.25rem;
     }
   }
+    .icons-container{
+          padding-right: 0.75rem;
+          padding-left: 0.75rem;
+        }
+
 }
 
 

@@ -1,21 +1,20 @@
-<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+<div class="d-flex flex-wrap mb-2">
     <h1  i18n="@@pedidosCompra.list.headline">Lista de pedidos de compras</h1>
+</div>
 
-    <div>
+    <div class="icon-container mb-2">
+        <div class="icon d-flex align-items-center ms-auto">
         <button
             mat-icon-button
             routerLink="/pedidosCompras/add"
-            matTooltip="Añadir pedido de compra"
-            matTooltipPosition="right"
-            [matTooltipClass]="'tooltip-pale'"
             aria-label="Añadir pedido de compra"
         >
             <mat-icon svgIcon="add_box"></mat-icon>
-
         </button>
+        <span id="labelList" class="action-text">Añadir pedido de compra</span>
+        </div>
     </div>
 
-</div>
 @if (!pedidosCompras || pedidosCompras.length === 0) {
 <div i18n="@@pedidosCompra.list.empty">No se pudo encontrar los pedidos de compras</div>
 } @else {

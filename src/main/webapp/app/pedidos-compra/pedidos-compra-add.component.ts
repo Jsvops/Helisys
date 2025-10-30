@@ -15,7 +15,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-pedidos-compra-add',
   imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatIconModule, MatTooltipModule, MatButtonModule, MatSnackBarModule],
-  templateUrl: './pedidos-compra-add.component.html'
+  templateUrl: './pedidos-compra-add.component.html',
+  styleUrls: ['./pedidos-compra-add.component.scss']
 })
 export class PedidosCompraAddComponent {
 

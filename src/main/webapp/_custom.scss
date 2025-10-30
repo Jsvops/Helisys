@@ -1,10 +1,10 @@
-$body-color: #191713;
+$body-color: #332F27;
 $link-color: $body-color;
 $input-btn-focus-width: 0.1rem;
-$texto-principal: #191713;
+$texto-principal: #332F27;
 $texto-secundario: #D4CFB8;
 $fondo-menu: #D4CFB8;
-$fondo-footer: #191713;
+$fondo-footer: #332F27;
 $font-family-sans-serif: "Roboto Flex", system-ui, -apple-system, "Segoe UI",
   Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
 $font-family-base: $font-family-sans-serif;
@@ -15,7 +15,6 @@ $fw-semibold: 600;
 $fw-bold: 700;
 
 $font-weight-base: $fw-medium;
-
 
 @mixin font-roboto-flex($weight: 400) {
   font-weight: $weight;

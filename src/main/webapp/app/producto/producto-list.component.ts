@@ -15,13 +15,22 @@ import { MatOptionModule } from '@angular/material/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { ElementRef, ViewChild } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
+@Pipe({ name: 'na', standalone: true })
+export class NaPipe implements PipeTransform {
+  transform(value: unknown, fallback = 'N/A'): string {
+    if (value === null || value === undefined) return fallback;
+    const str = String(value).trim();
+    return str.length ? str : fallback;
+  }
+}
 
 
 
 @Component({
   selector: 'app-producto-list',
-  imports: [CommonModule, RouterLink, FormsModule, MatIconModule, MatTooltipModule, MatSelectModule, MatOptionModule, MatButtonModule],
+  imports: [CommonModule, RouterLink, FormsModule, MatIconModule, MatTooltipModule, MatSelectModule, MatOptionModule, MatButtonModule,  NaPipe],
   templateUrl: './producto-list.component.html',
   styleUrls: ['./producto-list.component.scss'],
   animations: [
@@ -51,7 +60,7 @@ export class ProductoListComponent implements OnInit, OnDestroy {
   productos: ProductResponseDTO[] = [];
   totalItems = 0;
   page = 0;
-  size = 10;
+  size = 30;
   modeloAeronaveId?: number;
   modelosAeronave: ModeloAeronaveDTO[] = [];
   Math = Math;
@@ -141,18 +150,6 @@ export class ProductoListComponent implements OnInit, OnDestroy {
     });
   }
 
-    onWheelX(ev: WheelEvent) {
-      const el = this.scrollRegion?.nativeElement;
-      if (!el) return;
-
-      const canScrollX = el.scrollWidth > el.clientWidth;
-      if (!canScrollX) return;
-
-      if (Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) {
-        ev.preventDefault();
-        el.scrollLeft += ev.deltaY;
-      }
-    }
 
   confirmDelete(proId: number) {
     if (confirm(this.getMessage('confirm'))) {

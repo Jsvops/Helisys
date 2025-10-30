@@ -147,7 +147,7 @@ export class ProductoAddComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         if (err?.status === 409) {
           this.snackBar.open('Ya existe una pieza con ese número de parte ℹ️', '', {
-            duration: 4000,
+            duration: 7000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
             panelClass: ['snackbar-error', 'snackbar-offset']

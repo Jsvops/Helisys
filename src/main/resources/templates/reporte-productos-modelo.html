@@ -61,6 +61,10 @@
             margin-top: 40px;
         }
 
+        .text-center {
+            text-align: center !important;
+        }
+
     </style>
 </head>
 <body>
@@ -72,29 +76,29 @@
     <table th:class="${stat.index == 0} ? 'tabla-primera-hoja' : ''">
     <thead>
         <tr>
-            <th>Número de Parte</th>
-            <th>Nombre</th>
-            <th>Número Parte Alterno</th>
-            <th>Número Serie</th>
-            <th>Unidades</th>
-            <th>Tipo Documento</th>
-            <th>Tipo Producto</th>
-            <th>Ubicacion</th>
-            <th>Proveedor</th>
-            <th>Modelos Aeronave</th>
+            <th class="text-center">Número de Parte</th>
+            <th class="text-center">Nombre</th>
+            <th class="text-center">Número Parte Alterno</th>
+            <th class="text-center">Número Serie</th>
+            <th class="text-center">Unidades</th>
+            <th class="text-center">Tipo Documento</th>
+            <th class="text-center">Tipo Producto</th>
+            <th class="text-center">Ubicacion</th>
+            <th class="text-center">Proveedor</th>
+            <th class="text-center">Modelos Aeronave</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="producto : ${pagina}">
-            <td th:text="${producto.proNumeroParte}"></td>
-            <td th:text="${producto.proNombre}"></td>
-            <td th:text="${producto.proNumeroParteAlterno}"></td>
-            <td th:text="${producto.proNumeroSerie}"></td>
-            <td th:text="${producto.proUnidades}"></td>
-            <td th:text="${producto.proTipoDocumento}"></td>
-            <td th:text="${producto.proTpoNombre}"></td>
-            <td th:text="${producto.proAmcNombre}"></td>
-            <td th:text="${producto.proPveNombre}"></td>
+            <td class="text-center" th:text="${producto.proNumeroParte}"></td>
+            <td class="text-center" th:text="${producto.proNombre}"></td>
+            <td class="text-center" th:text="${#strings.isEmpty(producto.proNumeroParteAlterno) ? 'N/A' : producto.proNumeroParteAlterno}"></td>
+            <td class="text-center" th:text="${producto.proNumeroSerie}"></td>
+            <td class="text-center" th:text="${producto.proUnidades}"></td>
+            <td class="text-center" th:text="${producto.proTipoDocumento}"></td>
+            <td class="text-center" th:text="${producto.proTpoNombre}"></td>
+            <td class="text-center" th:text="${producto.proAmcNombre}"></td>
+            <td class="text-center" th:text="${producto.proPveNombre}"></td>
             <td>
                 <ul>
                     <li th:each="modelo : ${producto.modeloAeronaveNombres}" th:text="${modelo}">Bell 206</li>

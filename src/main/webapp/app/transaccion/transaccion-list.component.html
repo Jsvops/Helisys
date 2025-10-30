@@ -1,93 +1,92 @@
-<div class="d-flex flex-wrap mb-2 gap-2 header-bar">
+<div class="d-flex flex-wrap mb-2">
     <h1 i18n="@@transaccion.list.headline">Lista de transacciones</h1>
-
-    <div>
-        <button
-            mat-icon-button
-            routerLink="/transacciones/add"
-            matTooltip="Añadir pieza"
-            matTooltipPosition="right"
-            [matTooltipClass]="'tooltip-pale'"
-            aria-label="Añadir transaccion"
-        >
-            <mat-icon svgIcon="add_box"></mat-icon>
-
-        </button>
-    </div>
 </div>
 
-    <form class="row row-cols-auto mb-2 search-form" #f="ngForm">
-        <h5 class="filters__title col-12">Filtro por fechas</h5>
+<form class="search-form mb-2 " #f="ngForm">
+    <h5 class="filters-title col-12">Filtro por fechas</h5>
 
-        <div class="col-12 col-sm-auto">
-            <label class="form-label" for="fechaInicio">Desde:</label>
-            <input
-                id="fechaInicio"
-                type="date"
-                class="form-control input-220"
-                name="fechaInicio"
-                [(ngModel)]="fechaInicio"
-                required
-                #fi="ngModel"
-            >
-            <div class="error-slot" aria-live="polite">
-                <small class="text-danger" [class.invisible]="!(fi.invalid && fi.touched)">
-                    Este campo es obligatorio
-                </small>
-            </div>
+    <div class="d-flex gap-3">
+    <div class="col-sm-auto">
+        <label class="form-label" for="fechaInicio">Desde:</label>
+        <input
+            id="fechaInicio"
+            type="date"
+            class="form-control inputs"
+            name="fechaInicio"
+            [(ngModel)]="fechaInicio"
+            required
+            #fi="ngModel"
+        >
+        <div class="error-slot" aria-live="polite">
+            <small class="text-danger" [class.invisible]="!(fi.invalid && fi.touched)">
+                Este campo es obligatorio
+            </small>
         </div>
+    </div>
 
-        <div class="col-12 col-sm-auto">
-            <label class="form-label" for="fechaFin">Hasta:</label>
-            <input
-                id="fechaFin"
-                type="date"
-                class="form-control input-220"
-                name="fechaFin"
-                [(ngModel)]="fechaFin"
-                required
-                #ff="ngModel"
-            >
-            <div class="error-slot" aria-live="polite">
-                <small class="text-danger" [class.invisible]="!(ff.invalid && ff.touched)">
-                    Este campo es obligatorio
-                </small>
-            </div>
+    <div class="col-sm-auto">
+        <label class="form-label" for="fechaFin">Hasta:</label>
+        <input
+            id="fechaFin"
+            type="date"
+            class="form-control inputs"
+            name="fechaFin"
+            [(ngModel)]="fechaFin"
+            required
+            #ff="ngModel"
+        >
+        <div class="error-slot" aria-live="polite">
+            <small class="text-danger" [class.invisible]="!(ff.invalid && ff.touched)">
+                Este campo es obligatorio
+            </small>
         </div>
+    </div>
 
-        <div class="col-12 col-sm-auto d-flex flex-row flex-sm-column align-items-center gap-2 flex-nowrap">
+    <div class="d-flex align-items-center gap-2 w-100 justify-content-between">
+
+        <div class="icon-action">
             <button
                 mat-icon-button
-                [matTooltip]="filtroActivo ? 'Limpiar filtro' : 'Filtrar'"
-                matTooltipPosition="right"
-                [matTooltipClass]="'tooltip-pale'"
-                aria-label="Filtrar"
+                [attr.aria-label]="filtroActivo ? 'Limpiar filtro' : 'Filtrar'"
                 (click)="onClickFiltro(f)"
-            class="search-icon-btn"
-            >
-            <mat-icon [svgIcon]="filtroActivo ? 'filter_alt_off' : 'filter_alt'"></mat-icon>
+                class="filter-btn">
+                <mat-icon [svgIcon]="filtroActivo ? 'filter_alt_off' : 'filter_alt'"></mat-icon>
             </button>
+            <span class="action-label">{{ filtroActivo ? 'Limpiar filtro' : 'Filtrar' }}</span>
+        </div>
 
+        <div class="icon-action">
             <button
                 mat-icon-button
                 (click)="generarReporte()"
-                matTooltip="Generar reporte"
-                matTooltipPosition="right"
-                [matTooltipClass]="'tooltip-pale'"
-                aria-label="Generar PDF"
-            >
+                aria-label="Generar reporte"
+                class="pdf-btn">
                 <mat-icon svgIcon="assignment"></mat-icon>
             </button>
-
+            <span class="action-label">Generar reporte</span>
         </div>
 
-    </form>
+        <div class="icon-action ml-auto">
+            <button
+                type="button"
+                mat-icon-button
+                routerLink="/transacciones/add"
+                aria-label="Añadir transaccion"
+                class="add-transaction-btn">
+                <mat-icon svgIcon="add_box"></mat-icon>
+            </button>
+            <span class="action-label">Añadir transacción</span>
+        </div>
+
+        </div>
+    </div>
+</form>
 
 
 
 
-<div class="table-responsive">
-    <table class="table table-striped table-hover align-middle table-pale">
+<div class="table-responsive table-scroll">
+    <table class="table table-striped align-middle table-pale">
         <thead>
         <tr>
             <th scope="col" i18n="@@transaccion.productoNumeroParte.label">Número de parte</th>
@@ -105,10 +104,10 @@
             <td>{{ transaccion.productoNumeroParte }}</td>
             <td>{{ transaccion.eventoNombre }}</td>
             <td>{{ transaccion.unidades }}</td>
-            <td>{{ transaccion.aeronaveMatricula }}</td>
+            <td>{{ transaccion.aeronaveMatricula | na }}</td>
             <td>{{ transaccion.tceFechaTransaccion | date:'dd/MM/yyyy' }}</td>
             <td>{{ transaccion.usuarioNombre }}</td>
-            <td>{{ transaccion.tceObservaciones }}</td>
+            <td>{{ transaccion.tceObservaciones | na }}</td>
 
         </tr>
         }
@@ -120,7 +119,7 @@
     <button class="btn btn-primary me-2" (click)="previousPage()" [disabled]="page === 0" i18n="@@pagination.previous">
         Anterior
     </button>
-    <span class="align-self-center span_color">Página {{ page + 1 }} de {{ totalPages }}</span>
+    <span class="align-self-center span-color">Página {{ page + 1 }} de {{ totalPages }}</span>
     <button class="btn btn-primary ms-2" (click)="nextPage()" [disabled]="(page + 1) >= totalPages" i18n="@@pagination.next">
         Siguiente
     </button>

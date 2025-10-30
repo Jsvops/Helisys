@@ -1,36 +1,45 @@
-<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+<div class="d-flex flex-wrap mb-2">
     <h1 i18n="@@proveedor.add.headline">Añadir proveedor</h1>
-    <div>
-        <button
-            mat-icon-button
-            routerLink="/proveedores"
-            matTooltip="Lista de proveedores"
-            matTooltipPosition="right"
-            [matTooltipClass]="'tooltip-pale'"
-            aria-label="Lista de proveedores"
-        >
-            <mat-icon svgIcon="list_alt"></mat-icon>
-
-        </button>
-    </div>
-
 </div>
-<div class="form-container">
-<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
-    <app-input-row [group]="addForm" field="pveNombre" i18n-label="@@proveedor.pveNombre.label" label="Nombre" />
-    <app-input-row [group]="addForm" field="pveTelefono" i18n-label="@@proveedor.pveTelefono.label" label="Télefono" />
-    <app-input-row [group]="addForm" field="pveFax" i18n-label="@@proveedor.pveFax.label" label="Fax" />
-    <app-input-row [group]="addForm" field="pveEmail" i18n-label="@@proveedor.pveEmail.label" label="Email" />
-    <app-input-row [group]="addForm" field="pveDireccion" i18n-label="@@proveedor.pveDireccion.label" label="Dirección" />
-    <app-input-row [group]="addForm" field="pveCiudad" i18n-label="@@proveedor.pveCiudad.label" label="Ciudad" />
-    <app-input-row [group]="addForm" field="pvePais" i18n-label="@@proveedor.pvePais.label" label="País" />
 
-    <div class="text-end mt-3">
-        <input type="submit"
-               i18n-value="@@proveedor.add.headline"
-               value="Guardar"
-               class="btn btn-primary" />
+    <div class="form-containers">
+
+        <div class="form-header">
+
+            <div class="icon-container">
+
+                <div class="icon d-flex align-items-center ms-auto">
+                    <button
+                        mat-icon-button
+                        routerLink="/proveedores"
+                        aria-label="Lista de proveedores"
+                    >
+                        <mat-icon svgIcon="list_alt"></mat-icon>
+                    </button>
+                    <span id="labelList" class="action-text">Lista de proveedores</span>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-body">
+            <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+                <app-input-row [group]="addForm" field="pveNombre" i18n-label="@@proveedor.pveNombre.label" label="Nombre" />
+                <app-input-row [group]="addForm" field="pveTelefono" i18n-label="@@proveedor.pveTelefono.label" label="Télefono" />
+                <app-input-row [group]="addForm" field="pveFax" i18n-label="@@proveedor.pveFax.label" label="Fax" />
+                <app-input-row [group]="addForm" field="pveEmail" i18n-label="@@proveedor.pveEmail.label" label="Email" />
+                <app-input-row [group]="addForm" field="pveDireccion" i18n-label="@@proveedor.pveDireccion.label" label="Dirección" />
+                <app-input-row [group]="addForm" field="pveCiudad" i18n-label="@@proveedor.pveCiudad.label" label="Ciudad" />
+                <app-input-row [group]="addForm" field="pvePais" i18n-label="@@proveedor.pvePais.label" label="País" />
+
+                <div class="text-end mt-3">
+                    <input type="submit"
+                           i18n-value="@@proveedor.add.headline"
+                           value="Guardar"
+                           class="btn btn-primary" />
+                </div>
+
+            </form>
+        </div>
     </div>
-
-</form>
-</div>

@@ -11,9 +11,9 @@
   --table-min-width: 520px;
 
   --scrollbar-w: 8px;
-  --scrollbar-thumb: rgba(255, 255, 255, 0.28);
+  --scrollbar-thumb: rgba(12, 12, 12, 0.51);
   --scrollbar-thumb-hover: rgba(255, 255, 255, 0.42);
-  --scrollbar-track: transparent;
+  --scrollbar-track: #2C2C2C;
 }
 
 .narrow {
@@ -24,10 +24,9 @@
 }
 
 .card {
-  border: 1px solid #2a2a2a;
   overflow: hidden;
-  background: #191713;
-  color: #D4CFB8;
+  background: #D4CFB8;
+  color: #332F27;
   font-size: var(--fs-base);
   line-height: 1.25;
   text-align: center;
@@ -39,7 +38,8 @@
   align-items: center;
   gap: 8px;
   padding: 8px 10px;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid rgba(25, 23, 19, 0.12);
+  background:#c8c2a5;
 }
 
 .title { margin: 0; font-size: var(--fs-title); font-weight: 700; }
@@ -53,33 +53,33 @@
   overflow-x: hidden;
   margin: 0 auto;
   width: 100%;
-  padding-right: var(--scrollbar-w);
-  scrollbar-gutter: stable both-edges;
+}
+
+.tbl-wrap {
+  scrollbar-color: rgba(159,159,159,1) #2C2C2C;  // thumb | track
+  scrollbar-width: thin;
 }
 
 .tbl {
   width: 100%;
   min-width: var(--table-min-width);
   border-collapse: collapse;
-  table-layout: fixed;
-  margin-right: calc(var(--scrollbar-w) * -1);
 }
 
 .tbl thead th {
   position: sticky;
   top: 0;
   z-index: 2;
-  background: #191713;
-  color: #D4CFB8;
+  background: #D4CFB8;
+  color: #332F27;
   font-weight: 700;
 }
 
 .tbl th,
 .tbl td {
   padding: var(--cell-pad-y) var(--cell-pad-x);
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #b8b19a;
   text-align: center;
-  white-space: nowrap;
 }
 
 :host { --units-col-w: 80px; }
@@ -92,7 +92,7 @@
 }
 
 .name {
-  color: #D4CFB8;
+  color: #332F27;
   font-size: var(--fs-base);
   max-width: 240px;
   overflow: hidden;
@@ -100,53 +100,35 @@
 }
 .pn,
 .date,
-.qty {
-  color: #D4CFB8;
+.qty,
+.date,
+.days,
+.status{
+  color: #332F27;
   font-variant-numeric: tabular-nums;
   font-size: var(--fs-small);
 }
-.days { font-size: var(--fs-small); }
-.status { font-size: var(--fs-small); font-weight: 700; }
+// .days { font-size: var(--fs-small); }
+// .status { font-size: var(--fs-small); font-weight: 700; }
 
-.pill {
-  padding: 2px 6px;
-  border-radius: 10px;
-  font-weight: 700;
-  display: inline-block;
-}
-.pill--rojo     { background: #b71c1c; color: #ffd6d6; }
-.pill--amarillo { background: #f59e0b; color: #1b1b1b; }
-.pill--verde    { background: #1b5e20; color: #d0ffd0; }
+// .pill {
+//   padding: 2px 6px;
+//   border-radius: 10px;
+//   font-weight: 700;
+//   display: inline-block;
+// }
+// .pill--rojo     { background: #b71c1c; color: #ffd6d6; }
+// .pill--amarillo { background: #f59e0b; color: #1b1b1b; }
+// .pill--verde    { background: #1b5e20; color: #d0ffd0; }
+//
+// .status--rojo     { color: #ff6b6b; }
+// .status--amarillo { color: #ffd166; }
+// .status--verde    { color: #98e699; }
 
-.status--rojo     { color: #ff6b6b; }
-.status--amarillo { color: #ffd166; }
-.status--verde    { color: #98e699; }
+.row--rojo     { background: rgba(183, 28, 28, 0.37); }
+.row--amarillo { background: rgba(245, 158, 11, 0.3); }
+.row--verde    { background: rgba(27, 94, 32, 0.27); }
 
-.row--rojo     { background: rgba(183, 28, 28, 0.04); }
-.row--amarillo { background: rgba(245, 158, 11, 0.04); }
-.row--verde    { background: rgba(27, 94, 32, 0.04); }
-
-
-.tbl-wrap {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-}
-
-.tbl-wrap::-webkit-scrollbar {
-  width: var(--scrollbar-w);
-  height: 0;
-}
-.tbl-wrap::-webkit-scrollbar-track { background: var(--scrollbar-track); }
-.tbl-wrap::-webkit-scrollbar-thumb {
-  background-clip: padding-box;
-  border: 2px solid transparent;
-  border-radius: 8px;
-  background-color: var(--scrollbar-thumb);
-}
-.tbl-wrap:hover::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb-hover);
-}
-.tbl-wrap::-webkit-scrollbar-corner { background: transparent; }
 
 @media (max-width: 640px) {
   .tbl { min-width: 0; }
@@ -164,38 +146,8 @@
     margin-right: 0;
   }
 
-  .tbl-wrap {
-    overflow-x: auto;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-x pan-y;
-    cursor: grab;
-    padding-right: 0;
-  }
-  .tbl-wrap:active { cursor: grabbing; }
+  .tbl-wrap { overflow-x: auto; }
 
 }
 
-@media (max-width: 640px) {
-  .tbl th,
-  .tbl td {
-    padding: 10px 14px;
-  }
-
-  .tbl {
-    min-width: 680px;
-    margin-right: 0;
-  }
-
-  .tbl-wrap {
-    overflow-x: auto;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-x pan-y;
-    cursor: grab;
-    padding-right: 0;
-  }
-  .tbl-wrap:active { cursor: grabbing; }
-
-}
 

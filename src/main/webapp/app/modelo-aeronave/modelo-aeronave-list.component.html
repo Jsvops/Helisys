@@ -1,21 +1,18 @@
-<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+<div class="d-flex flex-wrap mb-2">
     <h1 i18n="@@modeloAeronave.list.headline">Lista de los modelo de aeronaves</h1>
-
-    <div>
-        <button
-            mat-icon-button
-            routerLink="/modeloAeronaves/add"
-            matTooltip="Añadir modelo"
-            matTooltipPosition="right"
-            [matTooltipClass]="'tooltip-pale'"
-            aria-label="Añadir modelo "
-        >
-            <mat-icon svgIcon="add_box"></mat-icon>
-
-        </button>
-    </div>
-
 </div>
+
+    <div class="icon-container mb-2">
+        <div class="icon d-flex align-items-center ms-auto">
+            <button
+                mat-icon-button
+                routerLink="/modeloAeronaves/add"
+                aria-label="Añadir modelo ">
+                <mat-icon svgIcon="add_box"></mat-icon>
+            </button>
+            <span id="labelList" class="action-text">Añadir modelo de aeronaves</span>
+        </div>
+    </div>
 
 @if (!modeloAeronaves || modeloAeronaves.length === 0) {
 <div i18n="@@modeloAeronave.list.empty">No Modelo Aeronaves could be found.</div>

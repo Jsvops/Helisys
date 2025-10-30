@@ -1,33 +1,41 @@
-<div class="d-flex flex-wrap mb-4 header-bar gap-2">
-    <h1 i18n="@@aeronave.add.headline">Añadir aeronave</h1>
-    <div>
-        <button
-            mat-icon-button
-            routerLink="/aeronaves"
-            matTooltip="Lista de aeronaves"
-            matTooltipPosition="right"
-            [matTooltipClass]="'tooltip-pale'"
-            aria-label="Lista de aeronaves"
-        >
-            <mat-icon svgIcon="list_alt"></mat-icon>
-
-        </button>
+    <div class="d-flex flex-wrap mb-2 ">
+        <h1 i18n="@@aeronave.add.headline">Añadir aeronave</h1>
     </div>
 
-</div>
-<div class="form-container">
-<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
-    <app-input-row [group]="addForm" field="anvMatricula" i18n-label="@@aeronave.anvMatricula.label" label="Matricula" />
-    <app-input-row [group]="addForm" field="anvNumeroSerie" i18n-label="@@aeronave.anvNumeroSerie.label" label="Numero de serie" />
-    <app-input-row [group]="addForm" field="anvFabricacion" i18n-label="@@aeronave.anvFabricacion.label" label="Fabricación" />
-    <app-input-row [group]="addForm" field="anvMre" rowType="select" [options]="anvMreValues" i18n-label="@@aeronave.anvMre.label" label="Modelo de aeronave" />
+    <div class="form-containers">
+        <div class="form-header">
 
-    <div class="text-end mt-3">
-        <input type="submit"
-               i18n-value="@@aeronave.add.headline"
-               value="Guardar"
-               class="btn btn-primary" />
+            <div class="icon-container">
+
+                <div class="icon d-flex align-items-center ms-auto">
+                        <button
+                            mat-icon-button
+                            routerLink="/aeronaves"
+                            aria-label="Lista de aeronaves"
+                        >
+                            <mat-icon svgIcon="list_alt"></mat-icon>
+
+                        </button>
+                        <span id="labelList" class="action-text">Lista de aeronaves</span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-body">
+            <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+                <app-input-row [group]="addForm" field="anvMatricula" i18n-label="@@aeronave.anvMatricula.label" label="Matricula" />
+                <app-input-row [group]="addForm" field="anvNumeroSerie" i18n-label="@@aeronave.anvNumeroSerie.label" label="Numero de serie" />
+                <app-input-row [group]="addForm" field="anvFabricacion" i18n-label="@@aeronave.anvFabricacion.label" label="Fabricación" />
+                <app-input-row [group]="addForm" field="anvMre" rowType="select" [options]="anvMreValues" i18n-label="@@aeronave.anvMre.label" label="Modelo de aeronave" />
+
+                <div class="text-end mt-3">
+                    <input type="submit"
+                           i18n-value="@@aeronave.add.headline"
+                           value="Guardar"
+                           class="btn btn-primary" />
+                </div>
+
+            </form>
+        </div>
     </div>
-
-</form>
-</div>

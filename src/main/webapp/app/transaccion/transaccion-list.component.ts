@@ -12,11 +12,21 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatButtonModule } from '@angular/material/button';
 import { NgForm } from '@angular/forms';
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({ name: 'na', standalone: true })
+export class NaPipe implements PipeTransform {
+  transform(value: unknown, fallback = 'N/A'): string {
+    if (value === null || value === undefined) return fallback;
+    const str = String(value).trim();
+    return str.length ? str : fallback;
+  }
+}
 
 @Component({
   selector: 'app-transaccion-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, MatIconModule, MatTooltipModule, MatButtonModule],
+  imports: [CommonModule, RouterLink, FormsModule, MatIconModule, MatTooltipModule, MatButtonModule, NaPipe],
   templateUrl: './transaccion-list.component.html',
   styleUrls: ['./transaccion-list.component.scss'],
 
@@ -33,7 +43,7 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
   filtroActivo = false;
   navigationSubscription?: Subscription;
   page = 0;
-  size = 10;
+  size = 30;
   total = 0;
   totalPages = 0;
   fechaInicio: string | null = null;

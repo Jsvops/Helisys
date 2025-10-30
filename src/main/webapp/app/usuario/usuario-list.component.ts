@@ -14,7 +14,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-usuario-list',
   imports: [CommonModule, RouterLink, MatIconModule, MatTooltipModule, MatButtonModule, MatSnackBarModule],
-  templateUrl: './usuario-list.component.html'})
+  templateUrl: './usuario-list.component.html',
+  styleUrls: ['./usuario-list.component.scss']
+  })
 export class UsuarioListComponent implements OnInit, OnDestroy {
 
   usuarioService = inject(UsuarioService);

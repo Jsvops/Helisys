@@ -2,7 +2,7 @@ export interface ProductResponseDTO {
   proId: number;
   proNumeroParte: string;
   proNombre: string;
-  proNumeroParteAlterno: string;
+  proNumeroParteAlterno: string | null;
   proNumeroSerie: string;
   proUnidades: number;
   proTipoDocumento: string;

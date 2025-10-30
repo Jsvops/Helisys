@@ -58,6 +58,16 @@ tasks.register('npmRunBuild', NpmTask) {
     outputs.dir(layout.buildDirectory.dir('angular'))
 }
 
+tasks.named('npmRunBuild', NpmTask).configure {
+    inputs.files(fileTree('src/main/webapp'))
+    inputs.file('angular.json')
+    inputs.file('package.json')
+    inputs.file('tsconfig.json')
+    inputs.file('tsconfig.app.json')
+    outputs.dir(layout.buildDirectory.dir('angular/browser'))
+}
+
+
 def generatedResourcesDir = "$buildDir/generated-resources/main"
 
 tasks.register('prepareFrontendResources', Copy) {
@@ -66,12 +76,22 @@ tasks.register('prepareFrontendResources', Copy) {
     into("$generatedResourcesDir/static")
 }
 
+tasks.named('prepareFrontendResources', Copy).configure {
+    outputs.dir("$buildDir/generated-resources/main/static")
+}
+
 sourceSets {
     main { resources { srcDir(generatedResourcesDir) } }
 }
 
 tasks.named('processResources') { dependsOn 'prepareFrontendResources' }
 
+tasks.named('bootRun') {
+    dependsOn 'prepareFrontendResources', 'processResources'
+}
+
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
+
+

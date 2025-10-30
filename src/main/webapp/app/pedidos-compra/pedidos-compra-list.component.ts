@@ -15,7 +15,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-pedidos-compra-list',
   imports: [CommonModule, RouterLink,MatIconModule, MatTooltipModule, MatButtonModule, MatSnackBarModule],
-  templateUrl: './pedidos-compra-list.component.html'})
+  templateUrl: './pedidos-compra-list.component.html',
+  styleUrls: ['./pedidos-compra-list.component.scss'],
+  })
 export class PedidosCompraListComponent implements OnInit, OnDestroy {
 
   pedidosCompraService = inject(PedidosCompraService);

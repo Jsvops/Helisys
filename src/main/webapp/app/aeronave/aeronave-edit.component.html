@@ -1,21 +1,7 @@
 <div class="d-flex flex-wrap mb-4 header-bar gap-2">
     <h1 i18n="@@aeronave.edit.headline">Editar la aeronave</h1>
-    <div>
-        <button
-            mat-icon-button
-            routerLink="/aeronaves"
-            matTooltip="Lista de las aeronaves"
-            matTooltipPosition="right"
-            [matTooltipClass]="'tooltip-pale'"
-            aria-label="Lista de las aeroanves"
-        >
-            <mat-icon svgIcon="list_alt"></mat-icon>
-
-        </button>
-    </div>
-
-
 </div>
+
 <div class="form-container">
 <form [formGroup]="editForm" (ngSubmit)="handleSubmit()">
     <app-input-row [group]="editForm" field="anvMatricula" i18n-label="@@aeronave.anvMatricula.label" label="Matricula" />

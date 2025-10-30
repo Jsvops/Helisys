@@ -126,8 +126,11 @@
             <td class="text-center table-cell" th:text="${transaccion['tcoUnidades']}"></td>
             <td class="text-center table-cell" th:text="${transaccion['tceUsrNombre']}"></td>
             <td class="text-center table-cell" th:text="${transaccion['tceFechaTransaccion'] != null ? #dates.format(transaccion['tceFechaTransaccion'], 'yyyy-MM-dd') : 'N/A'}"></td>
-            <td class="text-center table-cell" th:text="${transaccion['tceObservaciones']}"></td>
-            <td class="text-center table-cell" th:text="${transaccion['tceAnvMatricula']}"></td>
+            <td class="text-center table-cell"
+                th:text="${#strings.isEmpty(transaccion['tceObservaciones']) ? 'N/A' : transaccion['tceObservaciones']}"></td>
+
+            <td class="text-center table-cell"
+                th:text="${#strings.isEmpty(transaccion['tceAnvMatricula']) ? 'N/A' : transaccion['tceAnvMatricula']}"></td>
         </tr>
         </tbody>
     </table>

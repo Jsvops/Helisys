@@ -1,20 +1,5 @@
-<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+<div class="d-flex flex-wrap mb-2">
     <h1 i18n="@@proveedor.edit.headline">Editar proveedor</h1>
-
-    <div>
-        <button
-            mat-icon-button
-            routerLink="/proveedores"
-            matTooltip="Lista de proveedores"
-            matTooltipPosition="right"
-            [matTooltipClass]="'tooltip-pale'"
-            aria-label="Lista de proveedores"
-        >
-            <mat-icon svgIcon="list_alt"></mat-icon>
-
-        </button>
-    </div>
-
 </div>
 <div class="form-container">
 <form [formGroup]="editForm" (ngSubmit)="handleSubmit()">

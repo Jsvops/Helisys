@@ -1,23 +1,20 @@
-<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+<div class="d-flex flex-wrap mb-2">
     <h1 i18n="@@usuario.list.headline">Lista de usuarios</h1>
+</div>
 
-    <div>
+    <div class="icon-container mb-2">
+        <div class="icon d-flex align-items-center ms-auto">
         <button
             mat-icon-button
             routerLink="/usuarios/add"
-            matTooltip="Añadir usuario"
-            matTooltipPosition="right"
-            [matTooltipClass]="'tooltip-pale'"
             aria-label="Añadir usuario "
         >
             <mat-icon svgIcon="add_box"></mat-icon>
-
         </button>
+        <span id="labelList" class="action-text">Añadir usuario</span>
+        </div>
     </div>
 
-
-
-</div>
 @if (!usuarios || usuarios.length === 0) {
 <div i18n="@@usuario.list.empty">No Usuarios could be found.</div>
 } @else {
@@ -47,8 +44,8 @@
                 <td>{{ usuario.usrCargo }}</td>
                 <td>
                     <div class="text-nowrap">
-                        <a [routerLink]="['/usuarios/edit', usuario.usrId]" class="btn btn-sm btn-secondary" i18n="@@usuario.list.edit">Edit</a>
-                        <button type="button" (click)="confirmDelete(usuario.usrId!)" class="btn btn-sm btn-secondary" i18n="@@usuario.list.delete">Delete</button>
+                        <a [routerLink]="['/usuarios/edit', usuario.usrId]" class="btn btn-sm btn-secondary" i18n="@@usuario.list.edit">Editar</a>
+                        <button type="button" (click)="confirmDelete(usuario.usrId!)" class="btn btn-sm btn-secondary" i18n="@@usuario.list.delete">Eliminar</button>
                     </div>
                 </td>
             </tr>

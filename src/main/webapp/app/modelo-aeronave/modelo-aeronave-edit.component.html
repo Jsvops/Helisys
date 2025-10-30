@@ -1,18 +1,5 @@
-<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+<div class="d-flex flex-wrap mb-2 header-bar gap-2">
     <h1 i18n="@@modeloAeronave.edit.headline">Editar el modelo aeronave</h1>
-    <div>
-        <button
-            mat-icon-button
-            routerLink="/modeloAeronaves"
-            matTooltip="Lista de los modelos de aeroanves"
-            matTooltipPosition="right"
-            [matTooltipClass]="'tooltip-pale'"
-            aria-label="Lista de los modelos de aeroanves"
-        >
-            <mat-icon svgIcon="list_alt"></mat-icon>
-
-        </button>
-    </div>
 </div>
 <div class="form-container">
 <form [formGroup]="editForm" (ngSubmit)="handleSubmit()">

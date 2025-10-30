@@ -21,6 +21,15 @@
             <div class="collapse navbar-collapse" id="navbarToggle">
                 <ul class="navbar-nav ms-auto align-items-center flex-row flex-nowrap">
                     <li class="nav-item">
+                        <span class="navbar-text px-2 d-flex align-items-center gap-1">
+                            <mat-icon svgIcon="account_circle"
+                                      class="user-icon"
+                                      aria-hidden="true">
+                            </mat-icon>
+                        <span>Usuario: {{ userName }}</span>
+                        </span>
+                    </li>
+                    <li class="nav-item">
                         <a
                             routerLink="/"
                             class="nav-link d-flex align-items-center"
@@ -30,15 +39,6 @@
                         >
                             <mat-icon svgIcon="home" class="me-1" aria-hidden="true"></mat-icon>
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <span class="navbar-text px-2 d-flex align-items-center gap-1">
-                            <mat-icon svgIcon="account_circle"
-                                      class="user-icon"
-                                      aria-hidden="true">
-                            </mat-icon>
-                        <span>Usuario: {{ userName }}</span>
-                        </span>
                     </li>
                 </ul>
             </div>

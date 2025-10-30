@@ -1,14 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import {
-  ReactiveFormsModule,
-  FormControl,
-  FormGroup,
-  Validators,
-  ValidatorFn,
-  AbstractControl
-} from '@angular/forms';
+import {ReactiveFormsModule,FormControl,FormGroup,Validators,ValidatorFn,AbstractControl} from '@angular/forms';
 import { InputRowComponent } from 'app/common/input-row/input-row.component';
 import { TransaccionService } from 'app/transaccion/transaccion.service';
 import { TransaccionDTO } from 'app/transaccion/transaccion.model';
@@ -27,17 +20,7 @@ import { ConfirmDialogComponent } from 'app/confirm-dialog/confirm-dialog.compon
 
 @Component({
   selector: 'app-transaccion-add',
-  imports: [
-    CommonModule,
-    RouterLink,
-    ReactiveFormsModule,
-    InputRowComponent,
-    MatDialogModule,
-    MatIconModule,
-    MatTooltipModule,
-    MatButtonModule,
-    MatSnackBarModule
-  ],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatDialogModule, MatIconModule, MatTooltipModule, MatButtonModule, MatSnackBarModule],
   templateUrl: './transaccion-add.component.html',
   styleUrls: ['./transaccion-add.component.scss']
 })

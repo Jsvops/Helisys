@@ -26,10 +26,10 @@
                     <td class="pn">{{ r.numeroParte }}</td>
                     <td class="qty">{{ r.saldoTotalFecha }}</td>
                     <td class="date">{{ r.fechaVencimiento | date:'dd-MM-yyyy' }}</td>
-                    <td class="days" [ngClass]="'pill pill--' + estadoColor(dias(r))">
+                    <td class="days">
                         {{ dias(r) }}
                     </td>
-                    <td class="status" [ngClass]="'status--' + estadoColor(dias(r))">
+                    <td class="status">
                         {{ estadoTexto(dias(r)) }}
                     </td>
                 </tr>

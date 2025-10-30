@@ -1,34 +1,40 @@
-<div class="d-flex flex-wrap mb-4 header-bar gap-2">
+<div class="d-flex flex-wrap mb-2">
     <h1 i18n="@@pedidosCompra.add.headline">Añadir pedidos de compra</h1>
-
-    <div>
-        <button
-            mat-icon-button
-            routerLink="/pedidosCompras"
-            matTooltip="Lista de pedidos de compras"
-            matTooltipPosition="right"
-            [matTooltipClass]="'tooltip-pale'"
-            aria-label="Lista de pedidos de compras"
-        >
-            <mat-icon svgIcon="list_alt"></mat-icon>
-
-        </button>
-    </div>
 </div>
-<div class="form-container">
-<form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
-    <app-input-row [group]="addForm" field="pcaDescripcion" i18n-label="@@pedidosCompra.pcaDescripcion.label" label="Descripción" />
-    <app-input-row [group]="addForm" field="pcaFechaPedido" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaPedido.label" label="Fecha de pedido" />
-    <app-input-row [group]="addForm" field="pcaFechaEnvio" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaEnvio.label" label="Fecha de envio" />
-    <app-input-row [group]="addForm" field="pcaFechaEntrega" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaEntrega.label" label="Fecha de entrega" />
-    <app-input-row [group]="addForm" field="pcaFechaPrometida" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaPrometida.label" label="Fecha prometida" />
-    <app-input-row [group]="addForm" field="pcaDireccionEnvio" i18n-label="@@pedidosCompra.pcaDireccionEnvio.label" label="Direccion de envio" />
 
-    <div class="text-end mt-3">
-        <input type="submit"
-               i18n-value="@@pedidosCompra.add.headline"
-               value="Guardar"
-               class="btn btn-primary" />
+    <div class="form-containers">
+        <div class="form-header">
+
+            <div class="icon-container">
+
+                <div class="icon d-flex align-items-center ms-auto">
+                    <button
+                        mat-icon-button
+                        routerLink="/pedidosCompras"
+                        aria-label="Lista de pedidos de compras"
+                    >
+                        <mat-icon svgIcon="list_alt"></mat-icon>
+                    </button>
+                    <span id="labelList" class="action-text">Lista de pedidos de compra</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-body">
+            <form [formGroup]="addForm" (ngSubmit)="handleSubmit()">
+                <app-input-row [group]="addForm" field="pcaDescripcion" i18n-label="@@pedidosCompra.pcaDescripcion.label" label="Descripción" />
+                <app-input-row [group]="addForm" field="pcaFechaPedido" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaPedido.label" label="Fecha de pedido" />
+                <app-input-row [group]="addForm" field="pcaFechaEnvio" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaEnvio.label" label="Fecha de envio" />
+                <app-input-row [group]="addForm" field="pcaFechaEntrega" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaEntrega.label" label="Fecha de entrega" />
+                <app-input-row [group]="addForm" field="pcaFechaPrometida" datepicker="datepicker" i18n-label="@@pedidosCompra.pcaFechaPrometida.label" label="Fecha prometida" />
+                <app-input-row [group]="addForm" field="pcaDireccionEnvio" i18n-label="@@pedidosCompra.pcaDireccionEnvio.label" label="Direccion de envio" />
+
+                <div class="text-end mt-3">
+                    <input type="submit"
+                           i18n-value="@@pedidosCompra.add.headline"
+                           value="Guardar"
+                           class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</form>
-</div>
+

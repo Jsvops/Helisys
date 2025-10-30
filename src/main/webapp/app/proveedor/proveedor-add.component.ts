@@ -15,7 +15,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-proveedor-add',
   imports: [CommonModule, RouterLink, ReactiveFormsModule, InputRowComponent, MatIconModule, MatTooltipModule, MatButtonModule, MatSnackBarModule],
-  templateUrl: './proveedor-add.component.html'
+  templateUrl: './proveedor-add.component.html',
+  styleUrls: ['./proveedor-add.component.scss']
 })
 export class ProveedorAddComponent {
 
