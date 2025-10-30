@@ -42,7 +42,6 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-
 }
 
 node {
@@ -50,7 +49,6 @@ node {
     version.set('22.11.0')
 }
 
-/* 1) Build Angular a carpeta intermedia (outputPath = "build/angular" en angular.json) */
 tasks.register('npmRunBuild', NpmTask) {
     workingDir = project.projectDir
     args = ['run', 'build']
@@ -67,31 +65,29 @@ tasks.named('npmRunBuild', NpmTask).configure {
     outputs.dir(layout.buildDirectory.dir('angular/browser'))
 }
 
-
+def frontendDistDir = layout.buildDirectory.dir('angular/browser')
 def generatedResourcesDir = "$buildDir/generated-resources/main"
 
-tasks.register('prepareFrontendResources', Copy) {
+tasks.register('syncFrontendResources', Sync) {
     dependsOn 'npmRunBuild'
-    from("$buildDir/angular/browser") { include '**/*' }
+    from(frontendDistDir)
     into("$generatedResourcesDir/static")
-}
-
-tasks.named('prepareFrontendResources', Copy).configure {
-    outputs.dir("$buildDir/generated-resources/main/static")
+    include '**/*'
+    includeEmptyDirs = false
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    outputs.dir("$generatedResourcesDir/static")
 }
 
 sourceSets {
     main { resources { srcDir(generatedResourcesDir) } }
 }
 
-tasks.named('processResources') { dependsOn 'prepareFrontendResources' }
+tasks.named('processResources') { dependsOn 'syncFrontendResources' }
+tasks.named('bootRun') { dependsOn 'syncFrontendResources', 'processResources' }
 
-tasks.named('bootRun') {
-    dependsOn 'prepareFrontendResources', 'processResources'
+
+tasks.named('clean') {
+    delete("$buildDir/generated-resources")
 }
 
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
-}
-
-
+tasks.withType(Test).configureEach { useJUnitPlatform() }
