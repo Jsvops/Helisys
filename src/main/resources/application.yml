@@ -9,11 +9,9 @@ server:
 
 spring:
   datasource:
-    # Opción 1: UNA sola variable JDBC_URL (recomendada)
-    url: ${jdbc:mysql://trolley.proxy.rlwy.net:34700/railway?useUnicode=true&characterEncoding=utf8&sslMode=REQUIRED&enabledTLSProtocols=TLSv1.2&serverTimezone=UTC}
-
-    username: ${root}
-    password: ${uSgGHzDUkrbBpYAbhNQGxaPSzUWskbTg}
+    url: ${JDBC_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     hikari:
       connection-timeout: 30000
       maximum-pool-size: 5
@@ -28,7 +26,7 @@ spring:
     open-in-view: false
     properties:
       hibernate:
-        # Si tu base en Railway es MariaDB, usa este dialecto:
+
         dialect: org.hibernate.dialect.MariaDBDialect
         jdbc:
           lob:
