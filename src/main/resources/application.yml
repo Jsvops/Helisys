@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
   servlet:
     session:
       timeout: 60m
@@ -8,14 +8,19 @@ server:
         same-site: strict
 
 spring:
-
   datasource:
-    url: jdbc:mysql://localhost:3306/Helisys?serverTimezone=UTC
-    username: root
-    password:
+    # Opción 1: UNA sola variable JDBC_URL (recomendada)
+    url: ${jdbc:mysql://trolley.proxy.rlwy.net:34700/railway?useUnicode=true&characterEncoding=utf8&sslMode=REQUIRED&enabledTLSProtocols=TLSv1.2&serverTimezone=UTC}
+
+    username: ${root}
+    password: ${uSgGHzDUkrbBpYAbhNQGxaPSzUWskbTg}
     hikari:
       connection-timeout: 30000
-      maximum-pool-size: 10
+      maximum-pool-size: 5
+      minimum-idle: 0
+      idle-timeout: 60000
+      keepalive-time: 300000
+      initialization-fail-timeout: 0
 
   jpa:
     hibernate:
@@ -23,35 +28,13 @@ spring:
     open-in-view: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        # Si tu base en Railway es MariaDB, usa este dialecto:
+        dialect: org.hibernate.dialect.MariaDBDialect
         jdbc:
           lob:
             non_contextual_creation: true
         id:
           new_generator_mappings: true
 
-
-
-
-error:
-  handling:
-    http-status-in-json-response: true
-    exception-logging: NO_LOGGING
-    full-stacktrace-http-statuses: 5xx
-    log-levels:
-      5xx: ERROR
-    codes:
-      AeronaveAnvMatriculaUnique: AERONAVE_ANV_MATRICULA_UNIQUE
-      UsuarioUsrCtIdentidadUnique: USUARIO_USR_CT_IDENTIDAD_UNIQUE
-      UsuarioUsrCtMilitarUnique: USUARIO_USR_CT_MILITAR_UNIQUE
-      UsuarioUsrLoginUnique: USUARIO_USR_LOGIN_UNIQUE
-      UsuarioUsrPasswordUnique: USUARIO_USR_PASSWORD_UNIQUE
-
 springdoc:
   pathsToMatch: /api/**
-
-logging:
-  level:
-    org.springframework.web: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
