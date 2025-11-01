@@ -37,18 +37,18 @@ constructor() {
 
   private registerIcons() {
     const icons: Record<string, string> = {
-      list_alt: 'public/icons/list_alt.svg',
-      home:     'public/icons/home.svg',
-      edit:     'public/icons/edit.svg',
-      delete:   'public/icons/delete.svg',
-      save:     'public/icons/save.svg',
-      filter_alt:   'public/icons/filter_alt.svg',
-      assignment:   'public/icons/assignment.svg',
-      search:       'public/icons/search.svg',
-      add_box:      'public/icons/add_box.svg',
-      filter_alt_off: 'public/icons/filter_alt_off.svg',
-      account_circle: 'public/icons/account_circle.svg',
-      warning_yb_outline: 'public/icons/warning_yb_outline.svg'
+      list_alt:             '/list_alt.svg',
+      home:                 '/home.svg',
+      edit:                 '/edit.svg',
+      delete:               '/delete.svg',
+      save:                 '/save.svg',
+      filter_alt:           '/filter_alt.svg',
+      assignment:           '/assignment.svg',
+      search:               '/search.svg',
+      add_box:              '/add_box.svg',
+      filter_alt_off:       '/filter_alt_off.svg',
+      account_circle:       '/account_circle.svg',
+      warning_yb_outline:   '/warning_yb_outline.svg'
     };
 
     Object.entries(icons).forEach(([name, url]) => {
