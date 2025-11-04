@@ -34,11 +34,12 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/", "/index.html", "/favicon.ico", "/robots.txt",
+                     "/robots.txt",
                     "/assets/**", "/icons/**", "/image/**", "/images/**", "/public/**",
                     "/*.js", "/*.css", "/*.map", "/*.json", "/*.png", "/*.jpg", "/*.svg", "/*.webp",
                     "/login", "/logout", "/error", "/webjars/**"
                 ).permitAll()
+                .requestMatchers("/api/auth/**", "/api/public/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -117,34 +118,33 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(admin, user);
     }
 
-    /**
-     * Cuando la sesión es inválida (cookie huérfana/caducada), crea una nueva sesión
-     * y redirige a /login?timeout para evitar bucles de redirección.
-     * Para API/JSON, responde 401.
-     */
     @Bean
     public InvalidSessionStrategy invalidSessionStrategy() {
         return (request, response) -> {
-            String uri = request.getRequestURI();
+            String uri    = request.getRequestURI();
             String accept = String.valueOf(request.getHeader("Accept"));
-            String xhr = String.valueOf(request.getHeader("X-Requested-With"));
+            String xhr    = String.valueOf(request.getHeader("X-Requested-With"));
             boolean isApi = uri.startsWith("/api")
                 || accept.contains("application/json")
                 || "XMLHttpRequest".equalsIgnoreCase(xhr);
 
             if (isApi) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            } else {
-                request.getSession(true);
-                response.sendRedirect("/login?timeout");
+                return;
             }
+
+            boolean hasReferer = request.getHeader("Referer") != null && !request.getHeader("Referer").isEmpty();
+
+            var session = request.getSession(true);
+
+            if (hasReferer) {
+                session.setAttribute("timeoutOnce", Boolean.TRUE);
+            }
+            response.sendRedirect("/login");
         };
     }
 
-    /**
-     * Cuando una sesión expira por concurrencia o tiempo, trata igual que inválida:
-     * 401 para API, y redirección con nueva sesión para navegador.
-     */
+
     @Bean
     public SessionInformationExpiredStrategy expiredStrategy() {
         return event -> {

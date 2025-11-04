@@ -50,37 +50,37 @@ export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    title: $localize`:@@home.index.headline:Welcome to your new app!`
+    title: $localize`:@@home.index.headline:Helisys`
   },
   {
     path: 'modeloAeronaves',
     component: ModeloAeronaveListComponent,
-    title: $localize`:@@modeloAeronave.list.headline:Modelo Aeronaves`
+    title: $localize`:@@modeloAeronave.list.headline:Lista de los modelos de aeronaves`
   },
   {
     path: 'modeloAeronaves/add',
     component: ModeloAeronaveAddComponent,
-    title: $localize`:@@modeloAeronave.add.headline:Add Modelo Aeronave`
+    title: $localize`:@@modeloAeronave.add.headline:Añadir modelo de aeroanave`
   },
   {
     path: 'modeloAeronaves/edit/:mreId',
     component: ModeloAeronaveEditComponent,
-    title: $localize`:@@modeloAeronave.edit.headline:Edit Modelo Aeronave`
+    title: $localize`:@@modeloAeronave.edit.headline:Editar modelo de aeronave`
   },
   {
     path: 'aeronaves',
     component: AeronaveListComponent,
-    title: $localize`:@@aeronave.list.headline:Aeronaves`
+    title: $localize`:@@aeronave.list.headline:Lista de aeronaves`
   },
   {
     path: 'aeronaves/add',
     component: AeronaveAddComponent,
-    title: $localize`:@@aeronave.add.headline:Add Aeronave`
+    title: $localize`:@@aeronave.add.headline:Añadir aeroanve`
   },
   {
     path: 'aeronaves/edit/:anvId',
     component: AeronaveEditComponent,
-    title: $localize`:@@aeronave.edit.headline:Edit Aeronave`
+    title: $localize`:@@aeronave.edit.headline:Editar aeronave`
   },
   {
     path: 'almacenEstantes',
@@ -130,32 +130,32 @@ export const routes: Routes = [
   {
     path: 'proveedores',
     component: ProveedorListComponent,
-    title: $localize`:@@proveedor.list.headline:Proveedores`
+    title: $localize`:@@proveedor.list.headline:Lista de proveedores`
   },
   {
     path: 'proveedores/add',
     component: ProveedorAddComponent,
-    title: $localize`:@@proveedor.add.headline:Add Proveedor`
+    title: $localize`:@@proveedor.add.headline:Añadir proveedor`
   },
   {
     path: 'proveedores/edit/:pveId',
     component: ProveedorEditComponent,
-    title: $localize`:@@proveedor.edit.headline:Edit Proveedor`
+    title: $localize`:@@proveedor.edit.headline:Editar proveedor`
   },
   {
     path: 'pedidosCompras',
     component: PedidosCompraListComponent,
-    title: $localize`:@@pedidosCompra.list.headline:Pedidos Compras`
+    title: $localize`:@@pedidosCompra.list.headline: Lista de los pedidos de compra`
   },
   {
     path: 'pedidosCompras/add',
     component: PedidosCompraAddComponent,
-    title: $localize`:@@pedidosCompra.add.headline:Add Pedidos Compra`
+    title: $localize`:@@pedidosCompra.add.headline:Añaadir pedido de compra`
   },
   {
     path: 'pedidosCompras/edit/:pcaId',
     component: PedidosCompraEditComponent,
-    title: $localize`:@@pedidosCompra.edit.headline:Edit Pedidos Compra`
+    title: $localize`:@@pedidosCompra.edit.headline:Editar pedidos de compra`
   },
   {
     path: 'tipoProductos',
@@ -175,7 +175,7 @@ export const routes: Routes = [
   {
     path: 'productos',
     component: ProductoListComponent,
-    title: $localize`:@@producto.list.headline:Productos`
+    title: $localize`:@@producto.list.headline:Lista de las piezas`
   },
   {
     path: 'productos/add',
@@ -185,7 +185,7 @@ export const routes: Routes = [
   {
     path: 'productos/edit/:proId',
     component: ProductoEditComponent,
-    title: $localize`:@@producto.edit.headline:Edit Producto`
+    title: $localize`:@@producto.edit.headline:Editar pieza`
   },
   {
     path: 'pedidosProductos',
@@ -220,27 +220,27 @@ export const routes: Routes = [
   {
     path: 'usuarios',
     component: UsuarioListComponent,
-    title: $localize`:@@usuario.list.headline:Usuarios`
+    title: $localize`:@@usuario.list.headline:Lista de usuarios`
   },
   {
     path: 'usuarios/add',
     component: UsuarioAddComponent,
-    title: $localize`:@@usuario.add.headline:Add Usuario`
+    title: $localize`:@@usuario.add.headline:Añadir usuario`
   },
   {
     path: 'usuarios/edit/:usrId',
     component: UsuarioEditComponent,
-    title: $localize`:@@usuario.edit.headline:Edit Usuario`
+    title: $localize`:@@usuario.edit.headline:Editar usuario`
   },
   {
     path: 'transacciones',
     component: TransaccionListComponent,
-    title: $localize`:@@transaccion.list.headline:Transacciones`
+    title: $localize`:@@transaccion.list.headline:Lista de las transacciones`
   },
   {
     path: 'transacciones/add',
     component: TransaccionAddComponent,
-    title: $localize`:@@transaccion.add.headline:Add Transaccion`
+    title: $localize`:@@transaccion.add.headline:Añadir Transacción`
   },
   {
     path: 'transacciones/edit/:tceId',

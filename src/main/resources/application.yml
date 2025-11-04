@@ -2,10 +2,12 @@ server:
   port: ${PORT:8080}
   servlet:
     session:
-      timeout: 60m
+      tracking-modes: cookie
+      timeout: 2m
       cookie:
-        name: SESSION
-        same-site: strict
+          name: SESSION
+          same-site: lax
+          path: /
 
 spring:
   datasource:
