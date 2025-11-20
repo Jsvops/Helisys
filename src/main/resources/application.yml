@@ -3,11 +3,11 @@ server:
   servlet:
     session:
       tracking-modes: cookie
-      timeout: 2m
+      timeout: 60m
       cookie:
-          name: SESSION
-          same-site: lax
-          path: /
+        name: SESSION
+        same-site: lax
+        path: /
 
 spring:
   datasource:
