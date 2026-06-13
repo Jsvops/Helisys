@@ -77,8 +77,13 @@ export class ProductoService {
       return this.http.get<ModeloAeronaveDTO[]>('/api/modeloAeronaves');
     }
 
-  getAlmacenJerarquico(): Observable<AlmacenJerarquicoDTO[]> {
-    return this.http.get<AlmacenJerarquicoDTO[]>('/api/productos/almacen-jerarquico');
+  getAlmacenJerarquicoById(amcId: number) {
+    return this.http.get<AlmacenJerarquicoDTO>(`/api/productos/almacen-jerarquico/${amcId}`);
+  }
+
+  suggestAlmacenJerarquico(q: string): Observable<AlmacenJerarquicoDTO[]> {
+    const params = new HttpParams().set('q', q);
+    return this.http.get<AlmacenJerarquicoDTO[]>('/api/productos/almacen-jerarquico/suggest', { params });
   }
 
   generarReporteProductos(modeloAeronaveId: number) {

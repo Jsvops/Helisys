@@ -10,9 +10,18 @@ import { ErrorHandler } from 'app/common/error-handler.injectable';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import { forkJoin } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, switchMap, catchError } from 'rxjs/operators';
+import {AlmacenJerarquicoDTO} from "../almacen-jerarquico/almacen-jerarquico.model";
+import {HttpErrorResponse} from "@angular/common/http";
+import { startWith, tap } from 'rxjs/operators';
+
+
 
 @Component({
   selector: 'app-producto-edit',
@@ -25,7 +34,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatSelectModule,
     MatOptionModule,
     RouterModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatInputModule,
+    MatAutocompleteModule,
   ],
   templateUrl: './producto-edit.component.html',
   styleUrls: ['./producto-edit.component.scss']
@@ -37,12 +48,14 @@ export class ProductoEditComponent implements OnInit {
   private productoService = inject(ProductoService);
   private errorHandler = inject(ErrorHandler);
   snackBar = inject(MatSnackBar);
+  amcInputCtrl = new FormControl<string>('', { nonNullable: true });
+  amcOptions$!: Observable<AlmacenJerarquicoDTO[]>;
+
 
   proId?: number;
   proUnidades = 0;
 
   proTpoValues?: Map<number, string>;
-  proAmcValues?: Map<number, string>;
   proPveValues?: Map<number, string>;
   modeloAeronaveValues?: Map<number, string>;
   modeloAeronaveArray: { value: number, label: string }[] = [];
@@ -75,9 +88,9 @@ export class ProductoEditComponent implements OnInit {
 
 
   private loadAllData() {
+    this.initAmcAutocomplete(); // <-- NUEVO
     this.loadProTpoValues();
     this.loadProPveValues();
-    this.loadProAmcValues();
     this.loadModeloAeronaveValues();
     this.loadProducto();
   }
@@ -96,14 +109,52 @@ export class ProductoEditComponent implements OnInit {
     });
   }
 
-  private loadProAmcValues() {
-    this.productoService.getAlmacenJerarquico().subscribe({
-      next: (data) => {
-        this.proAmcValues = new Map(data.map(item => [item.amcId, item.descripcionJerarquica]));
+  private loadAmcLabel(amcId: number | null | undefined) {
+    if (amcId == null) return;
+
+    this.productoService.getAlmacenJerarquicoById(amcId).subscribe({
+      next: (dto: AlmacenJerarquicoDTO) => {
+        this.amcInputCtrl.setValue(dto.descripcionJerarquica, { emitEvent: false });
       },
-      error: (error) => this.errorHandler.handleServerError(error.error)
+      error: (error: HttpErrorResponse) => this.errorHandler.handleServerError(error.error)
     });
   }
+
+
+
+  private initAmcAutocomplete() {
+    this.amcOptions$ = this.amcInputCtrl.valueChanges.pipe(
+      startWith(this.amcInputCtrl.value),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(text => {
+        const q = (text ?? '').trim();
+
+        // ✅ Si el usuario borró o hay menos de 3 letras:
+        // - vaciamos opciones
+        // - y limpiamos el ID porque ya no hay selección válida
+        if (q.length < 3) {
+          this.editForm.get('proAmc')?.setValue(null);
+          return of([]);
+        }
+
+        return this.productoService.suggestAlmacenJerarquico(q).pipe(
+          catchError(() => of([]))
+        );
+      })
+    );
+  }
+
+  onAmcSelected(event: MatAutocompleteSelectedEvent) {
+    const selected = event.option.value as AlmacenJerarquicoDTO;
+
+    // guarda el ID real para backend
+    this.editForm.get('proAmc')?.setValue(selected.amcId);
+
+    // muestra solo el label
+    this.amcInputCtrl.setValue(selected.descripcionJerarquica, { emitEvent: false });
+  }
+
 
   private loadModeloAeronaveValues() {
     this.productoService.getModeloAeronaveValues().subscribe({
@@ -138,7 +189,11 @@ export class ProductoEditComponent implements OnInit {
           proPve: producto.proPveId,
           modeloAeronaveIds: producto.modeloAeronaveIds ?? []
         });
+
+        this.loadAmcLabel(producto.proAmcId);
+
       },
+
       error: (error) => this.errorHandler.handleServerError(error.error)
     });
   }

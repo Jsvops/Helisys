@@ -10,8 +10,38 @@
     <app-input-row [group]="editForm" field="proNumeroParteAlterno" i18n-label="@@producto.proNumeroParteAlterno.label" label="Número Alterno" />
     <app-input-row [group]="editForm" field="proNumeroSerie" i18n-label="@@producto.proNumeroSerie.label" label="Número de serie" />
     <app-input-row [group]="editForm" field="proTipoDocumento" i18n-label="@@producto.proTipoDocumento.label" label="Tipo de documento" />
-    <app-input-row [group]="editForm" field="proTpo" rowType="select" [options]="proTpoValues" i18n-label="@@producto.proTpo.label" label="Tipo de compomente" />
-    <app-input-row [group]="editForm" field="proAmc" rowType="select" [options]="proAmcValues" i18n-label="@@producto.proAmc.label" label="Almacen" />
+    <app-input-row [group]="editForm" field="proTpo" rowType="select" [options]="proTpoValues" i18n-label="@@producto.proTpo.label" label="Tipo de producto" />
+    <div class="form-line">
+        <div class="label-col">
+            <span class="col-form-label required">Almacén</span>
+        </div>
+
+        <div class="field-col">
+            <div class="field-wrap field-wrap--fluid">
+                <mat-form-field class="custom-mat-select" appearance="fill" [hideRequiredMarker]="true">
+                    <mat-label>Escriba al menos 3 letras</mat-label>
+
+                    <input
+                        matInput
+                        [formControl]="amcInputCtrl"
+                        [matAutocomplete]="amcAuto"
+                        placeholder="Buscar almacén..."
+                    />
+
+                    <mat-autocomplete #amcAuto="matAutocomplete" (optionSelected)="onAmcSelected($event)">
+                        <mat-option *ngFor="let opt of (amcOptions$ | async)" [value]="opt">
+                            {{ opt.descripcionJerarquica }}
+                        </mat-option>
+                    </mat-autocomplete>
+
+                    <mat-error *ngIf="editForm.get('proAmc')?.hasError('required') && editForm.touched">
+                        Este campo es obligatorio
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
     <app-input-row [group]="editForm" field="proPve" rowType="select" [options]="proPveValues" i18n-label="@@producto.proPve.label" label="Proveedor" />
 
     <div class="form-line form-line--modelo">

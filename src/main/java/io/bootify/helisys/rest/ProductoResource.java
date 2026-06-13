@@ -67,13 +67,13 @@ public class ProductoResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(productoId);
     }
 
-    @GetMapping("/{proId}")
+    @GetMapping("/{proId:\\d+}")
     public ResponseEntity<ProductResponseDTO> getProducto(
         @PathVariable(name = "proId") final Integer proId) {
         return ResponseEntity.ok(productoService.get(proId));
     }
 
-    @PutMapping("/{proId}")
+    @PutMapping("/{proId:\\d+}")
     public ResponseEntity<Integer> updateProducto(
         @PathVariable(name = "proId") final Integer proId,
         @RequestBody @Valid final ProductRequestDTO productRequestDTO) {
@@ -81,7 +81,7 @@ public class ProductoResource {
         return ResponseEntity.ok(proId);
     }
 
-    @DeleteMapping("/{proId}")
+    @DeleteMapping("/{proId:\\d+}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteProducto(
         @PathVariable(name = "proId") final Integer proId) {
@@ -114,11 +114,18 @@ public class ProductoResource {
             .collect(CustomCollectors.toSortedMap(Proveedor::getPveId, Proveedor::getPveNombre)));
     }
 
-    @GetMapping("/almacen-jerarquico")
-    public ResponseEntity<List<AlmacenJerarquicoDTO>> getAlmacenJerarquico() {
-        List<AlmacenJerarquicoDTO> datosCombinados = productoService.getAlmacenJerarquico();
-        return ResponseEntity.ok(datosCombinados);
+
+    @GetMapping("/almacen-jerarquico/{amcId:\\d+}")
+    public ResponseEntity<AlmacenJerarquicoDTO> getAlmacenJerarquicoById(@PathVariable Integer amcId) {
+        return ResponseEntity.ok(productoService.getAlmacenJerarquicoById(amcId));
     }
+
+
+    @GetMapping("/almacen-jerarquico/suggest")
+    public ResponseEntity<List<AlmacenJerarquicoDTO>> suggestAlmacen(@RequestParam String q) {
+        return ResponseEntity.ok(productoService.suggestAlmacenJerarquico(q));
+    }
+
 
     @GetMapping("/search")
     public ResponseEntity<List<ProductViewDTO>> findFilteredProducts(

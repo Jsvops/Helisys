@@ -1,25 +1,43 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router} from '@angular/router';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { InputRowComponent } from 'app/common/input-row/input-row.component';
 import { ProductoService } from 'app/producto/producto.service';
 import { ProductRequestDTO } from 'app/producto/product-request.dto';
 import { ErrorHandler } from 'app/common/error-handler.injectable';
-import { AlmacenJerarquicoDTO } from 'app/almacen-jerarquico/almacen-jerarquico.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { MatIconModule} from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, switchMap, catchError } from 'rxjs/operators';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {AlmacenJerarquicoDTO} from "../almacen-jerarquico/almacen-jerarquico.model";
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { startWith, tap } from 'rxjs/operators';
+
+
 
 
 @Component({
   selector: 'app-producto-add',
-  imports: [CommonModule, ReactiveFormsModule, InputRowComponent, MatFormFieldModule,MatSelectModule, MatOptionModule, MatSnackBarModule, MatIconModule,MatTooltipModule],
+  imports: [CommonModule,
+    ReactiveFormsModule,
+    InputRowComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatOptionModule,
+    MatSnackBarModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatSelectModule
+  ],
   templateUrl: './producto-add.component.html',
   styleUrls: ['./producto-add.component.scss'],
 })
@@ -29,6 +47,9 @@ export class ProductoAddComponent implements OnInit {
   router = inject(Router);
   errorHandler = inject(ErrorHandler);
   snackBar = inject(MatSnackBar);
+  amcInputCtrl = new FormControl<string>('', { nonNullable: true, updateOn: 'change' });
+  amcOptions$!: Observable<AlmacenJerarquicoDTO[]>;
+
 
   proTpoValues?: Map<number, string>;
   proAmcValues?: Map<number, string>;
@@ -44,7 +65,7 @@ export class ProductoAddComponent implements OnInit {
     proNumeroSerie: new FormControl(null, [Validators.required, Validators.maxLength(45)]),
     proTipoDocumento: new FormControl(null, [Validators.required, Validators.maxLength(25)]),
     proTpo: new FormControl(null, [Validators.required]),
-    proAmc: new FormControl(null, [Validators.required]),
+    proAmc: new FormControl<number | null>(null, [Validators.required]),
     proPve: new FormControl(null, [Validators.required]),
     modeloAeronaveIds: new FormControl([], [Validators.required])
 
@@ -60,10 +81,52 @@ export class ProductoAddComponent implements OnInit {
   ngOnInit() {
     this.loadProTpoValues();
     this.loadProPveValues();
-    this.loadAlmacenJerarquico();
+    this.initAmcAutocomplete();
     this.loadModeloAeronaveValues();
-
   }
+
+  private initAmcAutocomplete() {
+    this.amcOptions$ = this.amcInputCtrl.valueChanges.pipe(
+      startWith(this.amcInputCtrl.value),
+      debounceTime(300),
+      distinctUntilChanged(),
+      tap(text => {
+        // Si el usuario modifica/borra el texto, el ID seleccionado ya no es confiable
+        const trimmed = (text ?? '').trim();
+        if (trimmed.length < 3) {
+          this.addForm.get('proAmc')?.setValue(null); // en Add: this.addForm.get('proAmc')...
+        }
+      }),
+      switchMap(text => {
+        const q = (text ?? '').trim();
+
+        // ✅ clave: emitir lista vacía cuando hay < 3 letras
+        if (q.length < 3) return of([]);
+
+        return this.productoService.suggestAlmacenJerarquico(q).pipe(
+          catchError(() => of([]))
+        );
+      })
+    );
+  }
+
+  onAmcSelected(event: MatAutocompleteSelectedEvent) {
+    const selected = event.option.value as AlmacenJerarquicoDTO;
+
+    // Guarda el ID en el formulario (lo que se envía al backend)
+    this.addForm.get('proAmc')?.setValue(selected.amcId);
+
+    // Deja en el input solo el label
+    this.amcInputCtrl.setValue(selected.descripcionJerarquica, { emitEvent: false });
+  }
+
+  clearAmcSelection() {
+    this.amcInputCtrl.setValue('', { emitEvent: true }); // importante: true para que limpie opciones
+    this.addForm.get('proAmc')?.setValue(null);
+    this.addForm.get('proAmc')?.markAsTouched();
+  }
+
+
 
   private loadProTpoValues() {
     this.productoService.getProTpoValues()
@@ -80,7 +143,7 @@ export class ProductoAddComponent implements OnInit {
         error: (error) => this.errorHandler.handleServerError(error.error)
       });
   }
-
+  /*
   private loadAlmacenJerarquico() {
     this.productoService.getAlmacenJerarquico()
       .subscribe({
@@ -90,6 +153,7 @@ export class ProductoAddComponent implements OnInit {
         error: (error) => this.errorHandler.handleServerError(error.error)
       });
   }
+   */
 
   private loadModeloAeronaveValues() {
     this.productoService.getModeloAeronaveValues()

@@ -15,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,9 +113,20 @@ public class ProductoService {
         return productoRepository.findProducts(partNumber, name, alterPartNumber);
     }
 
-    public List<AlmacenJerarquicoDTO> getAlmacenJerarquico() {
-        return almacenContenedorRepository.findAllAlmacenJerarquico();
+    @Transactional(readOnly = true)
+    public AlmacenJerarquicoDTO getAlmacenJerarquicoById(Integer amcId) {
+        return almacenContenedorRepository.findJerarquicoById(amcId)
+            .orElseThrow(NotFoundException::new);
     }
+
+    public List<AlmacenJerarquicoDTO> suggestAlmacenJerarquico(String q) {
+        if (q == null || q.trim().length() < 3) {
+            return List.of();
+        }
+        // si quieres "todas las opciones", no limites aquí
+        return almacenContenedorRepository.suggest(q.trim());
+    }
+
 
     private ProductoDTO mapToDTO(final Producto producto, final ProductoDTO productoDTO) {
         productoDTO.setProId(producto.getProId());
