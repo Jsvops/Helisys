@@ -1,5 +1,5 @@
     <div class="d-flex flex-wrap mb-2 ">
-        <h1 i18n="@@aeronave.add.headline">Añadir aeronave</h1>
+        <h1 i18n="@@aeronave.add.headline">Añadir tipo de aeronave</h1>
     </div>
 
     <div class="form-containers">
@@ -11,12 +11,12 @@
                         <button
                             mat-icon-button
                             routerLink="/aeronaves"
-                            aria-label="Lista de aeronaves"
+                            aria-label="Lista de tipos de aeronaves"
                         >
                             <mat-icon svgIcon="list_alt"></mat-icon>
 
                         </button>
-                        <span id="labelList" class="action-text">Lista de aeronaves</span>
+                        <span id="labelList" class="action-text">Lista de tipos de aeronaves</span>
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
                 <app-input-row [group]="addForm" field="anvMatricula" i18n-label="@@aeronave.anvMatricula.label" label="Matricula" />
                 <app-input-row [group]="addForm" field="anvNumeroSerie" i18n-label="@@aeronave.anvNumeroSerie.label" label="Numero de serie" />
                 <app-input-row [group]="addForm" field="anvFabricacion" i18n-label="@@aeronave.anvFabricacion.label" label="Fabricación" />
-                <app-input-row [group]="addForm" field="anvMre" rowType="select" [options]="anvMreValues" i18n-label="@@aeronave.anvMre.label" label="Modelo de aeronave" />
+                <app-input-row [group]="addForm" field="anvMre" rowType="select" [options]="anvMreValues" i18n-label="@@aeronave.anvMre.label" label="Tipo de aeronave" />
 
                 <div class="text-end mt-3">
                     <input type="submit"

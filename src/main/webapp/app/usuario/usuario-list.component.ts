@@ -30,7 +30,7 @@ export class UsuarioListComponent implements OnInit, OnDestroy {
     const messages: Record<string, string> = {
       confirm: $localize`:@@delete.confirm:Seguro que quieres eliminar este usuario? No se puede deshacer`,
       deleted: $localize`:@@usuario.delete.success:El usuario fue eliminado con éxito ✅`,
-      'usuario.transaccion.tceUsr.referenced': $localize`:@@usuario.transaccion.tceUsr.referenced:This entity is still referenced by Transaccion ${details?.id} via field Tce Usr.`
+      'usuario.transaccion.tceUsr.referenced': $localize`:@@usuario.transaccion.tceUsr.referenced:Este usuario todavía está referenciado por Movimiento ${details?.id}.`
     };
     return messages[key];
   }

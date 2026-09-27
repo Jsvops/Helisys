@@ -22,8 +22,8 @@ export class TransaccionEventoListComponent implements OnInit, OnDestroy {
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
       confirm: $localize`:@@delete.confirm:Do you really want to delete this element? This cannot be undone.`,
-      deleted: $localize`:@@transaccionEvento.delete.success:Transaccion Evento was removed successfully.`,
-      'transaccionEvento.transaccion.tceTvo.referenced': $localize`:@@transaccionEvento.transaccion.tceTvo.referenced:This entity is still referenced by Transaccion ${details?.id} via field Tce Tvo.`
+      deleted: $localize`:@@transaccionEvento.delete.success:Evento de movimiento eliminado correctamente.`,
+      'transaccionEvento.transaccion.tceTvo.referenced': $localize`:@@transaccionEvento.transaccion.tceTvo.referenced:Este evento todavía está referenciado por Movimiento ${details?.id}.`
     };
     return messages[key];
   }

@@ -181,7 +181,7 @@ export class ProductoListComponent implements OnInit, OnDestroy {
       confirm: $localize`:@@delete.confirm:Do you really want to delete this element? This cannot be undone.`,
       deleted: $localize`:@@producto.delete.success:Producto was removed successfully.`,
       'producto.pedidosProducto.pptPro.referenced': $localize`:@@producto.pedidosProducto.pptPro.referenced:This entity is still referenced by Pedidos Producto ${details?.id} via field Ppt Pro.`,
-      'producto.transaccionesProducto.tcoPro.referenced': $localize`:@@producto.transaccionesProducto.tcoPro.referenced:This entity is still referenced by Transacciones Producto ${details?.id} via field Tco Pro.`
+      'producto.transaccionesProducto.tcoPro.referenced': $localize`:@@producto.transaccionesProducto.tcoPro.referenced:Este producto todavía está referenciado por Movimiento de producto ${details?.id}.`
     };
     return messages[key];
   }

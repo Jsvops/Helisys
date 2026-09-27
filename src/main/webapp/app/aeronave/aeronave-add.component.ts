@@ -37,7 +37,7 @@ export class AeronaveAddComponent implements OnInit {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      created: $localize`:@@aeronave.create.success:La aeronave fue creada con éxito ✅`,
+      created: $localize`:@@aeronave.create.success:El tipo de aeronave fue creado con éxito ✅`,
       AERONAVE_ANV_MATRICULA_UNIQUE: $localize`:@@Exists.aeronave.anvMatricula:This Anv Matricula is already taken.`
     };
     return messages[key];

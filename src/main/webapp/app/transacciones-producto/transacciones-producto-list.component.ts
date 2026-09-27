@@ -22,7 +22,7 @@ export class TransaccionesProductoListComponent implements OnInit, OnDestroy {
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
       confirm: $localize`:@@delete.confirm:Do you really want to delete this element? This cannot be undone.`,
-      deleted: $localize`:@@transaccionesProducto.delete.success:Transacciones Producto was removed successfully.`    };
+      deleted: $localize`:@@transaccionesProducto.delete.success:Movimiento de producto eliminado correctamente.`    };
     return messages[key];
   }
 

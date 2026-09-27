@@ -1,5 +1,5 @@
 <div class="d-flex flex-wrap mb-2">
-    <h1 i18n="@@transaccion.list.headline">Lista de transacciones</h1>
+    <h1 i18n="@@transaccion.list.headline">Lista de movimientos</h1>
 </div>
 
 <form class="search-form mb-2 " #f="ngForm">
@@ -71,11 +71,11 @@
                 type="button"
                 mat-icon-button
                 routerLink="/transacciones/add"
-                aria-label="Añadir transaccion"
+                aria-label="Añadir movimiento"
                 class="add-transaction-btn">
                 <mat-icon svgIcon="add_box"></mat-icon>
             </button>
-            <span class="action-label">Añadir transacción</span>
+            <span class="action-label">Añadir movimiento</span>
         </div>
 
         </div>
@@ -92,8 +92,8 @@
             <th scope="col" i18n="@@transaccion.productoNumeroParte.label">Número de parte</th>
             <th scope="col" i18n="@@transaccion.eventoNombre.label">Movimiento</th>
             <th scope="col" i18n="@@transaccion.unidades.label">Unidades</th>
-            <th scope="col" i18n="@@transaccion.aeronaveMatricula.label">Aeronave</th>
-            <th scope="col" i18n="@@transaccion.tceFechaTransaccion.label">Fecha de Transacción</th>
+            <th scope="col" i18n="@@transaccion.aeronaveMatricula.label">Tipo de aeronave</th>
+            <th scope="col" i18n="@@transaccion.tceFechaTransaccion.label">Fecha de movimiento</th>
             <th scope="col" i18n="@@transaccion.usuarioNombre.label">Usuario</th>
             <th scope="col" i18n="@@transaccion.tceObservaciones.label">Observaciones</th>
         </tr>

@@ -30,8 +30,8 @@ export class AeronaveListComponent implements OnInit, OnDestroy {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      confirm: $localize`:@@delete.confirm:Seguro que quieres eliminar esta aeronave? No se puede deshacer`,
-      deleted: $localize`:@@aeronave.delete.success:La aeronave fue eliminado con éxito ✅`};
+      confirm: $localize`:@@delete.confirm:Seguro que quieres eliminar este tipo de aeronave? No se puede deshacer`,
+      deleted: $localize`:@@aeronave.delete.success:El tipo de aeronave fue eliminado con éxito ✅`};
     return messages[key];
   }
 

@@ -30,7 +30,7 @@ export class TransaccionEventoEditComponent implements OnInit {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      updated: $localize`:@@transaccionEvento.update.success:Transaccion Evento was updated successfully.`
+      updated: $localize`:@@transaccionEvento.update.success:Evento de movimiento actualizado correctamente.`
     };
     return messages[key];
   }

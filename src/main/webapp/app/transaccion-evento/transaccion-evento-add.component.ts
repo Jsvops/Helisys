@@ -25,7 +25,7 @@ export class TransaccionEventoAddComponent {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      created: $localize`:@@transaccionEvento.create.success:Transaccion Evento was created successfully.`
+      created: $localize`:@@transaccionEvento.create.success:Evento de movimiento creado correctamente.`
     };
     return messages[key];
   }

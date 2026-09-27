@@ -65,7 +65,7 @@ export class TransaccionAddComponent implements OnInit {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      created: $localize`:@@transaccion.create.success:Transaccion was created successfully.`
+      created: $localize`:@@transaccion.create.success:Movimiento creado correctamente.`
     };
     return messages[key];
   }
@@ -82,8 +82,8 @@ export class TransaccionAddComponent implements OnInit {
       width: '420px',
       disableClose: true,
       data: {
-        title: 'Confirmar transacción',
-        message: '¿Está seguro de realizar esta transacción? Esta acción no se podrá deshacer',
+        title: 'Confirmar movimiento',
+        message: '¿Está seguro de realizar este movimiento? Esta acción no se podrá deshacer',
         confirmText: 'Continuar',
         cancelText: 'Cancelar'
       },
@@ -126,7 +126,7 @@ export class TransaccionAddComponent implements OnInit {
 
           this.transaccionService.executeTransaction(dto).subscribe({
             next: () => {
-              this.snackBar.open('Transacción ejecutada correctamente ✅', '', {
+              this.snackBar.open('Movimiento ejecutado correctamente ✅', '', {
                 duration: 3000,
                 verticalPosition: 'top',
                 horizontalPosition: 'center',

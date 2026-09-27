@@ -34,7 +34,7 @@ export class ErrorHandler {
 
     if (isInsufficient) {
       this.snackBar.open(
-        'No se puede completar la transacción: stock insuficiente en los lotes disponibles ℹ️',
+        'No se puede completar el movimiento: stock insuficiente en los lotes disponibles ℹ️',
         '',
         { duration: 3000,
           verticalPosition: 'top',

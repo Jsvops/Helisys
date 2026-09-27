@@ -1,5 +1,5 @@
 <div class="d-flex flex-wrap mb-4 header-bar gap-2">
-    <h1 i18n="@@aeronave.edit.headline">Editar la aeronave</h1>
+    <h1 i18n="@@aeronave.edit.headline">Editar tipo de aeronave</h1>
 </div>
 
 <div class="form-container">
@@ -7,7 +7,7 @@
     <app-input-row [group]="editForm" field="anvMatricula" i18n-label="@@aeronave.anvMatricula.label" label="Matricula" />
     <app-input-row [group]="editForm" field="anvNumeroSerie" i18n-label="@@aeronave.anvNumeroSerie.label" label="Numero de serie" />
     <app-input-row [group]="editForm" field="anvFabricacion" i18n-label="@@aeronave.anvFabricacion.label" label="Fabricación" />
-    <app-input-row [group]="editForm" field="anvMre" rowType="select" [options]="anvMreValues" i18n-label="@@aeronave.anvMre.label" label="Anv Mre" />
+    <app-input-row [group]="editForm" field="anvMre" rowType="select" [options]="anvMreValues" i18n-label="@@aeronave.anvMre.label" label="Tipo de aeronave" />
 
     <div class="text-end mt-3">
         <input type="submit"

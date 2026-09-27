@@ -70,17 +70,17 @@ export const routes: Routes = [
   {
     path: 'aeronaves',
     component: AeronaveListComponent,
-    title: $localize`:@@aeronave.list.headline:Lista de aeronaves`
+    title: $localize`:@@aeronave.list.headline:Lista de tipos de aeronaves`
   },
   {
     path: 'aeronaves/add',
     component: AeronaveAddComponent,
-    title: $localize`:@@aeronave.add.headline:Añadir aeroanve`
+    title: $localize`:@@aeronave.add.headline:Añadir tipo de aeronave`
   },
   {
     path: 'aeronaves/edit/:anvId',
     component: AeronaveEditComponent,
-    title: $localize`:@@aeronave.edit.headline:Editar aeronave`
+    title: $localize`:@@aeronave.edit.headline:Editar tipo de aeronave`
   },
   {
     path: 'almacenEstantes',
@@ -205,17 +205,17 @@ export const routes: Routes = [
   {
     path: 'transaccionEventos',
     component: TransaccionEventoListComponent,
-    title: $localize`:@@transaccionEvento.list.headline:Transaccion Eventos`
+    title: $localize`:@@transaccionEvento.list.headline:Eventos de movimiento`
   },
   {
     path: 'transaccionEventos/add',
     component: TransaccionEventoAddComponent,
-    title: $localize`:@@transaccionEvento.add.headline:Add Transaccion Evento`
+    title: $localize`:@@transaccionEvento.add.headline:Añadir evento de movimiento`
   },
   {
     path: 'transaccionEventos/edit/:tvoId',
     component: TransaccionEventoEditComponent,
-    title: $localize`:@@transaccionEvento.edit.headline:Edit Transaccion Evento`
+    title: $localize`:@@transaccionEvento.edit.headline:Editar evento de movimiento`
   },
   {
     path: 'usuarios',
@@ -235,32 +235,32 @@ export const routes: Routes = [
   {
     path: 'transacciones',
     component: TransaccionListComponent,
-    title: $localize`:@@transaccion.list.headline:Lista de las transacciones`
+    title: $localize`:@@transaccion.list.headline:Lista de movimientos`
   },
   {
     path: 'transacciones/add',
     component: TransaccionAddComponent,
-    title: $localize`:@@transaccion.add.headline:Añadir Transacción`
+    title: $localize`:@@transaccion.add.headline:Añadir movimiento`
   },
   {
     path: 'transacciones/edit/:tceId',
     component: TransaccionEditComponent,
-    title: $localize`:@@transaccion.edit.headline:Edit Transaccion`
+    title: $localize`:@@transaccion.edit.headline:Editar movimiento`
   },
   {
     path: 'transaccionesProductos',
     component: TransaccionesProductoListComponent,
-    title: $localize`:@@transaccionesProducto.list.headline:Transacciones Productos`
+    title: $localize`:@@transaccionesProducto.list.headline:Movimientos de productos`
   },
   {
     path: 'transaccionesProductos/add',
     component: TransaccionesProductoAddComponent,
-    title: $localize`:@@transaccionesProducto.add.headline:Add Transacciones Producto`
+    title: $localize`:@@transaccionesProducto.add.headline:Añadir movimiento de producto`
   },
   {
     path: 'transaccionesProductos/edit/:tcoId',
     component: TransaccionesProductoEditComponent,
-    title: $localize`:@@transaccionesProducto.edit.headline:Edit Transacciones Producto`
+    title: $localize`:@@transaccionesProducto.edit.headline:Editar movimiento de producto`
   },
   {
     path: 'search',

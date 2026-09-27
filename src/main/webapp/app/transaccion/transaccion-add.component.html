@@ -1,5 +1,5 @@
 <div class="d-flex flex-wrap mb-2 gap-3">
-    <h1 i18n="@@transaccion.add.headline">Añadir transacción</h1>
+    <h1 i18n="@@transaccion.add.headline">Añadir movimiento</h1>
 </div>
 
  <div class="form-containers">
@@ -30,7 +30,7 @@
                     [routerLink]="'/transacciones'">
                     <mat-icon svgIcon="list_alt"></mat-icon>
                 </button>
-                <span id="labelList" class="action-text">Lista de tranasacciones</span>
+                <span id="labelList" class="action-text">Lista de movimientos</span>
             </div>
 
         </div>
@@ -96,7 +96,7 @@
             rowType="select"
             [options]="tceAnvValues"
             i18n-label="@@transaccion.tceAnv.label"
-            label="Aeronave"
+            label="Tipo de aeronave"
         />
         <app-input-row
             [group]="addForm"

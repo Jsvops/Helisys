@@ -30,7 +30,7 @@ export class TransaccionesProductoAddComponent implements OnInit {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      created: $localize`:@@transaccionesProducto.create.success:Transacciones Producto was created successfully.`
+      created: $localize`:@@transaccionesProducto.create.success:Movimiento de producto creado correctamente.`
     };
     return messages[key];
   }

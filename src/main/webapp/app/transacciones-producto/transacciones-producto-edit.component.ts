@@ -34,7 +34,7 @@ export class TransaccionesProductoEditComponent implements OnInit {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      updated: $localize`:@@transaccionesProducto.update.success:Transacciones Producto was updated successfully.`
+      updated: $localize`:@@transaccionesProducto.update.success:Movimiento de producto actualizado correctamente.`
     };
     return messages[key];
   }

@@ -54,8 +54,8 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
       confirm: $localize`:@@delete.confirm:Do you really want to delete this element? This cannot be undone.`,
-      deleted: $localize`:@@transaccion.delete.success:Transaccion was removed successfully.`,
-      'transaccion.transaccionesProducto.tcoTce.referenced': $localize`:@@transaccion.transaccionesProducto.tcoTce.referenced:This entity is still referenced by Transacciones Producto ${details?.id} via field Tco Tce.`
+      deleted: $localize`:@@transaccion.delete.success:Movimiento eliminado correctamente.`,
+      'transaccion.transaccionesProducto.tcoTce.referenced': $localize`:@@transaccion.transaccionesProducto.tcoTce.referenced:Este movimiento todavía está referenciado por Movimiento de producto ${details?.id}.`
     };
     return messages[key];
   }
@@ -81,7 +81,7 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
           this.totalPages = data.totalPages;
         },
         error: (err) => {
-          console.error('Error al cargar transacciones', err);
+          console.error('Error al cargar movimientos', err);
         }
       });
   }
@@ -141,7 +141,7 @@ export class TransaccionListComponent implements OnInit, OnDestroy {
       const file = new Blob([blob], { type: 'application/pdf' });
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(file);
-      link.download = 'reporte-transacciones.pdf';
+      link.download = 'reporte-movimientos.pdf';
       link.click();
     }, (error: any) => {
       console.error('Error al generar el reporte', error);

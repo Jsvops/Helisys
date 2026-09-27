@@ -40,7 +40,7 @@ export class AeronaveEditComponent implements OnInit {
 
   getMessage(key: string, details?: any) {
     const messages: Record<string, string> = {
-      updated: $localize`:@@aeronave.update.success:La aeronave se actualizó correctamente ✅`,
+      updated: $localize`:@@aeronave.update.success:El tipo de aeronave se actualizó correctamente ✅`,
       AERONAVE_ANV_MATRICULA_UNIQUE: $localize`:@@Exists.aeronave.anvMatricula:This Anv Matricula is already taken.`
     };
     return messages[key];
